@@ -1,7 +1,7 @@
 import cv2 as cv                                                                                                                                                                                    
 import os                                                                                                                                                                                           
 
-target_height = 200
+target_height = 250
 
 for filename in os.listdir('.'):
   if (not filename.endswith('.jpg')) or filename.endswith('_fit.jpg'):
