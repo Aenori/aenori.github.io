@@ -38,7 +38,7 @@ function postDecision(team_name, decision_id, json_data) {
     success: function( data ) {
       if('errors' in data)
       {
-        alert('Oups, il y a un ou des problèmes avec vos décisions :' + data);
+        alert('Oups, il y a un ou des problèmes avec vos décisions :' + data['errors'].join(', '));
       }
       {
         alert('Votre choix a bien été enregistré');
