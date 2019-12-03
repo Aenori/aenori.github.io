@@ -36,7 +36,13 @@ function postDecision(team_name, decision_id, json_data) {
     contentType: "application/json; charset=utf-8",
     dataType: "json",
     success: function( data ) {
-      alert('Votre choix a bien été enregistré');
+      if('errors' in data)
+      {
+        alert('Oups, il y a un ou des problèmes avec vos décisions :' + data);
+      }
+      {
+        alert('Votre choix a bien été enregistré');
+      }
     }
   });
 }
