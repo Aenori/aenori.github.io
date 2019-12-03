@@ -22,3 +22,17 @@ function optimize() {
     }
   });
 }
+
+function nextStep(step_id) {
+  $.get("/current_step", function(data, status){
+    var current_step = data["current_step"];
+
+    if(current_step <= step_id) {
+      alert("Attendez d'avoir l'instruction de passer à l'étape suivante");
+    }
+    else
+    {
+      window.location.pathname = '/team-next-step';
+    }
+  });
+}
