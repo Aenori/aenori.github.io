@@ -40,6 +40,7 @@ function postDecision(team_name, decision_id, json_data) {
       {
         alert('Oups, il y a un ou des problèmes avec vos décisions :' + data['errors'].join(', '));
       }
+      else
       {
         alert('Votre choix a bien été enregistré');
       }
