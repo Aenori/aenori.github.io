@@ -23,6 +23,19 @@ function optimize() {
   });
 }
 
+function postDecision(team_name, decision_id, json) {
+  $.post(
+    "/team-decision",
+    {
+      'team_name': team_name,
+      'decision': json
+    },
+    function( data ) {
+      alert('Votre choix a bien été enregistré');
+    }
+  );
+}
+
 function nextStep(step_id) {
   $.get("/current_step", function(data, status){
     var current_step = data["current_step"];
