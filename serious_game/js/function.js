@@ -23,15 +23,15 @@ function optimize() {
   });
 }
 
-function postDecision(team_name, decision_id, json) {
+function postDecision(team_name, decision_id, json_data) {
   $.ajax( {
     type: "POST",
     url: "/team-decision",
     data: JSON.stringify(
     {
-      'team_name': team_name,
-      'decision_id': decision_id,
-      'decision_json': json
+      team_name: team_name,
+      decision_id: decision_id,
+      decision_json: json_data
     }),
     contentType: "application/json; charset=utf-8",
     dataType: "json",
