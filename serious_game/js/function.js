@@ -28,7 +28,8 @@ function postDecision(team_name, decision_id, json) {
     "/team-decision",
     {
       'team_name': team_name,
-      'decision': json
+      'decision_id': decision_id,
+      'decision_json': json
     },
     function( data ) {
       alert('Votre choix a bien été enregistré');
