@@ -1,7 +1,7 @@
 function postDecision(team_name, decision_id, json_data) {
   $.ajax( {
     type: "POST",
-    url: json_base_url + "team-decision",
+    url: "post/team-decision",
     data: JSON.stringify(
       {
         team_name: team_name,
