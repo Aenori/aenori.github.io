@@ -32,7 +32,7 @@ function nextStep(step_id) {
     }
     else
     {
-      window.location.pathname = 'team-next-step';
+      window.location.pathname = json_base_url + 'team-next-step&team_name=' + team_name;
     }
   });
 }
