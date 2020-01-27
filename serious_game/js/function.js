@@ -1,7 +1,7 @@
 function postDecision(team_name, decision_id, json_data) {
   $.ajax( {
     type: "POST",
-    url: "/team-decision",
+    url: "team-decision",
     data: JSON.stringify(
       {
         team_name: team_name,
@@ -24,7 +24,7 @@ function postDecision(team_name, decision_id, json_data) {
 }
 
 function nextStep(step_id) {
-  $.get("/current_step", function(data, status){
+  $.get("current_step", function(data, status){
     var current_step = data["current_step"];
 
     if(current_step <= step_id) {
@@ -32,7 +32,7 @@ function nextStep(step_id) {
     }
     else
     {
-      window.location.pathname = '/team-next-step';
+      window.location.pathname = 'team-next-step';
     }
   });
 }
