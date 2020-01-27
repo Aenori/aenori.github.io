@@ -24,7 +24,7 @@ function postDecision(team_name, decision_id, json_data) {
 }
 
 function nextStep(step_id) {
-  $.get(json_base_url + "current_step", function(data, status){
+  $.get("post/current_step", function(data, status){
     var current_step = data["current_step"];
 
     if(current_step <= step_id) {
