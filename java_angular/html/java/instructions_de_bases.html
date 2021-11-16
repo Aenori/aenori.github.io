@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
 
-    <title>Mockito Mock &#8212; Documentation Java Angular 0.1</title>
+    <title>&lt;no title&gt; &#8212; Documentation Java Angular 0.1</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
     
@@ -19,6 +19,8 @@
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="&lt;no title&gt;" href="programmation_orientee_objet.html" />
+    <link rel="prev" title="Java" href="../java.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -30,8 +32,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="Index général"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="programmation_orientee_objet.html" title="&lt;no title&gt;"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="../java.html" title="Java"
+             accesskey="P">précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Mockito Mock</a></li> 
+          <li class="nav-item nav-item-1"><a href="../java.html" accesskey="U">Java</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
       </ul>
     </div>  
 
@@ -40,50 +49,7 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="mockito-mock">
-<h1>Mockito Mock<a class="headerlink" href="#mockito-mock" title="Lien permanent vers ce titre">¶</a></h1>
-<section id="principe">
-<h2>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
-<dl class="simple">
-<dt>Pour rappel il existe 3 types de test :</dt><dd><ul class="simple">
-<li><p>les tests unitaires</p></li>
-<li><p>les tests d’intégration</p></li>
-<li><p>les tests fonctionnels</p></li>
-</ul>
-</dd>
-</dl>
-<p>On se concentrera dans la formation sur les 2 premiers. La séparation entre
-les deux est fortement marquée dans le framework Spring.</p>
-<p>Par défaut Spring considère qu’un test est un test unitaire, <strong>il n’injecte
-donc aucune dépendance !</strong>. Tous les objets portant l’annotation <em>&#64;Autowire</em>
-auront donc comme valeur <em>null</em></p>
-<section id="test-unitaire-et-mockito">
-<h3>Test unitaire et mockito<a class="headerlink" href="#test-unitaire-et-mockito" title="Lien permanent vers ce titre">¶</a></h3>
-<p>Par défaut Spring considère qu’un test est un test unitaire et n’injecte
-aucune dépendance. Il faut donc les « mocker », ie les remplacer par un objet
-factice dont on paramêtrera le fonction.</p>
-<p>Cela se fait en deux parties :</p>
-<p>1. Au Niveau de la classe de test, on ajoute l’annotation &#64;InjectMocks à
-l’objet que l’on veut tester et &#64;Mock au objet que l’on souhaite injecter
-en temps que mock.</p>
-<p>Par exemple :</p>
-<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@InjectMocks</span>
-<span class="kd">private</span> <span class="n">SampleController</span> <span class="n">sampleController</span><span class="p">;</span>
-
-<span class="nd">@Mock</span>
-<span class="kd">private</span> <span class="n">CerebookUserRepository</span> <span class="n">mockCerebookUserRepository</span><span class="p">;</span>
-</pre></div>
-</div>
-<p>Dans le cas présent, on cherche à tester un SampleController et celui ci
-possède une dépendance <em>&#64;Autowired</em> de type CerebookUserRepository.
-Le mock sera donc injecté en temps que dépendance.</p>
-<p>2. Au niveau de la méthode de test, on paramêtre le comportement de la
-fonction avec la syntaxe when(…).thenReturn(…)</p>
-<p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/controller/SampleControllerTest.java">Unit test example</a></p>
-</section>
-</section>
-</section>
-
+  
 
             <div class="clearer"></div>
           </div>
@@ -91,21 +57,16 @@ fonction avec la syntaxe when(…).thenReturn(…)</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table des matières</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Mockito Mock</a><ul>
-<li><a class="reference internal" href="#principe">Principe</a><ul>
-<li><a class="reference internal" href="#test-unitaire-et-mockito">Test unitaire et mockito</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="../java.html"
+                        title="Chapitre précédent">Java</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="programmation_orientee_objet.html"
+                        title="Chapitre suivant">&lt;no title&gt;</a></p>
   <div role="note" aria-label="source link">
     <h3>Cette page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/spring/mockito_mock.rst.txt"
+      <li><a href="../_sources/java/instructions_de_bases.rst.txt"
             rel="nofollow">Montrer le code source</a></li>
     </ul>
    </div>
@@ -129,8 +90,15 @@ fonction avec la syntaxe when(…).thenReturn(…)</p>
         <li class="right" style="margin-right: 10px">
           <a href="../genindex.html" title="Index général"
              >index</a></li>
+        <li class="right" >
+          <a href="programmation_orientee_objet.html" title="&lt;no title&gt;"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="../java.html" title="Java"
+             >précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Mockito Mock</a></li> 
+          <li class="nav-item nav-item-1"><a href="../java.html" >Java</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">&lt;no title&gt;</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
