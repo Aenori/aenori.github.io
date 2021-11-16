@@ -56,3 +56,64 @@ Par exemple :
 `Unit test example <https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/controller/SampleControllerTest.java>`_
 
 Ligne 28 pour le when(...).thenReturn(...)
+
+Test d'intégration
+^^^^^^^^^^^^^^^^^^
+
+Dans un test d'intégration on va tester l'ensemble du site. Ces tests sont un
+peu plus gourmand en ressources mais très efficace (je conseille d'en mettre
+un par route, ne serait-ce que pour vérifier quíl n'y a pas un gros bug).
+
+Il se fond avec l'objet MockMvc :
+
+.. code-block:: java
+
+    @Autowired
+    private MockMvc mvc;
+
+Qui nécesssite l'annotation AutoConfigureMockMvc sur la classe :
+
+.. code-block:: java
+
+    @AutoConfigureMockMvc(addFilters = false)
+    class SampleControllerRoutesTest {
+        ...
+    }
+
+Ensuite on appelle des requêtes ainsi :
+
+.. code-block:: java
+
+    mvc.perform(get("/cerebookUsers")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].name", is("Wolverine")));
+    }
+
+Dans le cas présent toutes les dépendances sont crées, on teste
+vraiment l'ensemble de l'application.
+
+`Integration test example <https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/integration/SampleControllerRoutesTest.java>`_
+
+Autres annotations utiles
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: java
+
+    @Transactional
+
+Créée une transaction au début de chaque test et la rollback à la fin du test.
+
+.. code-block:: java
+
+    @ActiveProfiles("test")
+
+Active un profil (et donc la lecture du fichier application-properties associé)
+
+.. code-block:: java
+
+    @AutoConfigureMockMvc(addFilters = false)
+
+La mention addFilters = false désactive l'identification

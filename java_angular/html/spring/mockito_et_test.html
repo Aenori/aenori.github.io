@@ -96,6 +96,52 @@ fonction avec la syntaxe when(…).thenReturn(…)</p>
 <p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/controller/SampleControllerTest.java">Unit test example</a></p>
 <p>Ligne 28 pour le when(…).thenReturn(…)</p>
 </section>
+<section id="test-d-integration">
+<h3>Test d’intégration<a class="headerlink" href="#test-d-integration" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Dans un test d’intégration on va tester l’ensemble du site. Ces tests sont un
+peu plus gourmand en ressources mais très efficace (je conseille d’en mettre
+un par route, ne serait-ce que pour vérifier quíl n’y a pas un gros bug).</p>
+<p>Il se fond avec l’objet MockMvc :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">MockMvc</span> <span class="n">mvc</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Qui nécesssite l’annotation AutoConfigureMockMvc sur la classe :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@AutoConfigureMockMvc</span><span class="p">(</span><span class="n">addFilters</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nc">SampleControllerRoutesTest</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ensuite on appelle des requêtes ainsi :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">mvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/cerebookUsers&quot;</span><span class="p">)</span>
+                    <span class="p">.</span><span class="na">contentType</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">))</span>
+            <span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">status</span><span class="p">().</span><span class="na">isOk</span><span class="p">())</span>
+            <span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">content</span><span class="p">()</span>
+                    <span class="p">.</span><span class="na">contentTypeCompatibleWith</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">))</span>
+            <span class="p">.</span><span class="na">andExpect</span><span class="p">(</span><span class="n">jsonPath</span><span class="p">(</span><span class="s">&quot;$[0].name&quot;</span><span class="p">,</span> <span class="n">is</span><span class="p">(</span><span class="s">&quot;Wolverine&quot;</span><span class="p">)));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Dans le cas présent toutes les dépendances sont crées, on teste
+vraiment l’ensemble de l’application.</p>
+<p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/integration/SampleControllerRoutesTest.java">Integration test example</a></p>
+</section>
+<section id="autres-annotations-utiles">
+<h3>Autres annotations utiles<a class="headerlink" href="#autres-annotations-utiles" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Transactional</span>
+</pre></div>
+</div>
+<p>Créée une transaction au début de chaque test et la rollback à la fin du test.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@ActiveProfiles</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Active un profil (et donc la lecture du fichier application-properties associé)</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@AutoConfigureMockMvc</span><span class="p">(</span><span class="n">addFilters</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>La mention addFilters = false désactive l’identification</p>
+</section>
 </section>
 </section>
 
@@ -111,6 +157,8 @@ fonction avec la syntaxe when(…).thenReturn(…)</p>
 <li><a class="reference internal" href="#">Mockito et test</a><ul>
 <li><a class="reference internal" href="#principe">Principe</a><ul>
 <li><a class="reference internal" href="#test-unitaire-et-mockito">Test unitaire et mockito</a></li>
+<li><a class="reference internal" href="#test-d-integration">Test d’intégration</a></li>
+<li><a class="reference internal" href="#autres-annotations-utiles">Autres annotations utiles</a></li>
 </ul>
 </li>
 </ul>

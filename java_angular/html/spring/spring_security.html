@@ -71,6 +71,9 @@ formulaire généré afin d’en vérifier l’authenticité.</p>
         <span class="na">th:value</span><span class="o">=</span><span class="s">&quot;${_csrf.token}&quot;</span> <span class="p">/&gt;</span>
 </pre></div>
 </div>
+<p>!Le csrf token est automatiquement généré dès lors que vous utilisez un formulaire
+géré par le moteur de template. Par contre il faut l’ajouter manuellement si vous
+faites un formulaire pur html.</p>
 </section>
 <section id="authentification">
 <h3>Authentification<a class="headerlink" href="#authentification" title="Lien permanent vers ce titre">¶</a></h3>
