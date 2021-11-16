@@ -1,0 +1,138 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>PL-SQL &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Angular" href="../angular.html" />
+    <link rel="prev" title="Principes acid" href="principes_acid.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../angular.html" title="Angular"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="principes_acid.html" title="Principes acid"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../base_de_donnee.html" accesskey="U">Base de données</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PL-SQL</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="pl-sql">
+<h1>PL-SQL<a class="headerlink" href="#pl-sql" title="Lien permanent vers ce titre">¶</a></h1>
+<p><strong>!Culture</strong></p>
+<p>Le plsql est un langage qui permet d’écrire des fonctions exécutées du côté
+de la base de donnée. On y retrouve les éléments de base de tout langage :
+variable, boucles, fonctions, mais pas de programmation objet, quand même :-)</p>
+<p>Un des principaux est la définition de trigger, par exemple le code ci-dessous
+créé un trigger qui produit automatiquement un champ dans une table
+action_history lorsque l’on supprime un élément dans action.</p>
+<p>Les tables sont définies ainsi :</p>
+<div class="highlight-plpgsql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="k">action</span><span class="p">(</span><span class="n">id</span> <span class="nb">int</span> <span class="k">primary</span> <span class="k">key</span><span class="p">,</span> <span class="k">name</span> <span class="nb">varchar</span><span class="p">(</span><span class="mf">256</span><span class="p">),</span> <span class="n">created_at</span> <span class="nb">timestamp</span><span class="p">);</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">action_history</span><span class="p">(</span><span class="n">id</span> <span class="nb">int</span> <span class="k">primary</span> <span class="k">key</span><span class="p">,</span> <span class="k">name</span> <span class="nb">varchar</span><span class="p">(</span><span class="mf">256</span><span class="p">),</span> <span class="n">created_at</span> <span class="nb">timestamp</span><span class="p">,</span> <span class="n">deleted_at</span> <span class="nb">timestamp</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Et le code pour créer le trigger :</p>
+<div class="highlight-plpgsql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">add_action_history</span><span class="p">()</span> <span class="k">RETURNS</span> <span class="k">trigger</span> <span class="k">AS</span>
+<span class="s">$$</span><span class="k">BEGIN</span>
+    <span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">action_history</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="k">name</span><span class="p">,</span> <span class="n">created_at</span><span class="p">,</span> <span class="n">deleted_at</span><span class="p">)</span>
+    <span class="k">VALUES</span><span class="p">(</span><span class="k">OLD</span><span class="mf">.</span><span class="n">id</span><span class="p">,</span> <span class="k">OLD</span><span class="mf">.</span><span class="k">name</span><span class="p">,</span> <span class="k">OLD</span><span class="mf">.</span><span class="n">created_at</span><span class="p">,</span> <span class="n">NOW</span><span class="p">()</span> <span class="p">);</span>
+
+    <span class="k">RETURN</span> <span class="k">OLD</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span><span class="s">$$</span> <span class="k">LANGUAGE</span> <span class="n">plpgsql</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">add_action_history</span>
+    <span class="k">BEFORE</span> <span class="k">DELETE</span> <span class="k">ON</span> <span class="k">action</span> <span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span>
+    <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="n">add_action_history</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="principes_acid.html"
+                        title="Chapitre précédent">Principes acid</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="../angular.html"
+                        title="Chapitre suivant">Angular</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/base_de_donnee/plsql.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../angular.html" title="Angular"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="principes_acid.html" title="Principes acid"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../base_de_donnee.html" >Base de données</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">PL-SQL</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>

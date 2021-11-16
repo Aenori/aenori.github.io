@@ -1,0 +1,49 @@
+Mockito Mock
+============
+
+Principe
+--------
+
+Pour rappel il existe 3 types de test :
+    - les tests unitaires
+    - les tests d'intégration
+    - les tests fonctionnels
+
+On se concentrera dans la formation sur les 2 premiers. La séparation entre
+les deux est fortement marquée dans le framework Spring.
+
+Par défaut Spring considère qu'un test est un test unitaire, **il n'injecte
+donc aucune dépendance !**. Tous les objets portant l'annotation *@Autowire*
+auront donc comme valeur *null*
+
+Test unitaire et mockito
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Par défaut Spring considère qu'un test est un test unitaire et n'injecte
+aucune dépendance. Il faut donc les "mocker", ie les remplacer par un objet
+factice dont on paramêtrera le fonction.
+
+Cela se fait en deux parties :
+
+1. Au Niveau de la classe de test, on ajoute l'annotation @InjectMocks à
+l'objet que l'on veut tester et @Mock au objet que l'on souhaite injecter
+en temps que mock.
+
+Par exemple :
+
+.. code-block:: java
+
+    @InjectMocks
+    private SampleController sampleController;
+
+    @Mock
+    private CerebookUserRepository mockCerebookUserRepository;
+
+Dans le cas présent, on cherche à tester un SampleController et celui ci
+possède une dépendance *@Autowired* de type CerebookUserRepository.
+Le mock sera donc injecté en temps que dépendance.
+
+2. Au niveau de la méthode de test, on paramêtre le comportement de la
+fonction avec la syntaxe when(...).thenReturn(...)
+
+`Unit test example <https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/controller/SampleControllerTest.java>`_

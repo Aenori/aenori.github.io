@@ -1,0 +1,161 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>Docker &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Intégration continue" href="integration_continue.html" />
+    <link rel="prev" title="Dev ops" href="../dev_ops.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="integration_continue.html" title="Intégration continue"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="../dev_ops.html" title="Dev ops"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../dev_ops.html" accesskey="U">Dev ops</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Docker</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="docker">
+<h1>Docker<a class="headerlink" href="#docker" title="Lien permanent vers ce titre">¶</a></h1>
+<section id="principe">
+<h2>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
+</section>
+<section id="fonctionnement">
+<h2>Fonctionnement<a class="headerlink" href="#fonctionnement" title="Lien permanent vers ce titre">¶</a></h2>
+<section id="dockerfile">
+<h3>Dockerfile<a class="headerlink" href="#dockerfile" title="Lien permanent vers ce titre">¶</a></h3>
+<p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/main/Dockerfile">Dockerfile example</a></p>
+</section>
+<section id="docker-compose-yml">
+<h3>docker-compose.yml<a class="headerlink" href="#docker-compose-yml" title="Lien permanent vers ce titre">¶</a></h3>
+</section>
+</section>
+<section id="small-workshop">
+<h2>Small workshop<a class="headerlink" href="#small-workshop" title="Lien permanent vers ce titre">¶</a></h2>
+<p>1. Partez d’un projet « Hello world » de votre framework préféré (par exemple
+pour spring, vous pouvez suivre ce tutoriel :
+<a class="reference external" href="https://spring.io/guides/gs/spring-boot/">https://spring.io/guides/gs/spring-boot/</a>)
+2. A la racine du projet (au niveau du pom.xml) créez un fichier Dockerfile
+3. Dans ce fichier, ajoutez les lignes suivantes :</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="s">heroku/heroku:20</span>
+
+<span class="k">RUN</span> apt-get update <span class="o">&amp;&amp;</span> apt-get install maven
+<span class="k">ADD</span> . /app
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">CMD</span> mvn spring-boot:run
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Lancez la commande docker build . -t docker_workshop</p></li>
+<li><p>Lancez la commande docker run -p 8081:8080 docker_workshop</p></li>
+</ol>
+<p>Vous devriez pouvoir accéder à votre site sur localhost:8081</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Docker</a><ul>
+<li><a class="reference internal" href="#principe">Principe</a></li>
+<li><a class="reference internal" href="#fonctionnement">Fonctionnement</a><ul>
+<li><a class="reference internal" href="#dockerfile">Dockerfile</a></li>
+<li><a class="reference internal" href="#docker-compose-yml">docker-compose.yml</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#small-workshop">Small workshop</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="../dev_ops.html"
+                        title="Chapitre précédent">Dev ops</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="integration_continue.html"
+                        title="Chapitre suivant">Intégration continue</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dev_ops/docker.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="integration_continue.html" title="Intégration continue"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="../dev_ops.html" title="Dev ops"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../dev_ops.html" >Dev ops</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Docker</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>

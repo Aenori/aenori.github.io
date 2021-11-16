@@ -1,0 +1,40 @@
+Docker
+======
+
+Principe
+--------
+
+Fonctionnement
+--------------
+
+Dockerfile
+^^^^^^^^^^
+
+`Dockerfile example <https://github.com/Aenori/HerokuProject/blob/main/Dockerfile>`_
+
+docker-compose.yml
+^^^^^^^^^^^^^^^^^^
+
+Small workshop
+--------------
+
+1. Partez d'un projet "Hello world" de votre framework préféré (par exemple
+pour spring, vous pouvez suivre ce tutoriel :
+https://spring.io/guides/gs/spring-boot/)
+2. A la racine du projet (au niveau du pom.xml) créez un fichier Dockerfile
+3. Dans ce fichier, ajoutez les lignes suivantes :
+
+.. code-block:: dockerfile
+
+    FROM heroku/heroku:20
+
+    RUN apt-get update && apt-get install maven
+    ADD . /app
+    WORKDIR /app
+
+    CMD mvn spring-boot:run
+
+4. Lancez la commande docker build . -t docker_workshop
+5. Lancez la commande docker run -p 8081:8080 docker_workshop
+
+Vous devriez pouvoir accéder à votre site sur localhost:8081

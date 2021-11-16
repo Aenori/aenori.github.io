@@ -1,0 +1,78 @@
+Spring security
+===============
+
+Principe
+--------
+
+Spring-security ajoute les protections de sécurité usuelles d'un site web
+(notamment l'authentification mais également la protection contre le CSRF)
+que
+! Le fait d'inclure la librairie Spring-security dans le pom.xml active
+certaines protections par défaut, notamment le CSRF et l'authentification.
+
+CSRF
+^^^^
+
+Pour rappel le CSRF (Cross-Site Request Forgery) est une attaque consistant
+a faire pointer un formulaire vers un site différent, et ainsi de profiter
+de l'authentification avec le session-id.
+
+La protection contre cette attaque est d'ajouter un token aléatoire à chaque
+formulaire généré afin d'en vérifier l'authenticité.
+
+.. code-block:: html
+
+    <!-- Avec thymeleaf comme moteur de template -->
+    <input type="hidden"
+            th:name="${_csrf.parameterName}"
+            th:value="${_csrf.token}" />
+
+Authentification
+^^^^^^^^^^^^^^^^
+
+Spring security est la librairie qui gère l'authentification (login). Pour
+cela il faut indiquer à Spring security les **username** et **password**
+qui permettent de se loguer et les droits associés.
+
+Pour cela deux méthodes :
+    - Hériter de la classe User : org.springframework.security.core.userdetails.User
+    - Implémenter l'interface UserDetails : org.springframework.security.core.userdetails.UserDetails;
+
+Dans le premier cas, il faut que la classe qui implémente User soit une entity.
+Normalement cela suffit (à vérifier).
+
+Dans le deuxième cas, il faut implémenter 2 choses :
+
+1/ Une classe qui implémente l'interface *UserDetails*
+
+2/ Un service *UserDetailsService* :
+
+.. code-block:: java
+
+    @Service
+    public class CerebookUserDetailsService implements UserDetailsService {
+
+        @Autowired
+        private CerebookUserRepository cerebookUserRepository;
+
+        @Override
+        public UserDetails loadUserByUsername(String username) {
+            CerebookUser user = cerebookUserRepository.findByUsername(username);
+            if (user == null) {
+                throw new UsernameNotFoundException(username);
+            }
+            return new UserDetailsWrapper(user);
+        }
+    }
+
+Et enfin le déclarer dans la classe WebSecurityConfig
+
+.. code-block:: java
+
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+`User detail service example : example <https://github.com/Aenori/HerokuProject/blob/main/src/main/java/wcsdata/xmen/services/CerebookUserDetailsService.java>`_
+`User detail service example : example <https://github.com/Aenori/HerokuProject/blob/main/src/main/java/wcsdata/xmen/services/CerebookUserDetailsService.java>`_

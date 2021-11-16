@@ -1,0 +1,36 @@
+PL-SQL
+======
+
+**!Culture**
+
+Le plsql est un langage qui permet d'écrire des fonctions exécutées du côté
+de la base de donnée. On y retrouve les éléments de base de tout langage :
+variable, boucles, fonctions, mais pas de programmation objet, quand même :-)
+
+Un des principaux est la définition de trigger, par exemple le code ci-dessous
+créé un trigger qui produit automatiquement un champ dans une table
+action_history lorsque l'on supprime un élément dans action.
+
+Les tables sont définies ainsi :
+
+.. code-block:: plpgsql
+
+    CREATE TABLE action(id int primary key, name varchar(256), created_at timestamp);
+    CREATE TABLE action_history(id int primary key, name varchar(256), created_at timestamp, deleted_at timestamp);
+
+Et le code pour créer le trigger :
+
+.. code-block:: plpgsql
+
+    CREATE OR REPLACE FUNCTION add_action_history() RETURNS trigger AS
+    $$BEGIN
+        INSERT INTO action_history(id, name, created_at, deleted_at)
+        VALUES(OLD.id, OLD.name, OLD.created_at, NOW() );
+
+        RETURN OLD;
+    END;$$ LANGUAGE plpgsql;
+
+    CREATE TRIGGER add_action_history
+        BEFORE DELETE ON action FOR EACH ROW
+        EXECUTE PROCEDURE add_action_history();
+

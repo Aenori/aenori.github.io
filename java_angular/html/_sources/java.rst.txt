@@ -1,0 +1,10 @@
+Java
+====
+
+.. toctree::
+    java/instructions_de_bases
+    java/programmation_orientee_objet
+    java/methodes_de_programmation
+    java/IO
+    java/java_8_et_stream
+    java/structure_de_donnee

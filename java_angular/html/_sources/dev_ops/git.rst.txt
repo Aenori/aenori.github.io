@@ -1,0 +1,49 @@
+Git
+===
+
+Principe
+--------
+
+Git est un logiciel de gestion de version que vous connaissez bien :-)
+
+Spécificités
+------------
+
+git-diff
+^^^^^^^^
+
+Une des commandes les plus pratiques en local est la commande git diff :
+
+.. code-block:: shell
+
+    git diff
+
+Sans argument, elle affiche les différences entre les fichiers locaux et le
+dernier commit. On peut préciser également des arguments, notamment les HEAD~n
+(comparaison avec le n-ème commit précédent) ou le nom d'une autre branche.
+
+Lien branche local <=> remote
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Une branche locale peut être configuré pour correspondre à une branche distante.
+Cela se traduit dans le fichier *.git/config*
+
+.. code-block:: kconfig
+
+    [branch "main"]
+      remote = origin
+      merge = refs/heads/main
+
+Cela vous permet de faire des git pull et git push sans préciser le remote.
+Cela s'obtient de deux façons différentes :
+
+.. code-block:: shell
+
+    # Branch created on remote side
+    git checkout dev
+    # Branch created localy
+    git push --set-upstream remote_name branch_name
+    # You will only have to add the --set-upstream once
+
+
+

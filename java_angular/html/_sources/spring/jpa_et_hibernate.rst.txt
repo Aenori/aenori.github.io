@@ -1,0 +1,22 @@
+Jpa et hibernate
+================
+
+
+
+One-to-many et Many-to-one
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+
+Many-to-many
+^^^^^^^^^^^^
+
+L'annotation *@ManyToMany* permet de créer une relation n-to-n, par exemple
+la relation d'amitié entre deux personnes dans facebook (chaque personne peut
+avoir plusieurs amis)
+
+Sql request
+^^^^^^^^^^^
+

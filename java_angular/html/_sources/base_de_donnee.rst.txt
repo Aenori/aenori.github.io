@@ -1,0 +1,25 @@
+Base de données
+===============
+
+Principes
+---------
+
+Les base de données sont un des éléments principaux des sites web. Elles
+stockent tous les éléments dynamiques, notamment ceux produits par les
+utilisateurs.
+
+Un des points à retenir sur les bases de données est qu'elles sont souvent
+un goulot d'étranglement (bottle-neck en anglais) des sites web, ie le point
+central qu'il est difficile de dupliquer.
+
+.. toctree::
+   base_de_donnee/transaction
+   base_de_donnee/index
+   base_de_donnee/principes_acid
+   base_de_donnee/plsql
+
+
+
+
+
+

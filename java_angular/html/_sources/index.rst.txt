@@ -1,0 +1,33 @@
+.. Java Angular documentation master file, created by
+   sphinx-quickstart on Fri Nov 12 07:59:51 2021.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to Java Angular's documentation!
+========================================
+
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 3
+
+   java
+   spring
+   base_de_donnee
+   angular
+   architecture_et_dev
+   dev_ops
+
+Indices and tables
+==================
+
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+
+* :ref:`search`
+
+
+
+
+
