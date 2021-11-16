@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
 
-    <title>Spring security &#8212; Documentation Java Angular 0.1</title>
+    <title>Principe &#8212; Documentation Java Angular 0.1</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
     
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
     <link rel="next" title="Base de données" href="../base_de_donnee.html" />
-    <link rel="prev" title="Mockito et test" href="mockito_et_test.html" />
+    <link rel="prev" title="Principe" href="mockito_et_test.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -36,11 +36,11 @@
           <a href="../base_de_donnee.html" title="Base de données"
              accesskey="N">suivant</a> |</li>
         <li class="right" >
-          <a href="mockito_et_test.html" title="Mockito et test"
+          <a href="mockito_et_test.html" title="Principe"
              accesskey="P">précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../spring.html" accesskey="U">Spring</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Spring security</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Principe</a></li> 
       </ul>
     </div>  
 
@@ -49,17 +49,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="spring-security">
-<h1>Spring security<a class="headerlink" href="#spring-security" title="Lien permanent vers ce titre">¶</a></h1>
+  <ul class="simple">
+<li><p>Spring security</p></li>
+</ul>
+<hr class="docutils" />
 <section id="principe">
-<h2>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
+<h1>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h1>
 <p>Spring-security ajoute les protections de sécurité usuelles d’un site web
 (notamment l’authentification mais également la protection contre le CSRF)
 que
 ! Le fait d’inclure la librairie Spring-security dans le pom.xml active
 certaines protections par défaut, notamment le CSRF et l’authentification.</p>
 <section id="csrf">
-<h3>CSRF<a class="headerlink" href="#csrf" title="Lien permanent vers ce titre">¶</a></h3>
+<h2>CSRF<a class="headerlink" href="#csrf" title="Lien permanent vers ce titre">¶</a></h2>
 <p>Pour rappel le CSRF (Cross-Site Request Forgery) est une attaque consistant
 a faire pointer un formulaire vers un site différent, et ainsi de profiter
 de l’authentification avec le session-id.</p>
@@ -76,7 +78,7 @@ géré par le moteur de template. Par contre il faut l’ajouter manuellement si
 faites un formulaire pur html.</p>
 </section>
 <section id="authentification">
-<h3>Authentification<a class="headerlink" href="#authentification" title="Lien permanent vers ce titre">¶</a></h3>
+<h2>Authentification<a class="headerlink" href="#authentification" title="Lien permanent vers ce titre">¶</a></h2>
 <p>Spring security est la librairie qui gère l’authentification (login). Pour
 cela il faut indiquer à Spring security les <strong>username</strong> et <strong>password</strong>
 qui permettent de se loguer et les droits associés.</p>
@@ -120,7 +122,6 @@ Normalement cela suffit (à vérifier).</p>
 <a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/main/src/main/java/wcsdata/xmen/services/CerebookUserDetailsService.java">User detail service example : example</a></p>
 </section>
 </section>
-</section>
 
 
             <div class="clearer"></div>
@@ -131,19 +132,16 @@ Normalement cela suffit (à vérifier).</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table des matières</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Spring security</a><ul>
-<li><a class="reference internal" href="#principe">Principe</a><ul>
+<li><a class="reference internal" href="#">Principe</a><ul>
 <li><a class="reference internal" href="#csrf">CSRF</a></li>
 <li><a class="reference internal" href="#authentification">Authentification</a></li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
 
   <h4>Sujet précédent</h4>
   <p class="topless"><a href="mockito_et_test.html"
-                        title="Chapitre précédent">Mockito et test</a></p>
+                        title="Chapitre précédent">Principe</a></p>
   <h4>Sujet suivant</h4>
   <p class="topless"><a href="../base_de_donnee.html"
                         title="Chapitre suivant">Base de données</a></p>
@@ -178,11 +176,11 @@ Normalement cela suffit (à vérifier).</p>
           <a href="../base_de_donnee.html" title="Base de données"
              >suivant</a> |</li>
         <li class="right" >
-          <a href="mockito_et_test.html" title="Mockito et test"
+          <a href="mockito_et_test.html" title="Principe"
              >précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../spring.html" >Spring</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Spring security</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Principe</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
