@@ -1,5 +1,5 @@
-* Mockito et test
-=================
+Mockito et test - done
+======================
 
 Principe
 --------
