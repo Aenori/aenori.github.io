@@ -80,6 +80,23 @@ donnée postgresql.</p>
 <p>Vous pouvez trouvez l’état du repo à la fin de chaque étape avec le tag
 step_X_solution</p>
 </section>
+<section id="pre-requis-installation-sous-linux">
+<h2>Pré-requis : installation sous linux<a class="headerlink" href="#pre-requis-installation-sous-linux" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Une petite subtilité sous linux est que vous devez ajouter votre utilisateur
+au groupe docker pour pouvoir lancer docker sans sudo (sinon vous aurez
+une erreur « permission denied »). Cela peut se faire avec les deux commandes
+ci-dessous :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo groupadd docker
+sudo usermod -aG docker <span class="nv">$USER</span>
+</pre></div>
+</div>
+<p>Et un petit redémarrage de votre pc plutôt, la commande groups devrait
+afficher (entre autre) docker :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>groups
+&gt; nicolas adm cdrom sudo dip plugdev lpadmin lxd sambashare docker
+</pre></div>
+</div>
+</section>
 <section id="step-1-image-heroku">
 <h2>Step 1 : image heroku<a class="headerlink" href="#step-1-image-heroku" title="Lien permanent vers ce titre">¶</a></h2>
 <p>Sous docker une image est un kernel linux avec un certain nombre de
@@ -368,6 +385,7 @@ username / password + 2 variables pour les usernames et passwords).</p>
 </li>
 <li><a class="reference internal" href="#workshop">Workshop</a><ul>
 <li><a class="reference internal" href="#pre-requis">Pré-requis</a></li>
+<li><a class="reference internal" href="#pre-requis-installation-sous-linux">Pré-requis : installation sous linux</a></li>
 <li><a class="reference internal" href="#step-1-image-heroku">Step 1 : image heroku</a></li>
 <li><a class="reference internal" href="#step-2-connect-to-heroku-image">Step 2 : connect to heroku image</a></li>
 <li><a class="reference internal" href="#step-3-local-sans-db">Step 3 : local sans db</a><ul>

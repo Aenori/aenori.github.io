@@ -47,6 +47,27 @@ A noter que ce tutoriel a été réalisé sur le repository :
 Vous pouvez trouvez l'état du repo à la fin de chaque étape avec le tag
 step_X_solution
 
+Pré-requis : installation sous linux
+------------------------------------
+
+Une petite subtilité sous linux est que vous devez ajouter votre utilisateur
+au groupe docker pour pouvoir lancer docker sans sudo (sinon vous aurez
+une erreur "permission denied"). Cela peut se faire avec les deux commandes
+ci-dessous :
+
+.. code-block:: shell
+
+    sudo groupadd docker
+    sudo usermod -aG docker $USER
+
+Et un petit redémarrage de votre pc plutôt, la commande groups devrait
+afficher (entre autre) docker :
+
+.. code-block:: shell
+
+    groups
+    > nicolas adm cdrom sudo dip plugdev lpadmin lxd sambashare docker
+
 Step 1 : image heroku
 ---------------------
 
