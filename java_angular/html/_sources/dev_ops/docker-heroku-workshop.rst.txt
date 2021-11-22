@@ -296,7 +296,10 @@ Et d'ajouter un fichier heroku.yml :
         docker:
             web: Dockerfile
     run:
-        web: mvn spring-boot:run
+        web: java -jar target/java-getting-started-1.0.jar
+
+En remplaçant java-getting-started-1.0.jar par le nom de votre jar (qui
+correspond au nom de votre projet)
 
 Pour rappel sous heroku, il est nécessaire d'avoir la configuration :
 
@@ -374,7 +377,7 @@ base de donnée.
 
 La solution avec l'appli par défaut heroku est disponible sous le tag :
 
-step_5_solution
+step_6_solution
 
 Step 7 : déploiement sous heroku
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

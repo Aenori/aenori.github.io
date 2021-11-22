@@ -266,9 +266,11 @@ utilisez docker pour votre déploiement :</p>
     docker:
         web: Dockerfile
 run:
-    web: mvn spring-boot:run
+    web: java -jar target/java-getting-started-1.0.jar
 </pre></div>
 </div>
+<p>En remplaçant java-getting-started-1.0.jar par le nom de votre jar (qui
+correspond au nom de votre projet)</p>
 <p>Pour rappel sous heroku, il est nécessaire d’avoir la configuration :</p>
 <div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>server.port=${PORT:8080}
 </pre></div>
@@ -331,7 +333,7 @@ db.</p>
 <p>Si vous avez des soucis, ils seront principalement dus au paramêtrage de la
 base de donnée.</p>
 <p>La solution avec l’appli par défaut heroku est disponible sous le tag :</p>
-<p>step_5_solution</p>
+<p>step_6_solution</p>
 </section>
 <section id="step-7-deploiement-sous-heroku">
 <h3>Step 7 : déploiement sous heroku<a class="headerlink" href="#step-7-deploiement-sous-heroku" title="Lien permanent vers ce titre">¶</a></h3>
