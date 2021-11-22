@@ -126,7 +126,10 @@ Dedans ajoutez ces 2 lignes :
 .. code-block:: dockerfile
 
     FROM heroku/heroku:20
-    RUN apt-get install maven
+    RUN apt-get install -y maven
+
+Le -y signifie de ne pas demander de prompt pour savoir si il faut installer
+les packages au dessus dúne certaine taille (c'est l'abréviation de yes)
 
 Maintenant lancez le build avec la commande suivante :
 

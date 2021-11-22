@@ -138,9 +138,11 @@ si vous êtes plusieurs sur un même repo)</p>
 <p>Créez un fichier Dockerfile (tel quel, sans extension) à la racine du projet.
 Dedans ajoutez ces 2 lignes :</p>
 <div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="s">heroku/heroku:20</span>
-<span class="k">RUN</span> apt-get install maven
+<span class="k">RUN</span> apt-get install -y maven
 </pre></div>
 </div>
+<p>Le -y signifie de ne pas demander de prompt pour savoir si il faut installer
+les packages au dessus dúne certaine taille (c’est l’abréviation de yes)</p>
 <p>Maintenant lancez le build avec la commande suivante :</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker build .
 </pre></div>
