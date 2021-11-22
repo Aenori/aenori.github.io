@@ -1,5 +1,69 @@
 Index
 =====
 
-TODO
+Les indexes sont des structures de recherches, analogue au TreeSet en java.
+On peut voir lorsque l'on regarde la structure d'une table (le CREATE, ou
+**\d+** lorsque vous êtes dans la console)
+
+Ils sont nécessaire pour faire des requêtes de type :
+
+.. code-block:: postgres
+
+    SELECT * FROM cerebook_user WHERE username = ?
+
+Ce type de requête peut se résoudre de deux façons différentes, en
+parcourant toute la table (ce qui s'appelle un full scan) ou en parcourant
+un index.
+
+Pour une table de 1 000 000 de lignes, où la profondeur de l'index est de
+maximum 40, le fullscan est donc 25 000 fois plus lent.
+
+!! Une requête qui ne renvoit qu'une (ou quelques lignes) doit avoir un index
+associé
+
+Commande explain
+^^^^^^^^^^^^^^^^
+
+On peut utiliser la commande *explain* avec postgres pour savoir si une
+requête va utiliser un index ou non. Par exemple, sur une table cerebook_user
+qui possède un index sur *username* et pas sur name, elle produit ces
+résultats.
+
+.. code-block:: postgres
+
+    postgres=# explain SELECT * FROM cerebook_user WHERE username = 'thor';
+                            QUERY PLAN
+    -----------------------------------------------------------------------------------------------------
+    Index Scan using uk_f1gupnn2y0q4dqvc1wfpi1hw0 on cerebook_user  (cost=0.14..8.15 rows=1 width=2068)
+        Index Cond: ((username)::text = 'thor'::text)
+    (2 rows)
+
+    postgres=# explain SELECT * FROM cerebook_user WHERE name = 'thor';
+                            QUERY PLAN
+    -----------------------------------------------------------------
+    Seq Scan on cerebook_user  (cost=0.00..10.38 rows=1 width=2068)
+        Filter: ((name)::text = 'thor'::text)
+
+On voit que la première requête utilise un index, tandis que la deuxième
+utilise un seq scan (= full scan). Les requêtes qui utilisent des seq scan
+doivent être utilisées avec la plus grande parcimonie.
+
+Index dans la description de la table
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: postgres
+
+    Indexes:
+        "cerebook_user_pkey" PRIMARY KEY, btree (id)
+        "uk_f1gupnn2y0q4dqvc1wfpi1hw0" UNIQUE CONSTRAINT, btree (username)
+
+Ici on peut voir que la table possède deux index, un sur le *id*, du au fait
+que c'est la primary key, et un autre sur le username, du au fait qu'il y a
+une contrainte d'unicité.
+
+**Une contrainte d'unicité nécessite obligatoirement un index**
+
+Effectivement, le fait d'avoir une contrainte d'unicité implique de vérifier
+à l'insertion si la valeur concernée existe déjà, ce qui serait beaucoup trop
+long sans index.
 

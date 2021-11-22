@@ -9,3 +9,4 @@ procécures de qualité, au déploiement, à l'automatisation des tests.
    dev_ops/git
    dev_ops/docker
    dev_ops/integration_continue
+   dev_ops/docker-heroku-workshop

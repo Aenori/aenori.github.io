@@ -1,0 +1,427 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>Docker-heroku-workshop &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="prev" title="Intégration continue" href="integration_continue.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="integration_continue.html" title="Intégration continue"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../dev_ops.html" accesskey="U">Dev ops</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Docker-heroku-workshop</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="docker-heroku-workshop">
+<h1>Docker-heroku-workshop<a class="headerlink" href="#docker-heroku-workshop" title="Lien permanent vers ce titre">¶</a></h1>
+<section id="resume">
+<h2>Résumé<a class="headerlink" href="#resume" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Docker est un système de machine virtuelle légère. La principale différence
+avec une machine virtuelle et qu’un docker fonctionne sur un OS analogue
+(principalement linux) et évite la virtualisation des ressources.</p>
+<p>Vous trouverez un schéma explicatif ici :</p>
+<p><a class="reference external" href="https://www.lebigdata.fr/wp-content/uploads/2018/05/docker-avantages-800x453.jpg">Docker VS VM</a></p>
+<p>Issue de cet article :</p>
+<p><a class="reference external" href="https://www.lebigdata.fr/docker-definition">Docker avantages</a></p>
+<p>Cela permet de s’extraire des dépendances au système d’exploitation. C’est notamment extrêmement
+utile si vous développez sous windows et déployez sous linux.</p>
+</section>
+</section>
+<section id="workshop">
+<h1>Workshop<a class="headerlink" href="#workshop" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Dans ce workshop nous allons partir de votre projet et le déployez sous heroku.</p>
+<section id="pre-requis">
+<h2>Pré-requis<a class="headerlink" href="#pre-requis" title="Lien permanent vers ce titre">¶</a></h2>
+<p>1. Avoir un projet spring qui fonctionne avec une connection à une base de
+donnée postgresql.</p>
+<ol class="arabic simple" start="2">
+<li><p>Avoir un compte heroku et heroku cli (command line interface)</p></li>
+<li><p>Avoir docker installé</p></li>
+</ol>
+<p>Pour le premier point, vous pouvez utiliser l’application sample d’heroku :
+<a class="reference external" href="https://github.com/heroku/java-getting-started">Heroku sample app</a></p>
+<p>Pour le deuxième vous pouvez suivre le tutorial :
+<a class="reference external" href="https://devcenter.heroku.com/articles/heroku-cli">Heroku CLI tutorial</a></p>
+<p>A noter que ce tutoriel a été réalisé sur le repository :</p>
+<p><a class="reference external" href="https://github.com/Aenori/docker-heroku-workshop">Github repository :</a></p>
+<p>Vous pouvez trouvez l’état du repo à la fin de chaque étape avec le tag
+step_X_solution</p>
+</section>
+<section id="step-1-image-heroku">
+<h2>Step 1 : image heroku<a class="headerlink" href="#step-1-image-heroku" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Sous docker une image est un kernel linux avec un certain nombre de
+programmes / fichiers.</p>
+<p>Dans ce tutoriel, nous allons utiliser l’image heroku/heroku:20,
+l’image heroku/heroku:20, c’est à dire une des images sur lesquelles heroku
+fait tourner les applications hébergées.</p>
+<p>Le premier heroku correspond au repository, ie celui d’heroku
+Le deuxième au nom de l’image
+Le :20 indique la version. Cela correspond à la version de la stack</p>
+<img alt="../_images/heroku_stack_20.png" src="../_images/heroku_stack_20.png" />
+<p>Vous pouvez la télećharger avec la commande :</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span>docker pull heroku/heroku:20
+</pre></div>
+</div>
+<p>A noter que cela est fait automatiquement lorsque vous l’indiquez comme base
+de votre fichier Docerfile. Si on veut voir comment elle est construite,
+utilisez la commande :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run heroku/heroku:20 lsb_release -a
+</pre></div>
+</div>
+<p>Où <em>lsb_release -a</em> est une commande linux pour afficher la version de l’OS.
+La commande <em>docker run heroku/heroku:20</em> signifie que l’on veut lancer une
+commande dans un container créé à partir de l’image <em>heroku/heroku:20</em></p>
+</section>
+<section id="step-2-connect-to-heroku-image">
+<h2>Step 2 : connect to heroku image<a class="headerlink" href="#step-2-connect-to-heroku-image" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Si vous voulez tester des commandes dans l’image heroku, la commande est :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -it heroku/heroku:20 bash
+</pre></div>
+</div>
+<p>C’est un excellent entrainement à l’administartion de serveurs distants en
+ssh !</p>
+</section>
+<section id="step-3-local-sans-db">
+<h2>Step 3 : local sans db<a class="headerlink" href="#step-3-local-sans-db" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Commencez par créez une branche « docker » dans votre repo git (ou une variante
+si vous êtes plusieurs sur un même repo)</p>
+<p>Créez un fichier Dockerfile (tel quel, sans extension) à la racine du projet.
+Dedans ajoutez ces 2 lignes :</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="s">heroku/heroku:20</span>
+<span class="k">RUN</span> apt-get install maven
+</pre></div>
+</div>
+<p>Maintenant lancez le build avec la commande suivante :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker build .
+</pre></div>
+</div>
+<p>A noter le point <strong>.*</strong> qui indique en linux le répertoire courant. On peut
+spećifier le docker file à utiliser avec l’option -f, sinon docker utilise le
+fichier <em>Dockerfile</em> par défaut (d’où l’importance de bien respecter la
+convention de nomage)</p>
+<p>Normanelement vous devez avoir un bug :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>Sending build context to Docker daemon  <span class="m">380</span>.4kB
+Step <span class="m">1</span>/2 : FROM heroku/heroku:20
+---&gt; 9cfa89b60302
+Step <span class="m">2</span>/2 : RUN apt-get install -y maven
+---&gt; Running <span class="k">in</span> ef3aac297145
+Reading package lists...
+Building dependency tree...
+Reading state information...
+E: Unable to locate package maven
+The <span class="nb">command</span> <span class="s1">&#39;/bin/sh -c apt-get install -y maven&#39;</span> returned a non-zero code: <span class="m">100</span>
+</pre></div>
+</div>
+<p>Que se passe-t-il ? Essayez de corriger le problème par vous-même avant de
+passer à l’étape suivante.</p>
+<section id="step-3-1-local-sans-db">
+<h3>Step 3.1 : local sans db<a class="headerlink" href="#step-3-1-local-sans-db" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Normalement vous avez trouver qu’il manque apt-get update avant le apt-get
+install. En effet un docker est un kernel linux réduit au minimum, il n’y a
+donc pas les listing des modules et des repository associés.</p>
+<p>C’est une des difficultés de la manipulation des docker, à savoir que
+beaucoup de pré-requis habituellement présents sur les OS (comme des
+compilateurs) ne sont pas disponibles par défaut.</p>
+<p>Complétez le dockerfile ainsi :</p>
+<div class="highlight-dockerfile notranslate"><div class="highlight"><pre><span></span><span class="k">FROM</span> <span class="s">heroku/heroku:20</span>
+
+<span class="k">RUN</span> apt-get update
+<span class="k">RUN</span> apt-get install -y maven
+
+<span class="k">RUN</span> mkdir /app
+<span class="k">ADD</span> pom.xml /app/pom.xml
+<span class="k">WORKDIR</span><span class="s"> /app</span>
+
+<span class="k">RUN</span> mvn dependency:resolve
+
+<span class="k">ADD</span> . /app
+<span class="k">RUN</span> mvn install
+
+<span class="k">CMD</span> mvn spring-boot:run
+</pre></div>
+</div>
+<p>La commande ADD ajoute le répertoire courant (où se trouve votre projet) dans
+l’image au chemin /app. Le workdir le défini comme répertoire par défaut.
+Enfin la commande CMD (pour commande) défini la commande par défaut de cette
+image.</p>
+<p>Construisez votre image avec la commande suivante :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker build . -t heroku_local
+</pre></div>
+</div>
+<p>Le . signifie que l’on veut construire le répertoire courant. Par défaut le
+fichier utilisé est Dockerfile, vous pouvez le spécifiez en utilisant l’option
+<em>-f Dockerfile_appele_comme_vous_voulez</em></p>
+<p>Le <em>-t heroku_local</em> indique que vous voulez taguez l’image comme étant nommé
+heroku_local, ce qui vous permettra de le lancer avec la commande :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run heroku_local
+</pre></div>
+</div>
+</section>
+<section id="step-3-2-desactivation-de-la-db">
+<h3>Step 3.2 : désactivation de la db<a class="headerlink" href="#step-3-2-desactivation-de-la-db" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ne vous inquiétez pas, c’est temporaire, et il ne s’agit en fait de remplacer
+postgres par h2. Pour cela, il faut indiquer ceci dans votre fichier
+application-properties (ou celui associé à votre profil) en enlevant toute
+référence à postgres.</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.username=sa
+spring.datasource.password=
+spring.datasource.driver-class-name=org.h2.Driver
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+</pre></div>
+</div>
+<p>Maintenant vous pouvez lancer votre container ainsi :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">8080</span>:8080 --name my_container -it heroku_local
+</pre></div>
+</div>
+<p>L’option –name vous permet de stopper le container avec la commande :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker stop my_container
+</pre></div>
+</div>
+<p>Ou de vous y connectez avec la commande :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker <span class="nb">exec</span> -it my_container bash
+</pre></div>
+</div>
+<p>L’option -p signifie que vous faites un lien entre le port 8080 du container
+et celui de votre ordinateur (le lien n’est pas fait par défaut).</p>
+<p>Vous pouvez éventuellement avoir à modifier les valeurs suivant la
+configuration de vos fichiers (il faut que cela correspond au port que vous
+utilisiez habituellement)</p>
+<p>Félicitations, vous avez lancer votre propre container !</p>
+<p>La solution avec l’appli par défaut heroku est disponible sous le tag :</p>
+<p>step_3_solution</p>
+</section>
+<section id="step-4-ajout-des-volumes">
+<h3>Step 4 : ajout des volumes<a class="headerlink" href="#step-4-ajout-des-volumes" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Un défaut de cette configuration est que le code du container n’est pas mis
+à jour au moment où vous modifiez votre code en local (donc pas de prise en
+compte des modifications locales). Pour corriger cela, il faut rajouter un
+volume au moment de lancer votre container :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">8080</span>:8080 --name my_container -it -v <span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>:/app heroku_local
+</pre></div>
+</div>
+<p>Relancez votre container et vérifier bien que si vous modifiez votre README
+par exemple, la modification est bien visible par le container. Vous pouvez
+vérifier avec la commande suivante :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker <span class="nb">exec</span> my_container cat /app/README
+</pre></div>
+</div>
+<p>Ou en vous connectant à votre container :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker <span class="nb">exec</span> -it my_container bash
+</pre></div>
+</div>
+<p>Pas de solution ici, puisqu’il n’y a pas de modification du code.</p>
+</section>
+<section id="step-5-deploiement-sous-heroku">
+<h3>Step 5 : Déploiement sous Heroku<a class="headerlink" href="#step-5-deploiement-sous-heroku" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Maintenant que vous avez votre application qui tourne sous Docker, vous pouvez
+la déployer sous heroku.</p>
+<p>Lier votre projet à votre application heroku (cela peut se faire avec la
+commande suivante) :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>heroku git:remote -a aenori-docker
+</pre></div>
+</div>
+<p>Ensuite vous pouvez suivre ce tutoriel :</p>
+<p><a href="#id1"><span class="problematic" id="id2">`</span></a>Tutoriel docker heroku <a href="#id3"><span class="problematic" id="id4">`</span></a><a class="reference external" href="https://devcenter.heroku.com/articles/build-docker-images-heroku-yml">https://devcenter.heroku.com/articles/build-docker-images-heroku-yml</a>&gt; <a href="#id5"><span class="problematic" id="id6">`</span></a>_</p>
+<p>Qui en résumé peut se réduire à exécuter cette commande pour définir que vous
+utilisez docker pour votre déploiement :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>heroku stack:set container
+</pre></div>
+</div>
+<p>Et d’ajouter un fichier heroku.yml :</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>build:
+    docker:
+        web: Dockerfile
+run:
+    web: mvn spring-boot:run
+</pre></div>
+</div>
+<p>Pour rappel sous heroku, il est nécessaire d’avoir la configuration :</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>server.port=${PORT:8080}
+</pre></div>
+</div>
+<p>Ou vous pouvez changer la valeur par défaut (ici 8080)</p>
+<p>La solution avec l’appli par défaut heroku est disponible sous le tag :</p>
+<p>step_5_solution</p>
+</section>
+<section id="step-6-remise-de-postgres-en-local">
+<h3>Step 6 : Remise de postgres en local<a class="headerlink" href="#step-6-remise-de-postgres-en-local" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Pour ajouter postgres, nous allons avoir besoin d’un élément supplémentaire,
+le docker-compose.yml. En effet la méthode classique pour lier un container
+à une base de donnée est de la faire tourner elle-même dans un container.</p>
+<p>Pour cela on va avoir besoin d’un fichier un peu complexe, le
+docker-compose.yml en le configurant comme cela :</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>version: <span class="s1">&#39;3&#39;</span>
+services:
+    web:
+        build: .
+        ports:
+            - <span class="s2">&quot;8080:8080&quot;</span>
+        depends_on:
+            - db
+        environment:
+            PORT: <span class="mi">8080</span>
+            JDBC_DATABASE_URL: postgresql://db:5432/postgres
+            DATABASE_USERNAME: postgres
+            DATABASE_PASSWORD: postgres
+        command: mvn spring-boot:run
+        volumes:
+            - .:/app
+            - maven_repository:/root/.m2
+
+db:
+    image: <span class="s2">&quot;postgres:13-alpine&quot;</span>
+    ports:
+        - <span class="s2">&quot;5433:5432&quot;</span>
+    environment:
+        POSTGRES_PASSWORD: postgres
+    volumes:
+        - postgres_volume:/var/lib/postgresql/data
+
+volumes:
+    postgres_volume:
+        driver: local
+    maven_repository:
+        driver: local
+</pre></div>
+</div>
+<p>Ici nous définissons des services. Chaque service correspond à un container
+dont le hostname est le nom du service, par exemple, c’est parce que l’on a
+nommé le service avec postgres db que l’adresse de connection est
+postgresql://db:5432/postgres.</p>
+<p>Maintenant, vous pouvez lancez votre projet en local en lançant la commande :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker-compose up web
+</pre></div>
+</div>
+<p>Comme on a indiqué que web dépend de db, lancez web lancera automatiquement la
+db.</p>
+<p>Si vous avez des soucis, ils seront principalement dus au paramêtrage de la
+base de donnée.</p>
+<p>La solution avec l’appli par défaut heroku est disponible sous le tag :</p>
+<p>step_5_solution</p>
+</section>
+<section id="step-7-deploiement-sous-heroku">
+<h3>Step 7 : déploiement sous heroku<a class="headerlink" href="#step-7-deploiement-sous-heroku" title="Lien permanent vers ce titre">¶</a></h3>
+<p>!Important : le fichier docker-compose.yml n’est pas nécessaire au déploiement
+sous heroku. Il permet juste d’avoir une base postgres sous docker en local et
+donc d’utiliser la même configuration en local et sous heroku.</p>
+<p>Déployez maintenant votre application sous heroku, en veillant à avoir une
+base de donnée postgres (gratuite).</p>
+<p>Les difficultés rencontrées seront surtout liées à la configuration de la base
+de donnée, heroku créé une variable DATABASE_URL de la forme :</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>postgres://username:password@hostname:port
+</pre></div>
+</div>
+<p>Qu’il peut être nécessaire de sáparer en 3 (connection à la base de donnée sans
+username / password + 2 variables pour les usernames et passwords).</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Docker-heroku-workshop</a><ul>
+<li><a class="reference internal" href="#resume">Résumé</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#workshop">Workshop</a><ul>
+<li><a class="reference internal" href="#pre-requis">Pré-requis</a></li>
+<li><a class="reference internal" href="#step-1-image-heroku">Step 1 : image heroku</a></li>
+<li><a class="reference internal" href="#step-2-connect-to-heroku-image">Step 2 : connect to heroku image</a></li>
+<li><a class="reference internal" href="#step-3-local-sans-db">Step 3 : local sans db</a><ul>
+<li><a class="reference internal" href="#step-3-1-local-sans-db">Step 3.1 : local sans db</a></li>
+<li><a class="reference internal" href="#step-3-2-desactivation-de-la-db">Step 3.2 : désactivation de la db</a></li>
+<li><a class="reference internal" href="#step-4-ajout-des-volumes">Step 4 : ajout des volumes</a></li>
+<li><a class="reference internal" href="#step-5-deploiement-sous-heroku">Step 5 : Déploiement sous Heroku</a></li>
+<li><a class="reference internal" href="#step-6-remise-de-postgres-en-local">Step 6 : Remise de postgres en local</a></li>
+<li><a class="reference internal" href="#step-7-deploiement-sous-heroku">Step 7 : déploiement sous heroku</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="integration_continue.html"
+                        title="Chapitre précédent">Intégration continue</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/dev_ops/docker-heroku-workshop.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="integration_continue.html" title="Intégration continue"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../dev_ops.html" >Dev ops</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Docker-heroku-workshop</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>

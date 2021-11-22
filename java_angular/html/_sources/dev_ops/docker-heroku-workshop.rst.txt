@@ -1,0 +1,399 @@
+Docker-heroku-workshop
+======================
+
+Résumé
+------
+
+Docker est un système de machine virtuelle légère. La principale différence
+avec une machine virtuelle et qu'un docker fonctionne sur un OS analogue
+(principalement linux) et évite la virtualisation des ressources.
+
+Vous trouverez un schéma explicatif ici :
+
+`Docker VS VM <https://www.lebigdata.fr/wp-content/uploads/2018/05/docker-avantages-800x453.jpg>`_
+
+Issue de cet article :
+
+`Docker avantages <https://www.lebigdata.fr/docker-definition>`_
+
+Cela permet de s'extraire des dépendances au système d'exploitation. C'est notamment extrêmement
+utile si vous développez sous windows et déployez sous linux.
+
+Workshop
+========
+
+Dans ce workshop nous allons partir de votre projet et le déployez sous heroku.
+
+Pré-requis
+----------
+
+1. Avoir un projet spring qui fonctionne avec une connection à une base de
+donnée postgresql.
+
+2. Avoir un compte heroku et heroku cli (command line interface)
+
+3. Avoir docker installé
+
+Pour le premier point, vous pouvez utiliser l'application sample d'heroku :
+`Heroku sample app <https://github.com/heroku/java-getting-started>`_
+
+Pour le deuxième vous pouvez suivre le tutorial :
+`Heroku CLI tutorial <https://devcenter.heroku.com/articles/heroku-cli>`_
+
+A noter que ce tutoriel a été réalisé sur le repository :
+
+`Github repository : <https://github.com/Aenori/docker-heroku-workshop>`_
+
+Vous pouvez trouvez l'état du repo à la fin de chaque étape avec le tag
+step_X_solution
+
+Step 1 : image heroku
+---------------------
+
+Sous docker une image est un kernel linux avec un certain nombre de
+programmes / fichiers.
+
+Dans ce tutoriel, nous allons utiliser l'image heroku/heroku:20,
+l'image heroku/heroku:20, c'est à dire une des images sur lesquelles heroku
+fait tourner les applications hébergées.
+
+Le premier heroku correspond au repository, ie celui d'heroku
+Le deuxième au nom de l'image
+Le :20 indique la version. Cela correspond à la version de la stack
+
+.. image:: img/heroku_stack_20.png
+
+Vous pouvez la télećharger avec la commande :
+
+.. code-block:: dockerfile
+
+    docker pull heroku/heroku:20
+
+A noter que cela est fait automatiquement lorsque vous l'indiquez comme base
+de votre fichier Docerfile. Si on veut voir comment elle est construite,
+utilisez la commande :
+
+.. code-block:: shell
+
+    docker run heroku/heroku:20 lsb_release -a
+
+Où *lsb_release -a* est une commande linux pour afficher la version de l'OS.
+La commande *docker run heroku/heroku:20* signifie que l'on veut lancer une
+commande dans un container créé à partir de l'image *heroku/heroku:20*
+
+Step 2 : connect to heroku image
+--------------------------------
+
+Si vous voulez tester des commandes dans l'image heroku, la commande est :
+
+.. code-block:: shell
+
+    docker run -it heroku/heroku:20 bash
+
+C'est un excellent entrainement à l'administartion de serveurs distants en
+ssh !
+
+Step 3 : local sans db
+----------------------
+
+Commencez par créez une branche "docker" dans votre repo git (ou une variante
+si vous êtes plusieurs sur un même repo)
+
+Créez un fichier Dockerfile (tel quel, sans extension) à la racine du projet.
+Dedans ajoutez ces 2 lignes :
+
+.. code-block:: dockerfile
+
+    FROM heroku/heroku:20
+    RUN apt-get install maven
+
+Maintenant lancez le build avec la commande suivante :
+
+.. code-block:: shell
+
+    docker build .
+
+A noter le point **.*** qui indique en linux le répertoire courant. On peut
+spećifier le docker file à utiliser avec l'option -f, sinon docker utilise le
+fichier *Dockerfile* par défaut (d'où l'importance de bien respecter la
+convention de nomage)
+
+Normanelement vous devez avoir un bug :
+
+.. code-block:: shell
+
+    Sending build context to Docker daemon  380.4kB
+    Step 1/2 : FROM heroku/heroku:20
+    ---> 9cfa89b60302
+    Step 2/2 : RUN apt-get install -y maven
+    ---> Running in ef3aac297145
+    Reading package lists...
+    Building dependency tree...
+    Reading state information...
+    E: Unable to locate package maven
+    The command '/bin/sh -c apt-get install -y maven' returned a non-zero code: 100
+
+Que se passe-t-il ? Essayez de corriger le problème par vous-même avant de
+passer à l'étape suivante.
+
+Step 3.1 : local sans db
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Normalement vous avez trouver qu'il manque apt-get update avant le apt-get
+install. En effet un docker est un kernel linux réduit au minimum, il n'y a
+donc pas les listing des modules et des repository associés.
+
+C'est une des difficultés de la manipulation des docker, à savoir que
+beaucoup de pré-requis habituellement présents sur les OS (comme des
+compilateurs) ne sont pas disponibles par défaut.
+
+Complétez le dockerfile ainsi :
+
+.. code-block:: dockerfile
+
+    FROM heroku/heroku:20
+
+    RUN apt-get update
+    RUN apt-get install -y maven
+
+    RUN mkdir /app
+    ADD pom.xml /app/pom.xml
+    WORKDIR /app
+
+    RUN mvn dependency:resolve
+
+    ADD . /app
+    RUN mvn install
+
+    CMD mvn spring-boot:run
+
+La commande ADD ajoute le répertoire courant (où se trouve votre projet) dans
+l'image au chemin /app. Le workdir le défini comme répertoire par défaut.
+Enfin la commande CMD (pour commande) défini la commande par défaut de cette
+image.
+
+Construisez votre image avec la commande suivante :
+
+.. code-block:: shell
+
+    docker build . -t heroku_local
+
+Le . signifie que l'on veut construire le répertoire courant. Par défaut le
+fichier utilisé est Dockerfile, vous pouvez le spécifiez en utilisant l'option
+*-f Dockerfile_appele_comme_vous_voulez*
+
+Le *-t heroku_local* indique que vous voulez taguez l'image comme étant nommé
+heroku_local, ce qui vous permettra de le lancer avec la commande :
+
+.. code-block:: shell
+
+    docker run heroku_local
+
+Step 3.2 : désactivation de la db
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Ne vous inquiétez pas, c'est temporaire, et il ne s'agit en fait de remplacer
+postgres par h2. Pour cela, il faut indiquer ceci dans votre fichier
+application-properties (ou celui associé à votre profil) en enlevant toute
+référence à postgres.
+
+.. code-block:: kconfig
+
+    spring.datasource.url=jdbc:h2:mem:testdb
+    spring.datasource.username=sa
+    spring.datasource.password=
+    spring.datasource.driver-class-name=org.h2.Driver
+    spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+
+Maintenant vous pouvez lancer votre container ainsi :
+
+.. code-block:: shell
+
+    docker run -p 8080:8080 --name my_container -it heroku_local
+
+L'option --name vous permet de stopper le container avec la commande :
+
+.. code-block:: shell
+
+    docker stop my_container
+
+Ou de vous y connectez avec la commande :
+
+.. code-block:: shell
+
+    docker exec -it my_container bash
+
+L'option -p signifie que vous faites un lien entre le port 8080 du container
+et celui de votre ordinateur (le lien n'est pas fait par défaut).
+
+Vous pouvez éventuellement avoir à modifier les valeurs suivant la
+configuration de vos fichiers (il faut que cela correspond au port que vous
+utilisiez habituellement)
+
+Félicitations, vous avez lancer votre propre container !
+
+La solution avec l'appli par défaut heroku est disponible sous le tag :
+
+step_3_solution
+
+Step 4 : ajout des volumes
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Un défaut de cette configuration est que le code du container n'est pas mis
+à jour au moment où vous modifiez votre code en local (donc pas de prise en
+compte des modifications locales). Pour corriger cela, il faut rajouter un
+volume au moment de lancer votre container :
+
+.. code-block:: shell
+
+    docker run -p 8080:8080 --name my_container -it -v $(pwd):/app heroku_local
+
+Relancez votre container et vérifier bien que si vous modifiez votre README
+par exemple, la modification est bien visible par le container. Vous pouvez
+vérifier avec la commande suivante :
+
+.. code-block:: shell
+
+    docker exec my_container cat /app/README
+
+Ou en vous connectant à votre container :
+
+.. code-block:: shell
+
+    docker exec -it my_container bash
+
+Pas de solution ici, puisqu'il n'y a pas de modification du code.
+
+Step 5 : Déploiement sous Heroku
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Maintenant que vous avez votre application qui tourne sous Docker, vous pouvez
+la déployer sous heroku.
+
+Lier votre projet à votre application heroku (cela peut se faire avec la
+commande suivante) :
+
+.. code-block:: shell
+
+    heroku git:remote -a aenori-docker
+
+Ensuite vous pouvez suivre ce tutoriel :
+
+`Tutoriel docker heroku `https://devcenter.heroku.com/articles/build-docker-images-heroku-yml> `_
+
+Qui en résumé peut se réduire à exécuter cette commande pour définir que vous
+utilisez docker pour votre déploiement :
+
+.. code-block:: shell
+
+    heroku stack:set container
+
+Et d'ajouter un fichier heroku.yml :
+
+.. code-block:: kconfig
+
+    build:
+        docker:
+            web: Dockerfile
+    run:
+        web: mvn spring-boot:run
+
+Pour rappel sous heroku, il est nécessaire d'avoir la configuration :
+
+.. code-block:: kconfig
+
+    server.port=${PORT:8080}
+
+Ou vous pouvez changer la valeur par défaut (ici 8080)
+
+La solution avec l'appli par défaut heroku est disponible sous le tag :
+
+step_5_solution
+
+Step 6 : Remise de postgres en local
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pour ajouter postgres, nous allons avoir besoin d'un élément supplémentaire,
+le docker-compose.yml. En effet la méthode classique pour lier un container
+à une base de donnée est de la faire tourner elle-même dans un container.
+
+Pour cela on va avoir besoin d'un fichier un peu complexe, le
+docker-compose.yml en le configurant comme cela :
+
+.. code-block:: kconfig
+
+    version: '3'
+    services:
+        web:
+            build: .
+            ports:
+                - "8080:8080"
+            depends_on:
+                - db
+            environment:
+                PORT: 8080
+                JDBC_DATABASE_URL: postgresql://db:5432/postgres
+                DATABASE_USERNAME: postgres
+                DATABASE_PASSWORD: postgres
+            command: mvn spring-boot:run
+            volumes:
+                - .:/app
+                - maven_repository:/root/.m2
+
+    db:
+        image: "postgres:13-alpine"
+        ports:
+            - "5433:5432"
+        environment:
+            POSTGRES_PASSWORD: postgres
+        volumes:
+            - postgres_volume:/var/lib/postgresql/data
+
+    volumes:
+        postgres_volume:
+            driver: local
+        maven_repository:
+            driver: local
+
+Ici nous définissons des services. Chaque service correspond à un container
+dont le hostname est le nom du service, par exemple, c'est parce que l'on a
+nommé le service avec postgres db que l'adresse de connection est
+postgresql://db:5432/postgres.
+
+Maintenant, vous pouvez lancez votre projet en local en lançant la commande :
+
+.. code-block:: shell
+
+    docker-compose up web
+
+Comme on a indiqué que web dépend de db, lancez web lancera automatiquement la
+db.
+
+Si vous avez des soucis, ils seront principalement dus au paramêtrage de la
+base de donnée.
+
+La solution avec l'appli par défaut heroku est disponible sous le tag :
+
+step_5_solution
+
+Step 7 : déploiement sous heroku
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+!Important : le fichier docker-compose.yml n'est pas nécessaire au déploiement
+sous heroku. Il permet juste d'avoir une base postgres sous docker en local et
+donc d'utiliser la même configuration en local et sous heroku.
+
+Déployez maintenant votre application sous heroku, en veillant à avoir une
+base de donnée postgres (gratuite).
+
+Les difficultés rencontrées seront surtout liées à la configuration de la base
+de donnée, heroku créé une variable DATABASE_URL de la forme :
+
+.. code-block:: kconfig
+
+    postgres://username:password@hostname:port
+
+Qu'il peut être nécessaire de sáparer en 3 (connection à la base de donnée sans
+username / password + 2 variables pour les usernames et passwords).
+
+

@@ -51,7 +51,59 @@
             
   <section id="index">
 <h1>Index<a class="headerlink" href="#index" title="Lien permanent vers ce titre">¶</a></h1>
-<p>TODO</p>
+<p>Les indexes sont des structures de recherches, analogue au TreeSet en java.
+On peut voir lorsque l’on regarde la structure d’une table (le CREATE, ou
+<strong>d+</strong> lorsque vous êtes dans la console)</p>
+<p>Ils sont nécessaire pour faire des requêtes de type :</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">cerebook_user</span> <span class="k">WHERE</span> <span class="n">username</span> <span class="o">=</span> <span class="o">?</span>
+</pre></div>
+</div>
+<p>Ce type de requête peut se résoudre de deux façons différentes, en
+parcourant toute la table (ce qui s’appelle un full scan) ou en parcourant
+un index.</p>
+<p>Pour une table de 1 000 000 de lignes, où la profondeur de l’index est de
+maximum 40, le fullscan est donc 25 000 fois plus lent.</p>
+<p>!! Une requête qui ne renvoit qu’une (ou quelques lignes) doit avoir un index
+associé</p>
+<section id="commande-explain">
+<h2>Commande explain<a class="headerlink" href="#commande-explain" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On peut utiliser la commande <em>explain</em> avec postgres pour savoir si une
+requête va utiliser un index ou non. Par exemple, sur une table cerebook_user
+qui possède un index sur <em>username</em> et pas sur name, elle produit ces
+résultats.</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span> <span class="k">explain</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">cerebook_user</span> <span class="k">WHERE</span> <span class="n">username</span> <span class="o">=</span> <span class="s1">&#39;thor&#39;</span><span class="p">;</span>
+                        <span class="n">QUERY</span> <span class="n">PLAN</span>
+<span class="c1">-----------------------------------------------------------------------------------------------------</span>
+<span class="k">Index</span> <span class="n">Scan</span> <span class="k">using</span> <span class="n">uk_f1gupnn2y0q4dqvc1wfpi1hw0</span> <span class="k">on</span> <span class="n">cerebook_user</span>  <span class="p">(</span><span class="k">cost</span><span class="o">=</span><span class="mf">0.14..8.15</span> <span class="k">rows</span><span class="o">=</span><span class="mf">1</span> <span class="n">width</span><span class="o">=</span><span class="mf">2068</span><span class="p">)</span>
+    <span class="k">Index</span> <span class="n">Cond</span><span class="p">:</span> <span class="p">((</span><span class="n">username</span><span class="p">)</span><span class="o">::</span><span class="nb">text</span> <span class="o">=</span> <span class="s1">&#39;thor&#39;</span><span class="o">::</span><span class="nb">text</span><span class="p">)</span>
+<span class="p">(</span><span class="mf">2</span> <span class="k">rows</span><span class="p">)</span>
+
+<span class="n">postgres</span><span class="o">=#</span> <span class="k">explain</span> <span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">cerebook_user</span> <span class="k">WHERE</span> <span class="k">name</span> <span class="o">=</span> <span class="s1">&#39;thor&#39;</span><span class="p">;</span>
+                        <span class="n">QUERY</span> <span class="n">PLAN</span>
+<span class="c1">-----------------------------------------------------------------</span>
+<span class="n">Seq</span> <span class="n">Scan</span> <span class="k">on</span> <span class="n">cerebook_user</span>  <span class="p">(</span><span class="k">cost</span><span class="o">=</span><span class="mf">0.00..10.38</span> <span class="k">rows</span><span class="o">=</span><span class="mf">1</span> <span class="n">width</span><span class="o">=</span><span class="mf">2068</span><span class="p">)</span>
+    <span class="k">Filter</span><span class="p">:</span> <span class="p">((</span><span class="k">name</span><span class="p">)</span><span class="o">::</span><span class="nb">text</span> <span class="o">=</span> <span class="s1">&#39;thor&#39;</span><span class="o">::</span><span class="nb">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On voit que la première requête utilise un index, tandis que la deuxième
+utilise un seq scan (= full scan). Les requêtes qui utilisent des seq scan
+doivent être utilisées avec la plus grande parcimonie.</p>
+</section>
+<section id="index-dans-la-description-de-la-table">
+<h2>Index dans la description de la table<a class="headerlink" href="#index-dans-la-description-de-la-table" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">Indexes</span><span class="p">:</span>
+    <span class="s s-Name">&quot;cerebook_user_pkey&quot;</span> <span class="k">PRIMARY</span> <span class="k">KEY</span><span class="p">,</span> <span class="n">btree</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span>
+    <span class="s s-Name">&quot;uk_f1gupnn2y0q4dqvc1wfpi1hw0&quot;</span> <span class="k">UNIQUE</span> <span class="k">CONSTRAINT</span><span class="p">,</span> <span class="n">btree</span> <span class="p">(</span><span class="n">username</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Ici on peut voir que la table possède deux index, un sur le <em>id</em>, du au fait
+que c’est la primary key, et un autre sur le username, du au fait qu’il y a
+une contrainte d’unicité.</p>
+<p><strong>Une contrainte d’unicité nécessite obligatoirement un index</strong></p>
+<p>Effectivement, le fait d’avoir une contrainte d’unicité implique de vérifier
+à l’insertion si la valeur concernée existe déjà, ce qui serait beaucoup trop
+long sans index.</p>
+</section>
 </section>
 
 
@@ -61,6 +113,15 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Index</a><ul>
+<li><a class="reference internal" href="#commande-explain">Commande explain</a></li>
+<li><a class="reference internal" href="#index-dans-la-description-de-la-table">Index dans la description de la table</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Sujet précédent</h4>
   <p class="topless"><a href="transaction.html"
                         title="Chapitre précédent">Transaction</a></p>
