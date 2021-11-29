@@ -164,7 +164,7 @@ Tips : toutes vos instructions doivent commencer par objectMapper
 
 Vous pouvez trouvez la correction ci-dessous :
 
-`JacksonSerialisationTest.java <https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/external/JacksonSerialisationTest.java>`_
+`JacksonSerialisationTest.java (correction) <https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/external/JacksonSerialisationTest.java>`_
 
 Sérialisation et Spring
 -----------------------
