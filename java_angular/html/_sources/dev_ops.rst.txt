@@ -7,6 +7,6 @@ procécures de qualité, au déploiement, à l'automatisation des tests.
 
 .. toctree::
    dev_ops/git
-   dev_ops/docker
    dev_ops/integration_continue
-   dev_ops/docker-heroku-workshop
+   dev_ops/docker
+   dev_ops/docker_heroku_workshop

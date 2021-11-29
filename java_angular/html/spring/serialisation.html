@@ -1,0 +1,356 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>Serialisation &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Base de données" href="../base_de_donnee.html" />
+    <link rel="prev" title="Spring security - done" href="spring_security.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../base_de_donnee.html" title="Base de données"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="spring_security.html" title="Spring security - done"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../spring.html" accesskey="U">Spring</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Serialisation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="serialisation">
+<h1>Serialisation<a class="headerlink" href="#serialisation" title="Lien permanent vers ce titre">¶</a></h1>
+<section id="principe">
+<h2>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La sérialisation est un principe essentielle aux api, elles-mêmes nécessaires
+au RIA (Rich Internet Application) qui consiste à avoir en front-end une vraie
+application, et pas seulement des fichiers d’UX statiques.</p>
+<p>Cela consite à transformer un objet java en texte (ou en représentation
+intermédiaire de type json) afin de pouvoir transmettre cette représentation
+à une autre application (typiquement notre front-end angular, ou une
+application d’un client).</p>
+<p>Ainsi on convertira un objet comme :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span> <span class="p">{</span>
+    <span class="kd">private</span> <span class="n">Integer</span> <span class="n">id</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">hobbies</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>En (format json) :</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;Clark Kent&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;hobbies&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Saving the world&quot;</span><span class="p">,</span> <span class="s2">&quot;Journalism&quot;</span><span class="p">,</span> <span class="s2">&quot;Fashion hater&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ou (formal xml) :</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;User&gt;</span>
+    <span class="nt">&lt;id&gt;</span>1<span class="nt">&lt;/id&gt;</span>
+    <span class="nt">&lt;name&gt;</span>Clark Kent<span class="nt">&lt;/name&gt;</span>
+    <span class="nt">&lt;hobbies&gt;</span>
+        <span class="nt">&lt;hobbie&gt;</span>Saving the world<span class="nt">&lt;/hobbie&gt;</span>
+        <span class="nt">&lt;Hobbie&gt;</span>Journalism<span class="nt">&lt;/hobbie&gt;</span>
+        <span class="nt">&lt;Hobbie&gt;</span>Fashion hater<span class="nt">&lt;/hobbie&gt;</span>
+    <span class="nt">&lt;/hobbies&gt;</span>
+<span class="nt">&lt;/User&gt;</span>
+</pre></div>
+</div>
+<p>Comme vous pouvez le constater le xml est beaucoup plus verbeux, mais un peu
+plus précis (par défaut il n’y a pas de mention dans le json qu’il s’agit d’un
+objet de type « user » par exemple).</p>
+<p>Dans cette formation, nous utiliserons uniquement le format json, qui est
+largement prépondérant sur le web et les start-up. Xml et soap (son acronyme
+associé webservice) étant eux plus présent dans le domaine des grosses
+entreprises et des réseaux internes (Microsoft, SAP, par exemple)</p>
+<p>L’opération inverse de la sérialisation est la désérialisation, elle consiste
+à lire une format texte (String ou directement fichier) pour le convertir en
+objet java ou en représentation intermédiaire (Json)</p>
+</section>
+<section id="jackson-instructions-de-base">
+<h2>Jackson - instructions de base<a class="headerlink" href="#jackson-instructions-de-base" title="Lien permanent vers ce titre">¶</a></h2>
+<p>La librairie utilisée par défaut dans Spring est Jackson.
+Celle-ci peut être utilisée pour interroger des api (on aura besoin de
+désérialiser la réponse) ou pour produire des routes « REST ».</p>
+<p>Cette librairie est intégrée par défaut dans Spring, nul besoin de l’ajouter
+au pom.xml.</p>
+<section id="jsonnode">
+<h3>JsonNode<a class="headerlink" href="#jsonnode" title="Lien permanent vers ce titre">¶</a></h3>
+<p>L’objet utilisé pour représenter le Json de Jackson est le JsonNode. C’est un
+objet polymorphe qui peut s’adapter à toute structure, le revers de la
+médaille étant que c’est à vous de vérifier que vous respectez effectivement
+la structure de l’objet (comme en typage dynamique)</p>
+<p>Par exemple si vous avez un json comme ceci :</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span> <span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;participants&quot;</span> <span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nt">&quot;name&quot;</span> <span class="p">:</span> <span class="s2">&quot;Superman&quot;</span><span class="p">,</span>
+            <span class="nt">&quot;superpowers&quot;</span> <span class="p">:</span> <span class="p">[</span>
+                <span class="s2">&quot;flight&quot;</span>
+            <span class="p">]</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Vous pouvez accéder à la valeur « flight » ainsi :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">JsonNode</span> <span class="n">jsonNode</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="n">String</span> <span class="n">flight</span> <span class="o">=</span> <span class="n">jsonNode</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;participants&quot;</span><span class="p">).</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;superpowers&quot;</span><span class="p">).</span><span class="na">get</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="na">asText</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="serialisation-principe">
+<h3>Serialisation - principe<a class="headerlink" href="#serialisation-principe" title="Lien permanent vers ce titre">¶</a></h3>
+<p>A noter que pour la sérialisation, si vous souhaitez intégrer votre objet dans
+un moteur de template, il convient de faire attention si celui convertit en
+String l’objet donné ou l’écrit directement dans le template.</p>
+<p>Dans le premier cas, il faut lui donner un objet de type JsonNode, dans le
+deuxièmeun objet de type texte.</p>
+</section>
+<section id="serialisation-java-jsonnode">
+<h3>Serialisation java =&gt; jsonNode<a class="headerlink" href="#serialisation-java-jsonnode" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">ObjectMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="p">();</span>
+<span class="n">JsonNode</span> <span class="n">node</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">.</span><span class="na">valueToTree</span><span class="p">(</span><span class="n">javaObject</span><span class="p">);</span>
+<span class="c1">// Ou</span>
+<span class="n">JsonNode</span> <span class="n">node</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="p">().</span><span class="na">valueToTree</span><span class="p">(</span><span class="n">javaObject</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="serialisation-java-text">
+<h3>Serialisation java =&gt; text<a class="headerlink" href="#serialisation-java-text" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">ObjectMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="p">();</span>
+<span class="n">String</span> <span class="n">jsonAsString</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">.</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">javaObject</span><span class="p">);</span>
+<span class="c1">// Ou pour avoir le &quot;pretty print&quot;, ie les retours à la ligne et</span>
+<span class="c1">//  l&#39;indentation</span>
+<span class="n">ObjectMapper</span> <span class="n">mapper</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMapper</span><span class="p">();</span>
+<span class="n">String</span> <span class="n">jsonAsString</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">.</span><span class="na">writerWithDefaultPrettyPrinter</span><span class="p">().</span><span class="na">writeValueAsString</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="deserialisation-text-java">
+<h3>Deserialisation text =&gt; java<a class="headerlink" href="#deserialisation-text-java" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">MyClass</span> <span class="n">myObject</span> <span class="o">=</span> <span class="n">objectMapper</span><span class="p">.</span><span class="na">readValue</span><span class="p">(</span><span class="n">jsonString</span><span class="p">,</span> <span class="n">type</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="deserialisation-text-jsonnode">
+<h3>Deserialisation text =&gt; jsonNode<a class="headerlink" href="#deserialisation-text-jsonnode" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">JsonNode</span> <span class="n">jsonNode</span> <span class="o">=</span> <span class="n">objectMapper</span><span class="p">.</span><span class="na">readValue</span><span class="p">(</span><span class="n">supermanAsString</span><span class="p">,</span> <span class="n">JsonNode</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="it-is-workshop-time">
+<h3>It is workshop time !!<a class="headerlink" href="#it-is-workshop-time" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Récupérez les deux fichiers ci dessous :</p>
+<p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/workshop_serialisation/src/test/java/wcsdata/xmen/external/Person.java">Person.java</a></p>
+<p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/workshop_serialisation/src/test/java/wcsdata/xmen/external/JacksonSerialisationTest.java">JacksonSerialisationTest.java</a></p>
+<p>Et modifiez les 4 lignes de JacksonSerialisation qui contiennent des null pour
+que cela fonction (NB : il ne faut jamais utiliser les méthodes getSuperman(),
+getSupermanAsJson())</p>
+<p>Tips : toutes vos instructions doivent commencer par objectMapper</p>
+<p>Vous pouvez trouvez la correction ci-dessous :</p>
+<p><a class="reference external" href="https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/external/JacksonSerialisationTest.java">JacksonSerialisationTest.java</a></p>
+</section>
+</section>
+<section id="serialisation-et-spring">
+<h2>Sérialisation et Spring<a class="headerlink" href="#serialisation-et-spring" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="simple">
+<dt>La sérialisation intervient principalement à 3 niveaux dans Spring :</dt><dd><ul class="simple">
+<li><p>le controller (annotations <strong>&#64;RestController</strong> et <strong>&#64;ResponseBody</strong>)</p></li>
+<li><p>dans les entités</p></li>
+<li><p>en définissant des serialiser customisés (plus avancés)</p></li>
+</ul>
+</dd>
+</dl>
+<section id="restcontroller-et-responsebody">
+<h3>RestController et ResponseBody<a class="headerlink" href="#restcontroller-et-responsebody" title="Lien permanent vers ce titre">¶</a></h3>
+<p>On commence par cette partie car elle est la plus simple.</p>
+<p>L’annotation &#64;ResponseBody signifie que la route renvoit du json, et elle
+sérialisera l’objet renvoyé par la méthode.</p>
+<p>Par exemple :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="p">)</span>
+<span class="nd">@ResponseBody</span>
+<span class="kd">public</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">CerebooUser</span><span class="o">&gt;</span> <span class="nf">getAll</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">getRepository</span><span class="p">().</span><span class="na">findAll</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Cette méthode renverra la liste des CerebookUser sérialisé.</p>
+<p>L’annotation &#64;RestController (qui remplace &#64;Controller) applique
+automatiquement l’annotation &#64;ResponseBody sur toutes les routes.</p>
+<p>A noter que l’objet renvoyé doit être un objet, une liste ou une map, mais pas
+une string par exemple.</p>
+</section>
+<section id="serialisation-jackson-et-entity">
+<h3>Serialisation - Jackson et entity<a class="headerlink" href="#serialisation-jackson-et-entity" title="Lien permanent vers ce titre">¶</a></h3>
+<p>De base, aucune annotation n’est nécessaire pour sérialiser en utilisant
+Jackson. La librairie utilise l’introspection pour récupérer les propriétés</p>
+<p>Pour rappel une propriété se caractérise par la présence d’un getter,
+contrairement aux attributs / field qui correspondent à une variable stockée
+dans la classe (et donc dans la table)</p>
+<p>La principale difficulté que vous rencontrerez lors de la sérialisation de vos
+entités sont les boucles infinies. En effet, dès que vous avez une relation
+bidrectionnelle, par exemple entre un User et ces Posts, vous tomberez dans
+la boucle infini suivante :</p>
+<ol class="arabic simple">
+<li><p>La sérialisation de User implique celle de la liste de ces postes</p></li>
+<li><p>La sérialisation des postes implique la sérialisation de l’attribut author</p></li>
+<li><p>Ce qui implique la sérialisation des posts de l’auteur</p></li>
+<li><p>Ce qui implique la sérialisation de l’auteur ….</p></li>
+</ol>
+<p>Vous pouvez trouver des exemples / informations complémentaires ici :</p>
+<p><a class="reference external" href="https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion">Exemple serialisation infinite recursion</a></p>
+<dl class="simple">
+<dt>Il existe principalement 4 annotations pour gérer ce problème:</dt><dd><ul class="simple">
+<li><p>JsonIgnore qui ignore complètement la propriété</p></li>
+<li><p>JsonManagedReference et JsonBackReference</p></li>
+<li><p>JsonIdentityInfo</p></li>
+</ul>
+</dd>
+</dl>
+<p>Les annotations JsonManagedReference et JsonBackReference font en sorte que la
+propriété taguée par JsonBackReference ne soit pas sérialisée. Vous devez
+annotée une des relations avec JsonManagedReference et sa réciproque avec
+JsonBackReference</p>
+<p>L’annotation JsonIdentityInfo se met au niveau de la classe (pas de la
+propriété), par exemple :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Entity</span>
+<span class="nd">@JsonIdentityInfo</span><span class="p">(</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">ObjectIdGenerators</span><span class="p">.</span><span class="na">PropertyGenerator</span><span class="p">.</span><span class="na">class</span><span class="p">,</span>
+    <span class="n">property</span> <span class="o">=</span> <span class="s">&quot;id&quot;</span><span class="p">)</span>
+<span class="kd">class</span> <span class="nc">CerebookUser</span> <span class="p">{...}</span>
+</pre></div>
+</div>
+<p>Cela assure que seul l’id est sérialisé lorsqu’une situation de récurrence
+infinie est rencontrée (ie quand l’objet est sérialisé plusieurs fois au sein
+d’un même processus de sérialisation)</p>
+</section>
+<section id="id2">
+<h3>It is workshop time !!<a class="headerlink" href="#id2" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Ajoutez un RestController à votre projet, associée à une entity avec deux
+routes :</p>
+<ol class="arabic simple">
+<li><p>Une qui renvoit toutes les entités au format Json</p></li>
+<li><p>Une qui prend un id comme PathParam et renvoit l’entité concernée</p></li>
+</ol>
+<p>A noter qu’en dehors de la gestion des erreurs, les méthodes peuvent faire une
+ligne chacune.</p>
+<p>Pourquoi ne fait-on pas de méthode update / delete / create pour l’instant ?
+Because il faut un peu d’ajax ou un client pour tester :-)</p>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Serialisation</a><ul>
+<li><a class="reference internal" href="#principe">Principe</a></li>
+<li><a class="reference internal" href="#jackson-instructions-de-base">Jackson - instructions de base</a><ul>
+<li><a class="reference internal" href="#jsonnode">JsonNode</a></li>
+<li><a class="reference internal" href="#serialisation-principe">Serialisation - principe</a></li>
+<li><a class="reference internal" href="#serialisation-java-jsonnode">Serialisation java =&gt; jsonNode</a></li>
+<li><a class="reference internal" href="#serialisation-java-text">Serialisation java =&gt; text</a></li>
+<li><a class="reference internal" href="#deserialisation-text-java">Deserialisation text =&gt; java</a></li>
+<li><a class="reference internal" href="#deserialisation-text-jsonnode">Deserialisation text =&gt; jsonNode</a></li>
+<li><a class="reference internal" href="#it-is-workshop-time">It is workshop time !!</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#serialisation-et-spring">Sérialisation et Spring</a><ul>
+<li><a class="reference internal" href="#restcontroller-et-responsebody">RestController et ResponseBody</a></li>
+<li><a class="reference internal" href="#serialisation-jackson-et-entity">Serialisation - Jackson et entity</a></li>
+<li><a class="reference internal" href="#id2">It is workshop time !!</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="spring_security.html"
+                        title="Chapitre précédent">Spring security - done</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="../base_de_donnee.html"
+                        title="Chapitre suivant">Base de données</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spring/serialisation.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../base_de_donnee.html" title="Base de données"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="spring_security.html" title="Spring security - done"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../spring.html" >Spring</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Serialisation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>

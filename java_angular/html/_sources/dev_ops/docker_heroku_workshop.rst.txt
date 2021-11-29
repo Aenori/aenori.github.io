@@ -211,7 +211,10 @@ heroku_local, ce qui vous permettra de le lancer avec la commande :
 
 .. code-block:: shell
 
-    docker run heroku_local
+    docker run -it heroku_local
+
+C'est normal si vous ne pouvez pas y accéder ! Il faut forwarder un port (voir
+plus loin)
 
 Step 3.2 : désactivation de la db
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -242,6 +245,8 @@ L'option --name vous permet de stopper le container avec la commande :
     docker stop my_container
 
 Ou de vous y connectez avec la commande :
+PS : j'ai bien dit ou, la commande suivante nécessite que le docker tourne,
+du coup si vous l'avez arrêté cela ne marche plus.
 
 .. code-block:: shell
 
@@ -260,8 +265,38 @@ La solution avec l'appli par défaut heroku est disponible sous le tag :
 
 step_3_solution
 
+Step 3.3 : nom des containers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Lorsque vous utilisez l'option *--name*, vous nommez le container.
+
+.. code-block:: shell
+
+    docker run -p 8080:8080 --name my_container -it heroku_local
+
+Cela est pratique pour stopper le container ou y accéder (via exec), mais cela
+a un contrepartie, vous ne pourrez pas lancer deux fois la commande ! En effet
+même après l'avoir stopper, le container continue à exister (vous pouvez même
+le relancer)
+
+Pour gérer cela, plusieur scommandes sont utiles :
+
+.. code-block:: shell
+
+    docker container rm my_container
+    # supprime un container
+
+    docker container ls
+    # liste les containers actifs
+
+    docker container ls -a
+    # liste tous les containers
+
+    docker container prune
+    # supprime après confirmation tous les containers stoppés
+
 Step 4 : ajout des volumes
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 
 Un défaut de cette configuration est que le code du container n'est pas mis
 à jour au moment où vous modifiez votre code en local (donc pas de prise en
@@ -303,7 +338,7 @@ commande suivante) :
 
 Ensuite vous pouvez suivre ce tutoriel :
 
-`Tutoriel docker heroku `https://devcenter.heroku.com/articles/build-docker-images-heroku-yml> `_
+`Tutoriel docker heroku <https://devcenter.heroku.com/articles/build-docker-images-heroku-yml>`_
 
 Qui en résumé peut se réduire à exécuter cette commande pour définir que vous
 utilisez docker pour votre déploiement :

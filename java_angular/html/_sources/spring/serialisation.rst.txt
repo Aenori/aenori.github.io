@@ -1,0 +1,265 @@
+Serialisation
+=============
+
+Principe
+--------
+
+La sérialisation est un principe essentielle aux api, elles-mêmes nécessaires
+au RIA (Rich Internet Application) qui consiste à avoir en front-end une vraie
+application, et pas seulement des fichiers d'UX statiques.
+
+Cela consite à transformer un objet java en texte (ou en représentation
+intermédiaire de type json) afin de pouvoir transmettre cette représentation
+à une autre application (typiquement notre front-end angular, ou une
+application d'un client).
+
+Ainsi on convertira un objet comme :
+
+.. code-block:: java
+
+    public class User {
+        private Integer id;
+        private String name;
+        private List<String> hobbies;
+    }
+
+En (format json) :
+
+.. code-block:: json
+
+    {
+        "id" : 1,
+        "name" : "Clark Kent",
+        "hobbies" : ["Saving the world", "Journalism", "Fashion hater"]
+    }
+
+Ou (formal xml) :
+
+.. code-block:: xml
+
+    <User>
+        <id>1</id>
+        <name>Clark Kent</name>
+        <hobbies>
+            <hobbie>Saving the world</hobbie>
+            <Hobbie>Journalism</hobbie>
+            <Hobbie>Fashion hater</hobbie>
+        </hobbies>
+    </User>
+
+Comme vous pouvez le constater le xml est beaucoup plus verbeux, mais un peu
+plus précis (par défaut il n'y a pas de mention dans le json qu'il s'agit d'un
+objet de type "user" par exemple).
+
+Dans cette formation, nous utiliserons uniquement le format json, qui est
+largement prépondérant sur le web et les start-up. Xml et soap (son acronyme
+associé webservice) étant eux plus présent dans le domaine des grosses
+entreprises et des réseaux internes (Microsoft, SAP, par exemple)
+
+L'opération inverse de la sérialisation est la désérialisation, elle consiste
+à lire une format texte (String ou directement fichier) pour le convertir en
+objet java ou en représentation intermédiaire (Json)
+
+Jackson - instructions de base
+------------------------------
+
+La librairie utilisée par défaut dans Spring est Jackson.
+Celle-ci peut être utilisée pour interroger des api (on aura besoin de
+désérialiser la réponse) ou pour produire des routes "REST".
+
+Cette librairie est intégrée par défaut dans Spring, nul besoin de l'ajouter
+au pom.xml.
+
+JsonNode
+^^^^^^^^
+
+L'objet utilisé pour représenter le Json de Jackson est le JsonNode. C'est un
+objet polymorphe qui peut s'adapter à toute structure, le revers de la
+médaille étant que c'est à vous de vérifier que vous respectez effectivement
+la structure de l'objet (comme en typage dynamique)
+
+Par exemple si vous avez un json comme ceci :
+
+.. code-block:: json
+
+    {
+        "id" : 1,
+        "participants" : [
+            {
+                "name" : "Superman",
+                "superpowers" : [
+                    "flight"
+                ]
+        ]
+    }
+
+Vous pouvez accéder à la valeur "flight" ainsi :
+
+.. code-block:: java
+
+    JsonNode jsonNode = ...;
+    String flight = jsonNode.get("participants").get(0).get("superpowers").get(0).asText();
+
+
+Serialisation - principe
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+A noter que pour la sérialisation, si vous souhaitez intégrer votre objet dans
+un moteur de template, il convient de faire attention si celui convertit en
+String l'objet donné ou l'écrit directement dans le template.
+
+Dans le premier cas, il faut lui donner un objet de type JsonNode, dans le
+deuxièmeun objet de type texte.
+
+Serialisation java => jsonNode
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: java
+
+    ObjectMapper mapper = new ObjectMapper();
+    JsonNode node = mapper.valueToTree(javaObject);
+    // Ou
+    JsonNode node = new ObjectMapper().valueToTree(javaObject);
+
+Serialisation java => text
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: java
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonAsString = mapper.writeValueAsString(javaObject);
+    // Ou pour avoir le "pretty print", ie les retours à la ligne et
+    //  l'indentation
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonAsString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+
+Deserialisation text => java
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: java
+
+    MyClass myObject = objectMapper.readValue(jsonString, type)
+
+Deserialisation text => jsonNode
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: java
+
+    JsonNode jsonNode = objectMapper.readValue(supermanAsString, JsonNode.class);
+
+It is workshop time !!
+^^^^^^^^^^^^^^^^^^^^^^
+
+Récupérez les deux fichiers ci dessous :
+
+`Person.java <https://github.com/Aenori/HerokuProject/blob/workshop_serialisation/src/test/java/wcsdata/xmen/external/Person.java>`_
+
+`JacksonSerialisationTest.java <https://github.com/Aenori/HerokuProject/blob/workshop_serialisation/src/test/java/wcsdata/xmen/external/JacksonSerialisationTest.java>`_
+
+Et modifiez les 4 lignes de JacksonSerialisation qui contiennent des null pour
+que cela fonction (NB : il ne faut jamais utiliser les méthodes getSuperman(),
+getSupermanAsJson())
+
+Tips : toutes vos instructions doivent commencer par objectMapper
+
+Vous pouvez trouvez la correction ci-dessous :
+
+`JacksonSerialisationTest.java <https://github.com/Aenori/HerokuProject/blob/main/src/test/java/wcsdata/xmen/external/JacksonSerialisationTest.java>`_
+
+Sérialisation et Spring
+-----------------------
+
+La sérialisation intervient principalement à 3 niveaux dans Spring :
+    - le controller (annotations **@RestController** et **@ResponseBody**)
+    - dans les entités
+    - en définissant des serialiser customisés (plus avancés)
+
+RestController et ResponseBody
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On commence par cette partie car elle est la plus simple.
+
+L'annotation @ResponseBody signifie que la route renvoit du json, et elle
+sérialisera l'objet renvoyé par la méthode.
+
+Par exemple :
+
+.. code-block:: java
+
+    @GetMapping("")
+    @ResponseBody
+    public List<CerebooUser> getAll() {
+        return getRepository().findAll();
+    }
+
+Cette méthode renverra la liste des CerebookUser sérialisé.
+
+L'annotation @RestController (qui remplace @Controller) applique
+automatiquement l'annotation @ResponseBody sur toutes les routes.
+
+A noter que l'objet renvoyé doit être un objet, une liste ou une map, mais pas
+une string par exemple.
+
+Serialisation - Jackson et entity
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+De base, aucune annotation n'est nécessaire pour sérialiser en utilisant
+Jackson. La librairie utilise l'introspection pour récupérer les propriétés
+
+Pour rappel une propriété se caractérise par la présence d'un getter,
+contrairement aux attributs / field qui correspondent à une variable stockée
+dans la classe (et donc dans la table)
+
+La principale difficulté que vous rencontrerez lors de la sérialisation de vos
+entités sont les boucles infinies. En effet, dès que vous avez une relation
+bidrectionnelle, par exemple entre un User et ces Posts, vous tomberez dans
+la boucle infini suivante :
+
+1. La sérialisation de User implique celle de la liste de ces postes
+2. La sérialisation des postes implique la sérialisation de l'attribut author
+3. Ce qui implique la sérialisation des posts de l'auteur
+4. Ce qui implique la sérialisation de l'auteur ....
+
+Vous pouvez trouver des exemples / informations complémentaires ici :
+
+`Exemple serialisation infinite recursion <https://www.baeldung.com/jackson-bidirectional-relationships-and-infinite-recursion>`_
+
+Il existe principalement 4 annotations pour gérer ce problème:
+    - JsonIgnore qui ignore complètement la propriété
+    - JsonManagedReference et JsonBackReference
+    - JsonIdentityInfo
+
+Les annotations JsonManagedReference et JsonBackReference font en sorte que la
+propriété taguée par JsonBackReference ne soit pas sérialisée. Vous devez
+annotée une des relations avec JsonManagedReference et sa réciproque avec
+JsonBackReference
+
+L'annotation JsonIdentityInfo se met au niveau de la classe (pas de la
+propriété), par exemple :
+
+.. code-block:: java
+
+    @Entity
+    @JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
+    class CerebookUser {...}
+
+Cela assure que seul l'id est sérialisé lorsqu'une situation de récurrence
+infinie est rencontrée (ie quand l'objet est sérialisé plusieurs fois au sein
+d'un même processus de sérialisation)
+
+It is workshop time !!
+^^^^^^^^^^^^^^^^^^^^^^
+
+Ajoutez un RestController à votre projet, associée à une entity avec deux
+routes :
+
+1. Une qui renvoit toutes les entités au format Json
+2. Une qui prend un id comme PathParam et renvoit l'entité concernée
+
+A noter qu'en dehors de la gestion des erreurs, les méthodes peuvent faire une
+ligne chacune.
+
+Pourquoi ne fait-on pas de méthode update / delete / create pour l'instant ?
+Because il faut un peu d'ajax ou un client pour tester :-)

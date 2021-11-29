@@ -1,0 +1,92 @@
+IO (Input / Output)
+===================
+
+Les opérations dites IO (input / output) consiste à écrire ou lire des données
+à l'extérieur de la zone mémoire du programme. Le cas le plus courant est le
+fichier, mais on peut le faire également avec des sockets (communication entre
+ordinateurs), des pipe (communication entre process), etc ...
+
+Un fichier doit être ouvert pour l'écriture ou la lecture. On trouvera souvent
+une option "append" qui peut être un mode ou une option booléenne pour
+préciser si l'on souhaite écrire à la suite du fichier ou écrasez celui-ci.
+
+Lecture / écriture basique
+--------------------------
+
+Une première méthode pour lire écrire dans des fichiers en java peut se faire
+à partir des 3 exemples suivants :
+
+!Attention ce ne sont pas des bonnes pratiques ! (voir plus loin)
+
+Ecriture
+^^^^^^^^
+
+.. code-block:: java
+
+    File file = new File("test");
+    BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath());
+    bufferedWriter.write("Hello world !");
+    bufferedWriter.close();
+
+Ecriture - append
+^^^^^^^^^^^^^^^^^
+
+.. code-block:: java
+
+    File file = new File("test");
+    BufferedWriter bufferedWriter = Files.newBufferedWriter(file.toPath(), StandardOpenOption.APPEND);
+    bufferedWriter.write("Hello world !");
+    bufferedWriter.close();
+
+Lecture
+^^^^^^^
+
+.. code-block:: java
+
+    File file = new File("test");
+    BufferedReader bufferedReader = Files.newBufferedReader(file.toPath());
+    bufferedReader.lines().forEach(
+        System.out::println
+    );
+    bufferedReader.close();
+
+Méthodes modernes
+-----------------
+
+Un très bon tutoriel (en anglais) sur la lecture / écriture de fichier peut
+être trouvé ici :
+
+https://docs.oracle.com/javase/tutorial/essential/io/file.html
+
+En résumé la méthode la plus simple (pour les petits fichiers) est d'utliser
+les méthodes de la classe Files :
+
+.. code-block:: java
+
+    // Lecture
+    List<String> fileByLine = Files.readAllLines(new File("test").toPath());
+    String fileInABigString = Files.readString(new File("test").toPath());
+
+    // Ecriture
+    Files.writeString(file.toPath(), "Hello world !");
+
+    // Ecrriture append
+    Files.writeString(file.toPath(), "Hello world !", StandardOpenOption.APPEND);
+
+On peut aussi trouver une syntaxe de type "try-with-resources" :
+
+.. code-block:: java
+
+    try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
+        writer.write(s, 0, s.length());
+    } catch (IOException x) {
+        System.err.format("IOException: %s%n", x);
+    }
+
+Une règle est qu'il n'est pas une bonne pratique d'appeler explicitement la
+méthode close. En effet c'est facile à oublier et si une exception est levée
+entre l'ouverture et la fermeture, cela peut laisser le fichier dans un état
+incertain.
+
+Les deux méthodes ci-dessus (Files.something et le try-with-resources)
+garantissent la fermeture du fichier dans tous les cas.

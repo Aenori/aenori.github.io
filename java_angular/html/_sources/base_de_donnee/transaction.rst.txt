@@ -1,4 +1,84 @@
 Transaction
 ===========
 
-TODO
+Principe
+--------
+
+Les transactions sont un système interne de toutes les bases de données
+classiques qui respectent les principes ACID (donc MySQL, Postgres, Oracle
+pour les plus courantes).
+
+Elles consistent à définir un ensemble d'instructions qui doivent être
+appliquées selon un principe tout ou rien.
+
+Imaginons par exemple que vous créiez un évènement avec deux organisateurs
+(la relation organise est donc une relation many to many)
+
+.. code-block:: postgres
+
+    INSERT INTO event(id, ...) VALUES(42, ...);
+    INSERT INTO event_origanizer_user VALUES(42, 1);
+    INSERT INTO event_origanizer_user VALUES(42, 2);
+
+Si il arrivait un problème à votre application entre la première instruction
+SQL et la deuxième, vous vous retrouveriez avec un évènement sans
+organisateur, ce qui n'est pas top.
+
+Le principe d'une transaction est donc de s'assurer qu'un groupe
+d'instructions est appliqué selon un système de tout ou rien. On démarre une
+transaction avec l'instruction **START TRANSACTION** et on la clôt avec une
+des instructions **COMMIT** (appliquer les changements) ou **ROLLBACK**
+(tout annuler)
+
+.. code-block:: postgres
+
+    START TRANSACTION;
+    INSERT INTO event(id, ...) VALUES(42, ...);
+    INSERT INTO event_origanizer_user VALUES(42, 1);
+    INSERT INTO event_origanizer_user VALUES(42, 2);
+    COMMIT;
+
+Cela vous garantit que vous n'aurez pas d'évènement sans organisateur !
+
+Transactions et contraintes
+---------------------------
+
+Les transactions peuvent être également utile dans certains cas pour violer
+temporairement des contraintes de la base de donnée. Imaginons par exemple que
+suite à une grosse erreur de manipulation, vous vouliez modifier la clé
+primaire d'un élément vers lequel pointe des clés étrangères pour insérer un
+autre élément avec cette même clé primaire :
+
+.. code-block:: postgres
+
+    UPDATE INTO my_user SET id = 2 WHERE id = 1;
+    INSERT INTO my_user(id, ...) VALUES(1, ...);
+
+Problème, ces deux instructions violent individuellement une contrainte. La
+première ne respecterait pas foreign key, tandis que la deuxième (si exécutée
+avant la première) introduirait un doublon sur la primary key.
+
+On peut s'en sortir en utilisant une transaction. En effet, on peut demander
+à la base d'attendre la fin de la transaction pour vérifier les différentes
+contraintes. La transaction amène la base d'un état cohérent vers un autre
+état cohérent, même si elle passe par un état intermédiaire incohérent :
+
+.. code-block:: postgres
+
+    START TRANSACTION;
+    SET CONSTRAINTS ALL DEFERRED;
+
+    UPDATE INTO my_user SET id = 2 WHERE id = 1;
+    INSERT INTO my_user(id, ...) VALUES(1, ...);
+
+    COMMIT;
+
+Vous pouvez essayer avec le transaction_deferred_workshop !
+
+A noter que certaines contraintes (comme les foreign key) doivent être
+déclarées *DEFERRABLE* à la création pour pouvoir être désactivées.
+
+.. code-block:: postgres
+
+    ALTER TABLE workshop_event ADD FOREIGN KEY(creator_id) REFERENCES workshop_user(id) DEFERRABLE;
+

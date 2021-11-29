@@ -1,0 +1,40 @@
+Transaction deferred workshop
+=============================
+
+Dans une base de donnée postgres de votre choix, exécutez les commandes
+suivantes :
+
+.. code-block:: postgres
+
+    CREATE TABLE workshop_user(
+        id INT PRIMARY KEY,
+        name VARCHAR(256)
+    );
+
+    CREATE TABLE workshop_event(
+        id INT PRIMARY KEY,
+        creator_id INT
+    );
+
+    ALTER TABLE workshop_event ADD FOREIGN KEY(creator_id) REFERENCES workshop_user(id) DEFERRABLE;
+
+    INSERT INTO workshop_user VALUES(1, 'Joe');
+    INSERT INTO workshop_event VALUES(1, 1);
+
+Maintenant, essayez d'exécutez les 2 instructions suivantes :
+
+.. code-block:: postgres
+
+    UPDATE workshop_user SET id = 2 WHERE name = 'Joe';
+    INSERT INTO workshop_user VALUES(1, 'Jack');
+
+Quoique vous fassiez, impossible de les exécutez ! (Sans détruire ce qui a été
+mis en place avant).
+
+En vous inspirant du cours sur les transactions :
+
+.. toctree::
+   transaction
+
+
+

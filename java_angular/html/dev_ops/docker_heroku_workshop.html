@@ -19,7 +19,7 @@
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
-    <link rel="prev" title="Intégration continue" href="integration_continue.html" />
+    <link rel="prev" title="Docker" href="docker.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -32,7 +32,7 @@
           <a href="../genindex.html" title="Index général"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="integration_continue.html" title="Intégration continue"
+          <a href="docker.html" title="Docker"
              accesskey="P">précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../dev_ops.html" accesskey="U">Dev ops</a> &#187;</li>
@@ -205,9 +205,11 @@ fichier utilisé est Dockerfile, vous pouvez le spécifiez en utilisant l’opti
 <em>-f Dockerfile_appele_comme_vous_voulez</em></p>
 <p>Le <em>-t heroku_local</em> indique que vous voulez taguez l’image comme étant nommé
 heroku_local, ce qui vous permettra de le lancer avec la commande :</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run heroku_local
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -it heroku_local
 </pre></div>
 </div>
+<p>C’est normal si vous ne pouvez pas y accéder ! Il faut forwarder un port (voir
+plus loin)</p>
 </section>
 <section id="step-3-2-desactivation-de-la-db">
 <h3>Step 3.2 : désactivation de la db<a class="headerlink" href="#step-3-2-desactivation-de-la-db" title="Lien permanent vers ce titre">¶</a></h3>
@@ -230,7 +232,9 @@ spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker stop my_container
 </pre></div>
 </div>
-<p>Ou de vous y connectez avec la commande :</p>
+<p>Ou de vous y connectez avec la commande :
+PS : j’ai bien dit ou, la commande suivante nécessite que le docker tourne,
+du coup si vous l’avez arrêté cela ne marche plus.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker <span class="nb">exec</span> -it my_container bash
 </pre></div>
 </div>
@@ -243,8 +247,34 @@ utilisiez habituellement)</p>
 <p>La solution avec l’appli par défaut heroku est disponible sous le tag :</p>
 <p>step_3_solution</p>
 </section>
+<section id="step-3-3-nom-des-containers">
+<h3>Step 3.3 : nom des containers<a class="headerlink" href="#step-3-3-nom-des-containers" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Lorsque vous utilisez l’option <em>–name</em>, vous nommez le container.</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker run -p <span class="m">8080</span>:8080 --name my_container -it heroku_local
+</pre></div>
+</div>
+<p>Cela est pratique pour stopper le container ou y accéder (via exec), mais cela
+a un contrepartie, vous ne pourrez pas lancer deux fois la commande ! En effet
+même après l’avoir stopper, le container continue à exister (vous pouvez même
+le relancer)</p>
+<p>Pour gérer cela, plusieur scommandes sont utiles :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker container rm my_container
+<span class="c1"># supprime un container</span>
+
+docker container ls
+<span class="c1"># liste les containers actifs</span>
+
+docker container ls -a
+<span class="c1"># liste tous les containers</span>
+
+docker container prune
+<span class="c1"># supprime après confirmation tous les containers stoppés</span>
+</pre></div>
+</div>
+</section>
+</section>
 <section id="step-4-ajout-des-volumes">
-<h3>Step 4 : ajout des volumes<a class="headerlink" href="#step-4-ajout-des-volumes" title="Lien permanent vers ce titre">¶</a></h3>
+<h2>Step 4 : ajout des volumes<a class="headerlink" href="#step-4-ajout-des-volumes" title="Lien permanent vers ce titre">¶</a></h2>
 <p>Un défaut de cette configuration est que le code du container n’est pas mis
 à jour au moment où vous modifiez votre code en local (donc pas de prise en
 compte des modifications locales). Pour corriger cela, il faut rajouter un
@@ -263,7 +293,6 @@ vérifier avec la commande suivante :</p>
 </pre></div>
 </div>
 <p>Pas de solution ici, puisqu’il n’y a pas de modification du code.</p>
-</section>
 <section id="step-5-deploiement-sous-heroku">
 <h3>Step 5 : Déploiement sous Heroku<a class="headerlink" href="#step-5-deploiement-sous-heroku" title="Lien permanent vers ce titre">¶</a></h3>
 <p>Maintenant que vous avez votre application qui tourne sous Docker, vous pouvez
@@ -274,7 +303,7 @@ commande suivante) :</p>
 </pre></div>
 </div>
 <p>Ensuite vous pouvez suivre ce tutoriel :</p>
-<p><a href="#id1"><span class="problematic" id="id2">`</span></a>Tutoriel docker heroku <a href="#id3"><span class="problematic" id="id4">`</span></a><a class="reference external" href="https://devcenter.heroku.com/articles/build-docker-images-heroku-yml">https://devcenter.heroku.com/articles/build-docker-images-heroku-yml</a>&gt; <a href="#id5"><span class="problematic" id="id6">`</span></a>_</p>
+<p><a class="reference external" href="https://devcenter.heroku.com/articles/build-docker-images-heroku-yml">Tutoriel docker heroku</a></p>
 <p>Qui en résumé peut se réduire à exécuter cette commande pour définir que vous
 utilisez docker pour votre déploiement :</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>heroku stack:set container
@@ -393,7 +422,10 @@ username / password + 2 variables pour les usernames et passwords).</p>
 <li><a class="reference internal" href="#step-3-local-sans-db">Step 3 : local sans db</a><ul>
 <li><a class="reference internal" href="#step-3-1-local-sans-db">Step 3.1 : local sans db</a></li>
 <li><a class="reference internal" href="#step-3-2-desactivation-de-la-db">Step 3.2 : désactivation de la db</a></li>
-<li><a class="reference internal" href="#step-4-ajout-des-volumes">Step 4 : ajout des volumes</a></li>
+<li><a class="reference internal" href="#step-3-3-nom-des-containers">Step 3.3 : nom des containers</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-4-ajout-des-volumes">Step 4 : ajout des volumes</a><ul>
 <li><a class="reference internal" href="#step-5-deploiement-sous-heroku">Step 5 : Déploiement sous Heroku</a></li>
 <li><a class="reference internal" href="#step-6-remise-de-postgres-en-local">Step 6 : Remise de postgres en local</a></li>
 <li><a class="reference internal" href="#step-7-deploiement-sous-heroku">Step 7 : déploiement sous heroku</a></li>
@@ -404,12 +436,12 @@ username / password + 2 variables pour les usernames et passwords).</p>
 </ul>
 
   <h4>Sujet précédent</h4>
-  <p class="topless"><a href="integration_continue.html"
-                        title="Chapitre précédent">Intégration continue</a></p>
+  <p class="topless"><a href="docker.html"
+                        title="Chapitre précédent">Docker</a></p>
   <div role="note" aria-label="source link">
     <h3>Cette page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/dev_ops/docker-heroku-workshop.rst.txt"
+      <li><a href="../_sources/dev_ops/docker_heroku_workshop.rst.txt"
             rel="nofollow">Montrer le code source</a></li>
     </ul>
    </div>
@@ -434,7 +466,7 @@ username / password + 2 variables pour les usernames et passwords).</p>
           <a href="../genindex.html" title="Index général"
              >index</a></li>
         <li class="right" >
-          <a href="integration_continue.html" title="Intégration continue"
+          <a href="docker.html" title="Docker"
              >précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../dev_ops.html" >Dev ops</a> &#187;</li>

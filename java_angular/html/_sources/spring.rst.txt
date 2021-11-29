@@ -6,3 +6,5 @@ Spring
    spring/jpa_et_hibernate
    spring/mockito_et_test
    spring/spring_security
+   spring/serialisation
+   spring/ajax_et_serialisation_workshop

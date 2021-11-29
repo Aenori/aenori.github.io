@@ -3,6 +3,7 @@ Base de données
 
 .. toctree::
    base_de_donnee/transaction
+   base_de_donnee/transaction_deferred_workshop
    base_de_donnee/index
    base_de_donnee/principes_acid
    base_de_donnee/plsql

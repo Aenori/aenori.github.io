@@ -19,7 +19,7 @@
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
-    <link rel="next" title="Index" href="index.html" />
+    <link rel="next" title="Transaction deferred workshop" href="transaction_deferred_workshop.html" />
     <link rel="prev" title="Base de données" href="../base_de_donnee.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
           <a href="../genindex.html" title="Index général"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="index.html" title="Index"
+          <a href="transaction_deferred_workshop.html" title="Transaction deferred workshop"
              accesskey="N">suivant</a> |</li>
         <li class="right" >
           <a href="../base_de_donnee.html" title="Base de données"
@@ -51,7 +51,71 @@
             
   <section id="transaction">
 <h1>Transaction<a class="headerlink" href="#transaction" title="Lien permanent vers ce titre">¶</a></h1>
-<p>TODO</p>
+<section id="principe">
+<h2>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les transactions sont un système interne de toutes les bases de données
+classiques qui respectent les principes ACID (donc MySQL, Postgres, Oracle
+pour les plus courantes).</p>
+<p>Elles consistent à définir un ensemble d’instructions qui doivent être
+appliquées selon un principe tout ou rien.</p>
+<p>Imaginons par exemple que vous créiez un évènement avec deux organisateurs
+(la relation organise est donc une relation many to many)</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">event</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="mf">...</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">42</span><span class="p">,</span> <span class="mf">...</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">event_origanizer_user</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">42</span><span class="p">,</span> <span class="mf">1</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">event_origanizer_user</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">42</span><span class="p">,</span> <span class="mf">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Si il arrivait un problème à votre application entre la première instruction
+SQL et la deuxième, vous vous retrouveriez avec un évènement sans
+organisateur, ce qui n’est pas top.</p>
+<p>Le principe d’une transaction est donc de s’assurer qu’un groupe
+d’instructions est appliqué selon un système de tout ou rien. On démarre une
+transaction avec l’instruction <strong>START TRANSACTION</strong> et on la clôt avec une
+des instructions <strong>COMMIT</strong> (appliquer les changements) ou <strong>ROLLBACK</strong>
+(tout annuler)</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">START</span> <span class="k">TRANSACTION</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="k">event</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="mf">...</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">42</span><span class="p">,</span> <span class="mf">...</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">event_origanizer_user</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">42</span><span class="p">,</span> <span class="mf">1</span><span class="p">);</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">event_origanizer_user</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">42</span><span class="p">,</span> <span class="mf">2</span><span class="p">);</span>
+<span class="k">COMMIT</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Cela vous garantit que vous n’aurez pas d’évènement sans organisateur !</p>
+</section>
+<section id="transactions-et-contraintes">
+<h2>Transactions et contraintes<a class="headerlink" href="#transactions-et-contraintes" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les transactions peuvent être également utile dans certains cas pour violer
+temporairement des contraintes de la base de donnée. Imaginons par exemple que
+suite à une grosse erreur de manipulation, vous vouliez modifier la clé
+primaire d’un élément vers lequel pointe des clés étrangères pour insérer un
+autre élément avec cette même clé primaire :</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">UPDATE</span> <span class="k">INTO</span> <span class="n">my_user</span> <span class="k">SET</span> <span class="n">id</span> <span class="o">=</span> <span class="mf">2</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mf">1</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">my_user</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="mf">...</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">...</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Problème, ces deux instructions violent individuellement une contrainte. La
+première ne respecterait pas foreign key, tandis que la deuxième (si exécutée
+avant la première) introduirait un doublon sur la primary key.</p>
+<p>On peut s’en sortir en utilisant une transaction. En effet, on peut demander
+à la base d’attendre la fin de la transaction pour vérifier les différentes
+contraintes. La transaction amène la base d’un état cohérent vers un autre
+état cohérent, même si elle passe par un état intermédiaire incohérent :</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">START</span> <span class="k">TRANSACTION</span><span class="p">;</span>
+<span class="k">SET</span> <span class="k">CONSTRAINTS</span> <span class="k">ALL</span> <span class="k">DEFERRED</span><span class="p">;</span>
+
+<span class="k">UPDATE</span> <span class="k">INTO</span> <span class="n">my_user</span> <span class="k">SET</span> <span class="n">id</span> <span class="o">=</span> <span class="mf">2</span> <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="mf">1</span><span class="p">;</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="n">my_user</span><span class="p">(</span><span class="n">id</span><span class="p">,</span> <span class="mf">...</span><span class="p">)</span> <span class="k">VALUES</span><span class="p">(</span><span class="mf">1</span><span class="p">,</span> <span class="mf">...</span><span class="p">);</span>
+
+<span class="k">COMMIT</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Vous pouvez essayer avec le transaction_deferred_workshop !</p>
+<p>A noter que certaines contraintes (comme les foreign key) doivent être
+déclarées <em>DEFERRABLE</em> à la création pour pouvoir être désactivées.</p>
+<div class="highlight-postgres notranslate"><div class="highlight"><pre><span></span><span class="k">ALTER</span> <span class="k">TABLE</span> <span class="n">workshop_event</span> <span class="k">ADD</span> <span class="k">FOREIGN</span> <span class="k">KEY</span><span class="p">(</span><span class="n">creator_id</span><span class="p">)</span> <span class="k">REFERENCES</span> <span class="n">workshop_user</span><span class="p">(</span><span class="n">id</span><span class="p">)</span> <span class="k">DEFERRABLE</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
@@ -61,12 +125,21 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Transaction</a><ul>
+<li><a class="reference internal" href="#principe">Principe</a></li>
+<li><a class="reference internal" href="#transactions-et-contraintes">Transactions et contraintes</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Sujet précédent</h4>
   <p class="topless"><a href="../base_de_donnee.html"
                         title="Chapitre précédent">Base de données</a></p>
   <h4>Sujet suivant</h4>
-  <p class="topless"><a href="index.html"
-                        title="Chapitre suivant">Index</a></p>
+  <p class="topless"><a href="transaction_deferred_workshop.html"
+                        title="Chapitre suivant">Transaction deferred workshop</a></p>
   <div role="note" aria-label="source link">
     <h3>Cette page</h3>
     <ul class="this-page-menu">
@@ -95,7 +168,7 @@
           <a href="../genindex.html" title="Index général"
              >index</a></li>
         <li class="right" >
-          <a href="index.html" title="Index"
+          <a href="transaction_deferred_workshop.html" title="Transaction deferred workshop"
              >suivant</a> |</li>
         <li class="right" >
           <a href="../base_de_donnee.html" title="Base de données"

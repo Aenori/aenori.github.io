@@ -1,0 +1,201 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>IO (Input / Output) &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Java 8 et Stream" href="java_8_et_stream.html" />
+    <link rel="prev" title="Méthodes de programmation" href="methodes_de_programmation.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="java_8_et_stream.html" title="Java 8 et Stream"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="methodes_de_programmation.html" title="Méthodes de programmation"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../java.html" accesskey="U">Java</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">IO (Input / Output)</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="io-input-output">
+<h1>IO (Input / Output)<a class="headerlink" href="#io-input-output" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Les opérations dites IO (input / output) consiste à écrire ou lire des données
+à l’extérieur de la zone mémoire du programme. Le cas le plus courant est le
+fichier, mais on peut le faire également avec des sockets (communication entre
+ordinateurs), des pipe (communication entre process), etc …</p>
+<p>Un fichier doit être ouvert pour l’écriture ou la lecture. On trouvera souvent
+une option « append » qui peut être un mode ou une option booléenne pour
+préciser si l’on souhaite écrire à la suite du fichier ou écrasez celui-ci.</p>
+<section id="lecture-ecriture-basique">
+<h2>Lecture / écriture basique<a class="headerlink" href="#lecture-ecriture-basique" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Une première méthode pour lire écrire dans des fichiers en java peut se faire
+à partir des 3 exemples suivants :</p>
+<p>!Attention ce ne sont pas des bonnes pratiques ! (voir plus loin)</p>
+<section id="ecriture">
+<h3>Ecriture<a class="headerlink" href="#ecriture" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="n">BufferedWriter</span> <span class="n">bufferedWriter</span> <span class="o">=</span> <span class="n">Files</span><span class="p">.</span><span class="na">newBufferedWriter</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="na">toPath</span><span class="p">());</span>
+<span class="n">bufferedWriter</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="s">&quot;Hello world !&quot;</span><span class="p">);</span>
+<span class="n">bufferedWriter</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="ecriture-append">
+<h3>Ecriture - append<a class="headerlink" href="#ecriture-append" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="n">BufferedWriter</span> <span class="n">bufferedWriter</span> <span class="o">=</span> <span class="n">Files</span><span class="p">.</span><span class="na">newBufferedWriter</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="na">toPath</span><span class="p">(),</span> <span class="n">StandardOpenOption</span><span class="p">.</span><span class="na">APPEND</span><span class="p">);</span>
+<span class="n">bufferedWriter</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="s">&quot;Hello world !&quot;</span><span class="p">);</span>
+<span class="n">bufferedWriter</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="lecture">
+<h3>Lecture<a class="headerlink" href="#lecture" title="Lien permanent vers ce titre">¶</a></h3>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="n">BufferedReader</span> <span class="n">bufferedReader</span> <span class="o">=</span> <span class="n">Files</span><span class="p">.</span><span class="na">newBufferedReader</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="na">toPath</span><span class="p">());</span>
+<span class="n">bufferedReader</span><span class="p">.</span><span class="na">lines</span><span class="p">().</span><span class="na">forEach</span><span class="p">(</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">::</span><span class="n">println</span>
+<span class="p">);</span>
+<span class="n">bufferedReader</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="methodes-modernes">
+<h2>Méthodes modernes<a class="headerlink" href="#methodes-modernes" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Un très bon tutoriel (en anglais) sur la lecture / écriture de fichier peut
+être trouvé ici :</p>
+<p><a class="reference external" href="https://docs.oracle.com/javase/tutorial/essential/io/file.html">https://docs.oracle.com/javase/tutorial/essential/io/file.html</a></p>
+<p>En résumé la méthode la plus simple (pour les petits fichiers) est d’utliser
+les méthodes de la classe Files :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="c1">// Lecture</span>
+<span class="n">List</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">fileByLine</span> <span class="o">=</span> <span class="n">Files</span><span class="p">.</span><span class="na">readAllLines</span><span class="p">(</span><span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">).</span><span class="na">toPath</span><span class="p">());</span>
+<span class="n">String</span> <span class="n">fileInABigString</span> <span class="o">=</span> <span class="n">Files</span><span class="p">.</span><span class="na">readString</span><span class="p">(</span><span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;test&quot;</span><span class="p">).</span><span class="na">toPath</span><span class="p">());</span>
+
+<span class="c1">// Ecriture</span>
+<span class="n">Files</span><span class="p">.</span><span class="na">writeString</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="na">toPath</span><span class="p">(),</span> <span class="s">&quot;Hello world !&quot;</span><span class="p">);</span>
+
+<span class="c1">// Ecrriture append</span>
+<span class="n">Files</span><span class="p">.</span><span class="na">writeString</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="na">toPath</span><span class="p">(),</span> <span class="s">&quot;Hello world !&quot;</span><span class="p">,</span> <span class="n">StandardOpenOption</span><span class="p">.</span><span class="na">APPEND</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>On peut aussi trouver une syntaxe de type « try-with-resources » :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="k">try</span> <span class="p">(</span><span class="n">BufferedWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="n">Files</span><span class="p">.</span><span class="na">newBufferedWriter</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">charset</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">writer</span><span class="p">.</span><span class="na">write</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">s</span><span class="p">.</span><span class="na">length</span><span class="p">());</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">System</span><span class="p">.</span><span class="na">err</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&quot;IOException: %s%n&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Une règle est qu’il n’est pas une bonne pratique d’appeler explicitement la
+méthode close. En effet c’est facile à oublier et si une exception est levée
+entre l’ouverture et la fermeture, cela peut laisser le fichier dans un état
+incertain.</p>
+<p>Les deux méthodes ci-dessus (Files.something et le try-with-resources)
+garantissent la fermeture du fichier dans tous les cas.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">IO (Input / Output)</a><ul>
+<li><a class="reference internal" href="#lecture-ecriture-basique">Lecture / écriture basique</a><ul>
+<li><a class="reference internal" href="#ecriture">Ecriture</a></li>
+<li><a class="reference internal" href="#ecriture-append">Ecriture - append</a></li>
+<li><a class="reference internal" href="#lecture">Lecture</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methodes-modernes">Méthodes modernes</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="methodes_de_programmation.html"
+                        title="Chapitre précédent">Méthodes de programmation</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="java_8_et_stream.html"
+                        title="Chapitre suivant">Java 8 et Stream</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/java/IO.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="java_8_et_stream.html" title="Java 8 et Stream"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="methodes_de_programmation.html" title="Méthodes de programmation"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../java.html" >Java</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">IO (Input / Output)</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>
