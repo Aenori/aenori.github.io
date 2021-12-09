@@ -7,4 +7,5 @@ Spring
    spring/mockito_et_test
    spring/spring_security
    spring/serialisation
-   spring/ajax_et_serialisation_workshop
+   spring/s3_hosting
+   spring/batch_job_workshop

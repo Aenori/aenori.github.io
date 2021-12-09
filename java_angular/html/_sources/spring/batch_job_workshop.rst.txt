@@ -1,0 +1,364 @@
+Spring batch job workshop
+=========================
+
+Le workshop a pour objectif de regrouper 4 points :
+    - pratique des spring batchs job
+    - tests unitaires
+    - pratiques amazon S3
+    - les dépendances non-java
+
+Du coup il est important de bien le suivre point par point, notamment pour les
+parties sur les tests unitaires.
+
+Objectifs
+---------
+
+Nous allons partir d'un projet avec une simple fonction de téléchargement de
+média et ajouter plusieurs fonctionnalités :
+
+- hébergement sous S3
+- redimensionnement si il s'agit d'une image de profil
+
+Et des tests !!
+
+Mise en place
+-------------
+
+1. Cloner le `repository <https://github.com/Aenori/WorkshopPictureDimensionning>`_
+2. Vous placez sur la branche workshop_start
+3. Lancez le script scripts/create_env_files.sh
+
+Vous pouvez vérifier que le projet fonctionne bien en le lançant, via la
+commande :
+
+- docker-compose up web
+
+Et puis aller sur la homepage localhost:8081
+
+Si vous préférez faire tourner le projet hors docker (ce qui peut sur certains
+points faciliter l'intégration avec l'IDE) il vous faut configurer votre
+serveur postgres OU solution express, héberger la db sous docker en modifiant
+le port de 5432 en 5433 dans les fichiers d'environnement et en lançant la db
+sous docker :
+
+.. code-block:: shell
+
+    docker-compose up db
+
+Partie 1 : tests
+================
+
+Etape numéro 1 : ajout d'un premier test
+----------------------------------------
+
+On va commencer par ajouter un test unitaire.
+Allez sur le MediaController, et faites clic droit + generate (ou alt +
+insert) et sélectionner "test", puis sélectionnez les deux méthodes.
+
+Ajoutez les annotations suivantes sur la classe générée (MediaControllerTest)
+:
+- **@Transactional**
+- **@ActiveProfiles("test")**
+- **@SpringBootTest**
+
+**Transactional** garantit qu'aucun test ne modifie la base de donnée en les
+effectuant dans une transaction qui est rollbackée à la fin du test.
+**ActiveProfile("test")** signifie que l'on utilise le profil test (et donc
+le fichier application-test.properties si il existe).
+
+Commencer par compléter la méthode getAll du test en appelant la méthode
+getAll du controller. Vous pouvez utiliser un attribut @Autowired et un
+attribut de type MediaController pour avoir un MediaController bien initialisé.
+
+.. code-block:: java
+
+    @Autowired
+    MediaController mediaController;
+
+Pour le Model, vous pouvez en créer un avec la ligne suivante :
+
+.. code-block:: java
+
+    Model model = new ExtendedModelMap();
+
+Vérifiez (avec la méthode assertTrue) que le model contient bien un attribut
+allElements en sortie de méthode.
+
+La correction de cette partie peut se trouver sous le répository sous le tag
+step_1_correction
+
+Etape numéro 2 : faire de notre test un vrai test unitaire
+----------------------------------------------------------
+
+Petit problème, notre test n'est pas un vrai test unitaire ! En effet, un test
+unitaire ne doit , par définition, que tester le code de la classe, et pas ses
+dépendances, alors que là notre classe fait appel au service **MediaService**
+
+Pour cela dans un premier temps remplacez l'annotation **@Autowired** au
+dessus de l'attribut par l'annotation **InjectMocks**.
+
+Relancez le test. Que se passe-t-il ? Essayez de résoudre le problème par
+vous-même avant de passer à la suite.
+
+La suite
+^^^^^^^^
+
+Il se passe qu'avec l'annotation InjectMocks, spring n'injecte pas les
+dépendances du MediaController, on reçoit donc un nullpointerexception à
+l'appel du **MediaService**. Pour palier cela, nous allons mocker ce service
+c'est à dire le remplacer par un service factice. Cela se fait en ajoutant
+un attribut à la méthode MediaControllerTest :
+
+.. code-block:: java
+
+    @Mock
+    MediaService
+
+Maintenant allez jeter un oeil à :
+
+`Baeldung - mockito behaviour <https://www.baeldung.com/mockito-behavior>`_
+`Baeldung - mockito verify <https://www.baeldung.com/mockito-verify>`_
+
+Et essayez de complétez le test en rajoutant deux élément :
+
+La syntaxe when(...).thenReturn(...) pour faire renvoyer à notre mock de
+service une liste vide.
+La syntaxe verify(mediaService).getMediaList() pour vérifier que votre méthode
+est bien appelée.
+
+La correction de cette partie peut se trouver sous le répository sous le tag
+step_2_correction
+
+N'hésitez pas à appeler votre formateur préféré (ou celui que vous avez sous
+la main pour compléter les explications sur cette partie)
+
+Etape numéro 3 : autre test unitaire
+------------------------------------
+
+On peut également créez des mocks dans une méthode, ainsi :
+
+.. code-block:: java
+
+    public void getUrl() {
+        Media media = mock(Media.class);
+        HostedMedia hostedMedia = new HostedMedia(media, "test");
+    }
+
+Utilisez cette syntaxe pour créez un test unitaire sur la méthode getUrl() de
+la classe HostedMedia, avec les paramêtres suivants :
+
+    - le mock de media renvoie testFile sur l'appel de getName()
+    - on vérifie que getName() est appelé
+
+La correction de cette partie peut se trouver sous le répository sous le tag
+step_3_correction
+
+Etape numéro 4 : test d'intégration
+-----------------------------------
+
+Créez un fichier de test IntegrationTest auxquels vous ajouterez l'annotation
+**@AutoConfigureMockMvc** et un attribut MockMvc:
+
+.. code-block:: java
+
+    ...
+    @AutoConfigureMockMvc
+    public class IntegrationTest {
+        @Autowired
+        private MockMvc mockMvc;
+
+        @Test
+        void homePage() {
+            MvcResult result = mockMvc.perform(get("/"));
+            String content = result.getResponse().getContentAsString();
+
+            System.out.println(content);
+        }
+    }
+
+Que contient la variable **content** ? Comment tester ce résultat ?
+
+Vous pouvez voir un code sous le tag **step_4_correction**
+
+Partie 2 : intégration S3
+=========================
+
+On va maintenant modifier le projet pour héberger les images sous S3. Pour
+cela nous aurons besoin de 6 éléments :
+
+1. ajouter le amazon sdk dans le pom.xml
+2. ajouter les credentials dans les fichiers de configuration / variables
+   d'environnement
+3. créer l'objet AmazonS3
+4. une méthode pour faire l'upload
+5. une méthode pour supprimer les fichiers
+
+1. Ajout du sdk dans pom.xml
+----------------------------
+
+Ajouter ceci dans le pom.xml (en faisant ensuite les mvn install ou mvn
+dependency:resolve et intellij -> reload project)
+
+.. code-block:: xml
+
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk-s3</artifactId>
+      <version>1.12.120</version>
+    </dependency>
+
+2. Ajout des credentials
+------------------------
+
+Cela se décomposent en 3 parties.
+D'abord vous créez les variables pour stocker vos identifiants en s'assurant
+qu'ils ne soit pas sous git !
+
+Dans votre fichier .env (ou autre réceptacle des variables d'environnement non
+versionnés)
+
+.. code-block:: shell
+
+    S3_ACCESS_KEY=XXX
+    S3_ACCESS_SECRET=XXX
+    S3_REGION=eu-west-3
+    S3_BUCKET_NAME=XXX
+
+Où il faut remplacer XXX par les credentials transmis par votre formateur.
+
+Puis dans le fichier application.properties, pour faire le lien entre spring
+et les variables d'environnement :
+
+.. code-block:: kconfig
+
+    amazon.aws.s3.accesskey=${S3_ACCESS_KEY:}
+    amazon.aws.s3.secretkey=${S3_ACCESS_SECRET:}
+    amazon.aws.s3.region=${S3_REGION:}
+    amazon.aws.s3.bucket=${S3_BUCKET_NAME:}
+
+Puis dans la classe qui crééra l'objet de connection à S3 :
+
+.. code-block:: java
+
+    @Value("${amazon.aws.s3.accesskey}")
+    private String accessKey;
+
+    @Value("${amazon.aws.s3.secretkey}")
+    private String accessSecret;
+
+    @Value("${amazon.aws.s3.region}")
+    private String region;
+
+    @Value("${amazon.aws.s3.bucket}")
+    private String bucketName;
+
+3. Création de l'objet AmazonS3
+-------------------------------
+
+.. code-block:: java
+
+    AWSCredentials credentials = new BasicAWSCredentials(
+        accessKey,
+        accessSecret
+    );
+
+    AmazonS3 amazonS3 = AmazonS3ClientBuilder
+        .standard()
+        .withCredentials(new AWSStaticCredentialsProvider(credentials))
+        .withRegion(Regions.valueOf(region.toUpperCase().replace('-', '_')))
+        .build();
+
+Où accessKey et accessSecret correspondent aux attributs créés à l'étape 2.
+Ici on indique en dur la region (EU_WEST_3, soit Paris) mais sinon on pouvait
+utiliser Regions.valueOf(s3Region).
+
+4. Upload de fichier
+--------------------
+
+Modifier la méthode **saveFile** de la classe **MediaService** pour intégrer
+la méthode d'upload de fichier, qui passe par une "PutObjectRequest".
+
+.. code-block:: java
+
+    public void uploadFile(String objectKey, InputStream inputStream, Long size) {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(size);
+        amazonS3.putObject(
+                new PutObjectRequest(bucketName, objectKey, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+    }
+
+Note : il existe également une méthode **putObject(String bucketName, String
+objectKey, File file)**
+
+A noter le complément .withCannedAcl(CannedAccessControlList.PublicRead) qui
+rend les objets publics (indispensable si c'est pour faire partie d'un site
+web).
+
+5. Suppression de fichier
+-------------------------
+
+De même, il serait bien de supprimer les fichiers qui ne sont plus utilisés.
+Pour cela, nous utiliserons une autre requête, la **DeleteObjectRequest**.
+Par exemple :
+
+.. code-block:: java
+
+    amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
+
+Correction
+----------
+
+Vous pouvez trouver la correcton sous
+partie_2_solution
+
+!Attention, il manque les credentials qui ne sont pas sous github
+
+Partie 3 : redimensionnement d'image
+====================================
+
+A noter que si Spring tend à encourager l'utilisation de services ou de "bean"
+, ie des composents gérés par Spring, nous simplement utiliser une classe
+abstraite et des méthodes statics.
+
+Nous allons effectuer 3 types d'opérations :
+
+- obtenir la taille de l'image
+- la "cropper", ie extraire une partie (pour faire un carré)
+- la redimensionner
+
+Nous allons utiliser la librairie native de java, potentiellement moins
+performante, mais plus facile à utiliser.
+
+Vous pouvez trouver les explications ci-dessous :
+
+`ImageIO get size <https://stackoverflow.com/questions/672916/how-to-get-image-height-and-width-using-java>`_
+`ImageIO crop image <https://stackoverflow.com/questions/2386064/how-do-i-crop-an-image-in-java>`_
+`ImageIO resize image <https://www.baeldung.com/java-resize-image#2-imagegetscaledinstance>`_
+
+Vous pouvez trouver la correcton sous
+partie_3_solution
+
+Avec un test unitaire évidemment
+
+Partie 4 : création du job
+==========================
+
+Maintenant nous attaquons la dernière partie, la création des batch jobs. Le
+principe des batchs jobs est de dissocier les tâches longues et couteuses de
+la réponse aux requêtes. Ceci pour plusieurs raisons :
+
+- renvoyer rapidement une réponse à l'utilisateur
+- controller le nombre de jobs parallèle en le dissociant des requêtes
+
+Par exemple, on peut vouloir paramêtrer que le serveur gère 10 requêtes mais
+seulement 1 batch jobs. Il est possible aussi d'avoir les batchs jobs gérez
+par un autre serveur (ou un autre dyno sous heroku, par exemple)
+
+Pour une rapide introduction, vous pouvez regarder ce guide :
+
+`Spring.io batch jobs <https://spring.io/guides/gs/batch-processing/>`_
+
+
+
+

@@ -1,0 +1,445 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>Spring batch job workshop &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Base de données" href="../base_de_donnee.html" />
+    <link rel="prev" title="Amazon S3 Hosting" href="s3_hosting.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../base_de_donnee.html" title="Base de données"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="s3_hosting.html" title="Amazon S3 Hosting"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../spring.html" accesskey="U">Spring</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Spring batch job workshop</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="spring-batch-job-workshop">
+<h1>Spring batch job workshop<a class="headerlink" href="#spring-batch-job-workshop" title="Lien permanent vers ce titre">¶</a></h1>
+<dl class="simple">
+<dt>Le workshop a pour objectif de regrouper 4 points :</dt><dd><ul class="simple">
+<li><p>pratique des spring batchs job</p></li>
+<li><p>tests unitaires</p></li>
+<li><p>pratiques amazon S3</p></li>
+<li><p>les dépendances non-java</p></li>
+</ul>
+</dd>
+</dl>
+<p>Du coup il est important de bien le suivre point par point, notamment pour les
+parties sur les tests unitaires.</p>
+<section id="objectifs">
+<h2>Objectifs<a class="headerlink" href="#objectifs" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Nous allons partir d’un projet avec une simple fonction de téléchargement de
+média et ajouter plusieurs fonctionnalités :</p>
+<ul class="simple">
+<li><p>hébergement sous S3</p></li>
+<li><p>redimensionnement si il s’agit d’une image de profil</p></li>
+</ul>
+<p>Et des tests !!</p>
+</section>
+<section id="mise-en-place">
+<h2>Mise en place<a class="headerlink" href="#mise-en-place" title="Lien permanent vers ce titre">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Cloner le <a class="reference external" href="https://github.com/Aenori/WorkshopPictureDimensionning">repository</a></p></li>
+<li><p>Vous placez sur la branche workshop_start</p></li>
+<li><p>Lancez le script scripts/create_env_files.sh</p></li>
+</ol>
+<p>Vous pouvez vérifier que le projet fonctionne bien en le lançant, via la
+commande :</p>
+<ul class="simple">
+<li><p>docker-compose up web</p></li>
+</ul>
+<p>Et puis aller sur la homepage localhost:8081</p>
+<p>Si vous préférez faire tourner le projet hors docker (ce qui peut sur certains
+points faciliter l’intégration avec l’IDE) il vous faut configurer votre
+serveur postgres OU solution express, héberger la db sous docker en modifiant
+le port de 5432 en 5433 dans les fichiers d’environnement et en lançant la db
+sous docker :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker-compose up db
+</pre></div>
+</div>
+</section>
+</section>
+<section id="partie-1-tests">
+<h1>Partie 1 : tests<a class="headerlink" href="#partie-1-tests" title="Lien permanent vers ce titre">¶</a></h1>
+<section id="etape-numero-1-ajout-d-un-premier-test">
+<h2>Etape numéro 1 : ajout d’un premier test<a class="headerlink" href="#etape-numero-1-ajout-d-un-premier-test" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On va commencer par ajouter un test unitaire.
+Allez sur le MediaController, et faites clic droit + generate (ou alt +
+insert) et sélectionner « test », puis sélectionnez les deux méthodes.</p>
+<p>Ajoutez les annotations suivantes sur la classe générée (MediaControllerTest)
+:
+- <strong>&#64;Transactional</strong>
+- <strong>&#64;ActiveProfiles(« test »)</strong>
+- <strong>&#64;SpringBootTest</strong></p>
+<p><strong>Transactional</strong> garantit qu’aucun test ne modifie la base de donnée en les
+effectuant dans une transaction qui est rollbackée à la fin du test.
+<strong>ActiveProfile(« test »)</strong> signifie que l’on utilise le profil test (et donc
+le fichier application-test.properties si il existe).</p>
+<p>Commencer par compléter la méthode getAll du test en appelant la méthode
+getAll du controller. Vous pouvez utiliser un attribut &#64;Autowired et un
+attribut de type MediaController pour avoir un MediaController bien initialisé.</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Autowired</span>
+<span class="n">MediaController</span> <span class="n">mediaController</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Pour le Model, vous pouvez en créer un avec la ligne suivante :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">Model</span> <span class="n">model</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ExtendedModelMap</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Vérifiez (avec la méthode assertTrue) que le model contient bien un attribut
+allElements en sortie de méthode.</p>
+<p>La correction de cette partie peut se trouver sous le répository sous le tag
+step_1_correction</p>
+</section>
+<section id="etape-numero-2-faire-de-notre-test-un-vrai-test-unitaire">
+<h2>Etape numéro 2 : faire de notre test un vrai test unitaire<a class="headerlink" href="#etape-numero-2-faire-de-notre-test-un-vrai-test-unitaire" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Petit problème, notre test n’est pas un vrai test unitaire ! En effet, un test
+unitaire ne doit , par définition, que tester le code de la classe, et pas ses
+dépendances, alors que là notre classe fait appel au service <strong>MediaService</strong></p>
+<p>Pour cela dans un premier temps remplacez l’annotation <strong>&#64;Autowired</strong> au
+dessus de l’attribut par l’annotation <strong>InjectMocks</strong>.</p>
+<p>Relancez le test. Que se passe-t-il ? Essayez de résoudre le problème par
+vous-même avant de passer à la suite.</p>
+<section id="la-suite">
+<h3>La suite<a class="headerlink" href="#la-suite" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Il se passe qu’avec l’annotation InjectMocks, spring n’injecte pas les
+dépendances du MediaController, on reçoit donc un nullpointerexception à
+l’appel du <strong>MediaService</strong>. Pour palier cela, nous allons mocker ce service
+c’est à dire le remplacer par un service factice. Cela se fait en ajoutant
+un attribut à la méthode MediaControllerTest :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Mock</span>
+<span class="n">MediaService</span>
+</pre></div>
+</div>
+<p>Maintenant allez jeter un oeil à :</p>
+<p><a class="reference external" href="https://www.baeldung.com/mockito-behavior">Baeldung - mockito behaviour</a>
+<a class="reference external" href="https://www.baeldung.com/mockito-verify">Baeldung - mockito verify</a></p>
+<p>Et essayez de complétez le test en rajoutant deux élément :</p>
+<p>La syntaxe when(…).thenReturn(…) pour faire renvoyer à notre mock de
+service une liste vide.
+La syntaxe verify(mediaService).getMediaList() pour vérifier que votre méthode
+est bien appelée.</p>
+<p>La correction de cette partie peut se trouver sous le répository sous le tag
+step_2_correction</p>
+<p>N’hésitez pas à appeler votre formateur préféré (ou celui que vous avez sous
+la main pour compléter les explications sur cette partie)</p>
+</section>
+</section>
+<section id="etape-numero-3-autre-test-unitaire">
+<h2>Etape numéro 3 : autre test unitaire<a class="headerlink" href="#etape-numero-3-autre-test-unitaire" title="Lien permanent vers ce titre">¶</a></h2>
+<p>On peut également créez des mocks dans une méthode, ainsi :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">getUrl</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">Media</span> <span class="n">media</span> <span class="o">=</span> <span class="n">mock</span><span class="p">(</span><span class="n">Media</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+    <span class="n">HostedMedia</span> <span class="n">hostedMedia</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HostedMedia</span><span class="p">(</span><span class="n">media</span><span class="p">,</span> <span class="s">&quot;test&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Utilisez cette syntaxe pour créez un test unitaire sur la méthode getUrl() de
+la classe HostedMedia, avec les paramêtres suivants :</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>le mock de media renvoie testFile sur l’appel de getName()</p></li>
+<li><p>on vérifie que getName() est appelé</p></li>
+</ul>
+</div></blockquote>
+<p>La correction de cette partie peut se trouver sous le répository sous le tag
+step_3_correction</p>
+</section>
+<section id="etape-numero-4-test-d-integration">
+<h2>Etape numéro 4 : test d’intégration<a class="headerlink" href="#etape-numero-4-test-d-integration" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Créez un fichier de test IntegrationTest auxquels vous ajouterez l’annotation
+<strong>&#64;AutoConfigureMockMvc</strong> et un attribut MockMvc:</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="p">...</span>
+<span class="nd">@AutoConfigureMockMvc</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">IntegrationTest</span> <span class="p">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">MockMvc</span> <span class="n">mockMvc</span><span class="p">;</span>
+
+    <span class="nd">@Test</span>
+    <span class="kt">void</span> <span class="nf">homePage</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">MvcResult</span> <span class="n">result</span> <span class="o">=</span> <span class="n">mockMvc</span><span class="p">.</span><span class="na">perform</span><span class="p">(</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">));</span>
+        <span class="n">String</span> <span class="n">content</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="na">getResponse</span><span class="p">().</span><span class="na">getContentAsString</span><span class="p">();</span>
+
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">content</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Que contient la variable <strong>content</strong> ? Comment tester ce résultat ?</p>
+<p>Vous pouvez voir un code sous le tag <strong>step_4_correction</strong></p>
+</section>
+</section>
+<section id="partie-2-integration-s3">
+<h1>Partie 2 : intégration S3<a class="headerlink" href="#partie-2-integration-s3" title="Lien permanent vers ce titre">¶</a></h1>
+<p>On va maintenant modifier le projet pour héberger les images sous S3. Pour
+cela nous aurons besoin de 6 éléments :</p>
+<ol class="arabic simple">
+<li><p>ajouter le amazon sdk dans le pom.xml</p></li>
+<li><p>ajouter les credentials dans les fichiers de configuration / variables
+d’environnement</p></li>
+<li><p>créer l’objet AmazonS3</p></li>
+<li><p>une méthode pour faire l’upload</p></li>
+<li><p>une méthode pour supprimer les fichiers</p></li>
+</ol>
+<section id="ajout-du-sdk-dans-pom-xml">
+<h2>1. Ajout du sdk dans pom.xml<a class="headerlink" href="#ajout-du-sdk-dans-pom-xml" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Ajouter ceci dans le pom.xml (en faisant ensuite les mvn install ou mvn
+dependency:resolve et intellij -&gt; reload project)</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;dependency&gt;</span>
+  <span class="nt">&lt;groupId&gt;</span>com.amazonaws<span class="nt">&lt;/groupId&gt;</span>
+  <span class="nt">&lt;artifactId&gt;</span>aws-java-sdk-s3<span class="nt">&lt;/artifactId&gt;</span>
+  <span class="nt">&lt;version&gt;</span>1.12.120<span class="nt">&lt;/version&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="ajout-des-credentials">
+<h2>2. Ajout des credentials<a class="headerlink" href="#ajout-des-credentials" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Cela se décomposent en 3 parties.
+D’abord vous créez les variables pour stocker vos identifiants en s’assurant
+qu’ils ne soit pas sous git !</p>
+<p>Dans votre fichier .env (ou autre réceptacle des variables d’environnement non
+versionnés)</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">S3_ACCESS_KEY</span><span class="o">=</span>XXX
+<span class="nv">S3_ACCESS_SECRET</span><span class="o">=</span>XXX
+<span class="nv">S3_REGION</span><span class="o">=</span>eu-west-3
+<span class="nv">S3_BUCKET_NAME</span><span class="o">=</span>XXX
+</pre></div>
+</div>
+<p>Où il faut remplacer XXX par les credentials transmis par votre formateur.</p>
+<p>Puis dans le fichier application.properties, pour faire le lien entre spring
+et les variables d’environnement :</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>amazon.aws.s3.accesskey=${S3_ACCESS_KEY:}
+amazon.aws.s3.secretkey=${S3_ACCESS_SECRET:}
+amazon.aws.s3.region=${S3_REGION:}
+amazon.aws.s3.bucket=${S3_BUCKET_NAME:}
+</pre></div>
+</div>
+<p>Puis dans la classe qui crééra l’objet de connection à S3 :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${amazon.aws.s3.accesskey}&quot;</span><span class="p">)</span>
+<span class="kd">private</span> <span class="n">String</span> <span class="n">accessKey</span><span class="p">;</span>
+
+<span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${amazon.aws.s3.secretkey}&quot;</span><span class="p">)</span>
+<span class="kd">private</span> <span class="n">String</span> <span class="n">accessSecret</span><span class="p">;</span>
+
+<span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${amazon.aws.s3.region}&quot;</span><span class="p">)</span>
+<span class="kd">private</span> <span class="n">String</span> <span class="n">region</span><span class="p">;</span>
+
+<span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${amazon.aws.s3.bucket}&quot;</span><span class="p">)</span>
+<span class="kd">private</span> <span class="n">String</span> <span class="n">bucketName</span><span class="p">;</span>
+</pre></div>
+</div>
+</section>
+<section id="creation-de-l-objet-amazons3">
+<h2>3. Création de l’objet AmazonS3<a class="headerlink" href="#creation-de-l-objet-amazons3" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">AWSCredentials</span> <span class="n">credentials</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BasicAWSCredentials</span><span class="p">(</span>
+    <span class="n">accessKey</span><span class="p">,</span>
+    <span class="n">accessSecret</span>
+<span class="p">);</span>
+
+<span class="n">AmazonS3</span> <span class="n">amazonS3</span> <span class="o">=</span> <span class="n">AmazonS3ClientBuilder</span>
+    <span class="p">.</span><span class="na">standard</span><span class="p">()</span>
+    <span class="p">.</span><span class="na">withCredentials</span><span class="p">(</span><span class="k">new</span> <span class="n">AWSStaticCredentialsProvider</span><span class="p">(</span><span class="n">credentials</span><span class="p">))</span>
+    <span class="p">.</span><span class="na">withRegion</span><span class="p">(</span><span class="n">Regions</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">region</span><span class="p">.</span><span class="na">toUpperCase</span><span class="p">().</span><span class="na">replace</span><span class="p">(</span><span class="sc">&#39;-&#39;</span><span class="p">,</span> <span class="sc">&#39;_&#39;</span><span class="p">)))</span>
+    <span class="p">.</span><span class="na">build</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Où accessKey et accessSecret correspondent aux attributs créés à l’étape 2.
+Ici on indique en dur la region (EU_WEST_3, soit Paris) mais sinon on pouvait
+utiliser Regions.valueOf(s3Region).</p>
+</section>
+<section id="upload-de-fichier">
+<h2>4. Upload de fichier<a class="headerlink" href="#upload-de-fichier" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Modifier la méthode <strong>saveFile</strong> de la classe <strong>MediaService</strong> pour intégrer
+la méthode d’upload de fichier, qui passe par une « PutObjectRequest ».</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="kd">public</span> <span class="kt">void</span> <span class="nf">uploadFile</span><span class="p">(</span><span class="n">String</span> <span class="n">objectKey</span><span class="p">,</span> <span class="n">InputStream</span> <span class="n">inputStream</span><span class="p">,</span> <span class="n">Long</span> <span class="n">size</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ObjectMetadata</span> <span class="n">objectMetadata</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectMetadata</span><span class="p">();</span>
+    <span class="n">objectMetadata</span><span class="p">.</span><span class="na">setContentLength</span><span class="p">(</span><span class="n">size</span><span class="p">);</span>
+    <span class="n">amazonS3</span><span class="p">.</span><span class="na">putObject</span><span class="p">(</span>
+            <span class="k">new</span> <span class="n">PutObjectRequest</span><span class="p">(</span><span class="n">bucketName</span><span class="p">,</span> <span class="n">objectKey</span><span class="p">,</span> <span class="n">inputStream</span><span class="p">,</span> <span class="n">objectMetadata</span><span class="p">)</span>
+                    <span class="p">.</span><span class="na">withCannedAcl</span><span class="p">(</span><span class="n">CannedAccessControlList</span><span class="p">.</span><span class="na">PublicRead</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Note : il existe également une méthode <strong>putObject(String bucketName, String
+objectKey, File file)</strong></p>
+<p>A noter le complément .withCannedAcl(CannedAccessControlList.PublicRead) qui
+rend les objets publics (indispensable si c’est pour faire partie d’un site
+web).</p>
+</section>
+<section id="suppression-de-fichier">
+<h2>5. Suppression de fichier<a class="headerlink" href="#suppression-de-fichier" title="Lien permanent vers ce titre">¶</a></h2>
+<p>De même, il serait bien de supprimer les fichiers qui ne sont plus utilisés.
+Pour cela, nous utiliserons une autre requête, la <strong>DeleteObjectRequest</strong>.
+Par exemple :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="n">amazonS3</span><span class="p">.</span><span class="na">deleteObject</span><span class="p">(</span><span class="k">new</span> <span class="n">DeleteObjectRequest</span><span class="p">(</span><span class="n">bucketName</span><span class="p">,</span> <span class="n">key</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="correction">
+<h2>Correction<a class="headerlink" href="#correction" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Vous pouvez trouver la correcton sous
+partie_2_solution</p>
+<p>!Attention, il manque les credentials qui ne sont pas sous github</p>
+</section>
+</section>
+<section id="partie-3-redimensionnement-d-image">
+<h1>Partie 3 : redimensionnement d’image<a class="headerlink" href="#partie-3-redimensionnement-d-image" title="Lien permanent vers ce titre">¶</a></h1>
+<p>A noter que si Spring tend à encourager l’utilisation de services ou de « bean »
+, ie des composents gérés par Spring, nous simplement utiliser une classe
+abstraite et des méthodes statics.</p>
+<p>Nous allons effectuer 3 types d’opérations :</p>
+<ul class="simple">
+<li><p>obtenir la taille de l’image</p></li>
+<li><p>la « cropper », ie extraire une partie (pour faire un carré)</p></li>
+<li><p>la redimensionner</p></li>
+</ul>
+<p>Nous allons utiliser la librairie native de java, potentiellement moins
+performante, mais plus facile à utiliser.</p>
+<p>Vous pouvez trouver les explications ci-dessous :</p>
+<p><a class="reference external" href="https://stackoverflow.com/questions/672916/how-to-get-image-height-and-width-using-java">ImageIO get size</a>
+<a class="reference external" href="https://stackoverflow.com/questions/2386064/how-do-i-crop-an-image-in-java">ImageIO crop image</a>
+<a class="reference external" href="https://www.baeldung.com/java-resize-image#2-imagegetscaledinstance">ImageIO resize image</a></p>
+<p>Vous pouvez trouver la correcton sous
+partie_3_solution</p>
+<p>Avec un test unitaire évidemment</p>
+</section>
+<section id="partie-4-creation-du-job">
+<h1>Partie 4 : création du job<a class="headerlink" href="#partie-4-creation-du-job" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Maintenant nous attaquons la dernière partie, la création des batch jobs. Le
+principe des batchs jobs est de dissocier les tâches longues et couteuses de
+la réponse aux requêtes. Ceci pour plusieurs raisons :</p>
+<ul class="simple">
+<li><p>renvoyer rapidement une réponse à l’utilisateur</p></li>
+<li><p>controller le nombre de jobs parallèle en le dissociant des requêtes</p></li>
+</ul>
+<p>Par exemple, on peut vouloir paramêtrer que le serveur gère 10 requêtes mais
+seulement 1 batch jobs. Il est possible aussi d’avoir les batchs jobs gérez
+par un autre serveur (ou un autre dyno sous heroku, par exemple)</p>
+<p>Pour une rapide introduction, vous pouvez regarder ce guide :</p>
+<p><a class="reference external" href="https://spring.io/guides/gs/batch-processing/">Spring.io batch jobs</a></p>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Spring batch job workshop</a><ul>
+<li><a class="reference internal" href="#objectifs">Objectifs</a></li>
+<li><a class="reference internal" href="#mise-en-place">Mise en place</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#partie-1-tests">Partie 1 : tests</a><ul>
+<li><a class="reference internal" href="#etape-numero-1-ajout-d-un-premier-test">Etape numéro 1 : ajout d’un premier test</a></li>
+<li><a class="reference internal" href="#etape-numero-2-faire-de-notre-test-un-vrai-test-unitaire">Etape numéro 2 : faire de notre test un vrai test unitaire</a><ul>
+<li><a class="reference internal" href="#la-suite">La suite</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#etape-numero-3-autre-test-unitaire">Etape numéro 3 : autre test unitaire</a></li>
+<li><a class="reference internal" href="#etape-numero-4-test-d-integration">Etape numéro 4 : test d’intégration</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#partie-2-integration-s3">Partie 2 : intégration S3</a><ul>
+<li><a class="reference internal" href="#ajout-du-sdk-dans-pom-xml">1. Ajout du sdk dans pom.xml</a></li>
+<li><a class="reference internal" href="#ajout-des-credentials">2. Ajout des credentials</a></li>
+<li><a class="reference internal" href="#creation-de-l-objet-amazons3">3. Création de l’objet AmazonS3</a></li>
+<li><a class="reference internal" href="#upload-de-fichier">4. Upload de fichier</a></li>
+<li><a class="reference internal" href="#suppression-de-fichier">5. Suppression de fichier</a></li>
+<li><a class="reference internal" href="#correction">Correction</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#partie-3-redimensionnement-d-image">Partie 3 : redimensionnement d’image</a></li>
+<li><a class="reference internal" href="#partie-4-creation-du-job">Partie 4 : création du job</a></li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="s3_hosting.html"
+                        title="Chapitre précédent">Amazon S3 Hosting</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="../base_de_donnee.html"
+                        title="Chapitre suivant">Base de données</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/spring/batch_job_workshop.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="../base_de_donnee.html" title="Base de données"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="s3_hosting.html" title="Amazon S3 Hosting"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../spring.html" >Spring</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Spring batch job workshop</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>
