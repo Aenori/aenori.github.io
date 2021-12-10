@@ -352,8 +352,111 @@ la réponse aux requêtes. Ceci pour plusieurs raisons :</p>
 <p>Par exemple, on peut vouloir paramêtrer que le serveur gère 10 requêtes mais
 seulement 1 batch jobs. Il est possible aussi d’avoir les batchs jobs gérez
 par un autre serveur (ou un autre dyno sous heroku, par exemple)</p>
-<p>Pour une rapide introduction, vous pouvez regarder ce guide :</p>
+<p>Pour une introduction, vous pouvez regarder ce guide :</p>
 <p><a class="reference external" href="https://spring.io/guides/gs/batch-processing/">Spring.io batch jobs</a></p>
+<p>Un job est défini par plusieurs step. Dans notre cas, nous utiliserons des
+steps simples, basés sur des « Tasks », elle-même contenus dans des Tasklets.</p>
+<p>Un exemple de Job :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="n">Job</span> <span class="nf">uploadToS3Job</span><span class="p">(</span><span class="n">Step</span> <span class="n">uploadToS3</span><span class="p">,</span> <span class="n">Step</span> <span class="n">makeMediaProcessed</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">jobBuilderFactory</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="s">&quot;uploadToS3Job&quot;</span><span class="p">)</span>
+            <span class="p">.</span><span class="na">start</span><span class="p">(</span><span class="n">uploadToS3</span><span class="p">)</span>
+            <span class="p">.</span><span class="na">next</span><span class="p">(</span><span class="n">makeMediaProcessed</span><span class="p">)</span>
+            <span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ceci créé un job constitué de 2 steps, uploadToS3 puis makeMediaPorcessed.
+Comme cette fonction renvoit un objet géré par Spring (cela est créé par
+l’annotation &#64;Bean) elle peut prendre en argument d’autres objets gérés par
+Spring. Ainsi les 2 steps sont créés par Spring via le code suivant :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="n">Step</span> <span class="nf">makeMediaProcessed</span><span class="p">(</span><span class="n">MakeMediaProcessedTasklet</span> <span class="n">makeMediaProcessedTasklet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">getSimpleTaskletStep</span><span class="p">(</span>
+            <span class="s">&quot;makeAllImagesProcessed&quot;</span><span class="p">,</span>
+            <span class="n">makeMediaProcessedTasklet</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nd">@Bean</span>
+<span class="kd">public</span> <span class="n">Step</span> <span class="nf">uploadToS3</span><span class="p">(</span><span class="n">UploadTasklet</span> <span class="n">uploadTasklet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">getSimpleTaskletStep</span><span class="p">(</span>
+            <span class="s">&quot;uploadToS3&quot;</span><span class="p">,</span>
+            <span class="n">uploadTasklet</span>
+    <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">private</span> <span class="n">TaskletStep</span> <span class="nf">getSimpleTaskletStep</span><span class="p">(</span><span class="n">String</span> <span class="n">name</span><span class="p">,</span> <span class="n">Tasklet</span> <span class="n">tasklet</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">stepBuilderFactory</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="p">.</span><span class="na">tasklet</span><span class="p">(</span><span class="n">tasklet</span><span class="p">)</span>
+            <span class="p">.</span><span class="na">build</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Et donc de la même façon, les Tasklets sont également gérés par Spring :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Component</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">UploadTasklet</span> <span class="kd">extends</span> <span class="n">AbstractTasklet</span> <span class="p">{</span>
+    <span class="nd">@Autowired</span>
+    <span class="kd">private</span> <span class="n">MediaProcessingService</span> <span class="n">mediaProcessingService</span><span class="p">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">RepeatStatus</span> <span class="nf">execute</span><span class="p">(</span><span class="n">StepContribution</span> <span class="n">stepContribution</span><span class="p">,</span> <span class="n">ChunkContext</span> <span class="n">chunkContext</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+        <span class="n">String</span> <span class="n">filename</span> <span class="o">=</span> <span class="n">getJobParam</span><span class="p">(</span><span class="n">chunkContext</span><span class="p">,</span> <span class="s">&quot;filename&quot;</span><span class="p">);</span>
+        <span class="n">String</span> <span class="n">tmpFile</span> <span class="o">=</span> <span class="n">getJobParam</span><span class="p">(</span><span class="n">chunkContext</span><span class="p">,</span> <span class="s">&quot;tmpFile&quot;</span><span class="p">);</span>
+
+        <span class="n">mediaProcessingService</span><span class="p">.</span><span class="na">saveFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="n">tmpFile</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">RepeatStatus</span><span class="p">.</span><span class="na">FINISHED</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Ici c’est l’annotation &#64;Component (qui s’applique à une classe, alors que
+&#64;Bean s’appliquait à une méthode)</p>
+<p>Il est important de définir un JobLauncher async :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Autowired</span>
+<span class="kd">private</span> <span class="n">JobRepository</span> <span class="n">jobRepository</span><span class="p">;</span>
+
+<span class="nd">@Bean</span><span class="p">(</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;asyncJobLauncher&quot;</span><span class="p">)</span>
+<span class="kd">public</span> <span class="n">JobLauncher</span> <span class="nf">simpleJobLauncher</span><span class="p">()</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="p">{</span>
+    <span class="n">SimpleJobLauncher</span> <span class="n">jobLauncher</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleJobLauncher</span><span class="p">();</span>
+    <span class="n">jobLauncher</span><span class="p">.</span><span class="na">setJobRepository</span><span class="p">(</span><span class="n">jobRepository</span><span class="p">);</span>
+    <span class="n">ThreadPoolTaskExecutor</span> <span class="n">threadPoolTaskExecutor</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadPoolTaskExecutor</span><span class="p">();</span>
+    <span class="n">threadPoolTaskExecutor</span><span class="p">.</span><span class="na">initialize</span><span class="p">();</span>
+    <span class="n">jobLauncher</span><span class="p">.</span><span class="na">setTaskExecutor</span><span class="p">(</span><span class="n">threadPoolTaskExecutor</span><span class="p">);</span>
+    <span class="n">jobLauncher</span><span class="p">.</span><span class="na">afterPropertiesSet</span><span class="p">();</span>
+    <span class="k">return</span> <span class="n">jobLauncher</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Et enfin il faut spécifier dans application.properties une propriété pour
+créer les tables nécessaires aux exécutions de job :</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>spring.batch.jdbc.initialize-schema=always
+</pre></div>
+</div>
+<p>Vous pourrez ensuite appeler votre job dans le service :</p>
+<div class="highlight-java notranslate"><div class="highlight"><pre><span></span><span class="nd">@Autowired</span>
+<span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;asyncJobLauncher&quot;</span><span class="p">)</span>
+<span class="n">JobLauncher</span> <span class="n">jobLauncher</span><span class="p">;</span>
+
+<span class="nd">@Autowired</span>
+<span class="n">Job</span> <span class="n">uploadToS3Job</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kt">void</span> <span class="nf">myMethod</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">...</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">JobParameter</span><span class="o">&gt;</span> <span class="n">confMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="p">,</span> <span class="n">JobParameter</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">confMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;mediaId&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">JobParameter</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">valueOf</span><span class="p">(</span><span class="n">savedMedia</span><span class="p">.</span><span class="na">getId</span><span class="p">())));</span>
+    <span class="n">confMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;filename&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">JobParameter</span><span class="p">(</span><span class="n">filename</span><span class="p">));</span>
+    <span class="n">confMap</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="s">&quot;tmpFile&quot;</span><span class="p">,</span> <span class="k">new</span> <span class="n">JobParameter</span><span class="p">(</span><span class="n">tmpFile</span><span class="p">));</span>
+    <span class="n">JobParameters</span> <span class="n">jobParameters</span> <span class="o">=</span> <span class="k">new</span> <span class="n">JobParameters</span><span class="p">(</span><span class="n">confMap</span><span class="p">);</span>
+
+    <span class="n">jobLauncher</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">uploadToS3Job</span><span class="p">,</span> <span class="n">jobParameters</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Essayez de créez un job pour faire l’upload de façon asynchrone.
+Goodluck !</p>
+<p>Vous pouvez trouver la solution sous le tag partie_4_solution</p>
 </section>
 
 

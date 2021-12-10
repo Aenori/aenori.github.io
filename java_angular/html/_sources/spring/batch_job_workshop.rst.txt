@@ -355,10 +355,125 @@ Par exemple, on peut vouloir paramêtrer que le serveur gère 10 requêtes mais
 seulement 1 batch jobs. Il est possible aussi d'avoir les batchs jobs gérez
 par un autre serveur (ou un autre dyno sous heroku, par exemple)
 
-Pour une rapide introduction, vous pouvez regarder ce guide :
+Pour une introduction, vous pouvez regarder ce guide :
 
 `Spring.io batch jobs <https://spring.io/guides/gs/batch-processing/>`_
 
+Un job est défini par plusieurs step. Dans notre cas, nous utiliserons des
+steps simples, basés sur des "Tasks", elle-même contenus dans des Tasklets.
 
+Un exemple de Job :
 
+.. code-block:: java
 
+    @Bean
+    public Job uploadToS3Job(Step uploadToS3, Step makeMediaProcessed) {
+        return this.jobBuilderFactory.get("uploadToS3Job")
+                .start(uploadToS3)
+                .next(makeMediaProcessed)
+                .build();
+    }
+
+Ceci créé un job constitué de 2 steps, uploadToS3 puis makeMediaPorcessed.
+Comme cette fonction renvoit un objet géré par Spring (cela est créé par
+l'annotation @Bean) elle peut prendre en argument d'autres objets gérés par
+Spring. Ainsi les 2 steps sont créés par Spring via le code suivant :
+
+.. code-block:: java
+
+    @Bean
+    public Step makeMediaProcessed(MakeMediaProcessedTasklet makeMediaProcessedTasklet) {
+        return getSimpleTaskletStep(
+                "makeAllImagesProcessed",
+                makeMediaProcessedTasklet
+        );
+    }
+
+    @Bean
+    public Step uploadToS3(UploadTasklet uploadTasklet) {
+        return getSimpleTaskletStep(
+                "uploadToS3",
+                uploadTasklet
+        );
+    }
+
+    private TaskletStep getSimpleTaskletStep(String name, Tasklet tasklet) {
+        return this.stepBuilderFactory.get(name)
+                .tasklet(tasklet)
+                .build();
+    }
+
+Et donc de la même façon, les Tasklets sont également gérés par Spring :
+
+.. code-block:: java
+
+    @Component
+    public class UploadTasklet extends AbstractTasklet {
+        @Autowired
+        private MediaProcessingService mediaProcessingService;
+
+        @Override
+        public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
+            String filename = getJobParam(chunkContext, "filename");
+            String tmpFile = getJobParam(chunkContext, "tmpFile");
+
+            mediaProcessingService.saveFile(filename, new File(tmpFile));
+            return RepeatStatus.FINISHED;
+        }
+    }
+
+Ici c'est l'annotation @Component (qui s'applique à une classe, alors que
+@Bean s'appliquait à une méthode)
+
+Il est important de définir un JobLauncher async :
+
+.. code-block:: java
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Bean(name = "asyncJobLauncher")
+    public JobLauncher simpleJobLauncher() throws Exception {
+        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+        jobLauncher.setJobRepository(jobRepository);
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.initialize();
+        jobLauncher.setTaskExecutor(threadPoolTaskExecutor);
+        jobLauncher.afterPropertiesSet();
+        return jobLauncher;
+    }
+
+Et enfin il faut spécifier dans application.properties une propriété pour
+créer les tables nécessaires aux exécutions de job :
+
+.. code-block:: kconfig
+
+    spring.batch.jdbc.initialize-schema=always
+
+Vous pourrez ensuite appeler votre job dans le service :
+
+.. code-block:: java
+
+    @Autowired
+    @Qualifier("asyncJobLauncher")
+    JobLauncher jobLauncher;
+
+    @Autowired
+    Job uploadToS3Job;
+
+    public void myMethod() {
+        ...
+        Map<String, JobParameter> confMap = new HashMap<String, JobParameter>();
+        confMap.put("mediaId", new JobParameter(String.valueOf(savedMedia.getId())));
+        confMap.put("filename", new JobParameter(filename));
+        confMap.put("tmpFile", new JobParameter(tmpFile));
+        JobParameters jobParameters = new JobParameters(confMap);
+
+        jobLauncher.run(uploadToS3Job, jobParameters);
+        ...
+    }
+
+Essayez de créez un job pour faire l'upload de façon asynchrone.
+Goodluck !
+
+Vous pouvez trouver la solution sous le tag partie_4_solution
