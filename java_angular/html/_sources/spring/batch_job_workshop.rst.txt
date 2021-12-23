@@ -11,7 +11,7 @@ Du coup il est important de bien le suivre point par point, notamment pour les
 parties sur les tests unitaires.
 
 Objectifs
----------
+^^^^^^^^^
 
 Nous allons partir d'un projet avec une simple fonction de téléchargement de
 média et ajouter plusieurs fonctionnalités :
@@ -22,7 +22,7 @@ média et ajouter plusieurs fonctionnalités :
 Et des tests !!
 
 Mise en place
--------------
+^^^^^^^^^^^^^
 
 1. Cloner le `repository <https://github.com/Aenori/WorkshopPictureDimensionning>`_
 2. Vous placez sur la branche workshop_start
@@ -46,10 +46,10 @@ sous docker :
     docker-compose up db
 
 Partie 1 : tests
-================
+----------------
 
 Etape numéro 1 : ajout d'un premier test
-----------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On va commencer par ajouter un test unitaire.
 Allez sur le MediaController, et faites clic droit + generate (ou alt +
@@ -88,7 +88,7 @@ La correction de cette partie peut se trouver sous le répository sous le tag
 step_1_correction
 
 Etape numéro 2 : faire de notre test un vrai test unitaire
-----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Petit problème, notre test n'est pas un vrai test unitaire ! En effet, un test
 unitaire ne doit , par définition, que tester le code de la classe, et pas ses
@@ -133,7 +133,7 @@ N'hésitez pas à appeler votre formateur préféré (ou celui que vous avez sou
 la main pour compléter les explications sur cette partie)
 
 Etape numéro 3 : autre test unitaire
-------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 On peut également créez des mocks dans une méthode, ainsi :
 
@@ -154,7 +154,7 @@ La correction de cette partie peut se trouver sous le répository sous le tag
 step_3_correction
 
 Etape numéro 4 : test d'intégration
------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Créez un fichier de test IntegrationTest auxquels vous ajouterez l'annotation
 **@AutoConfigureMockMvc** et un attribut MockMvc:
@@ -181,7 +181,7 @@ Que contient la variable **content** ? Comment tester ce résultat ?
 Vous pouvez voir un code sous le tag **step_4_correction**
 
 Partie 2 : intégration S3
-=========================
+-------------------------
 
 On va maintenant modifier le projet pour héberger les images sous S3. Pour
 cela nous aurons besoin de 6 éléments :
@@ -194,7 +194,7 @@ cela nous aurons besoin de 6 éléments :
 5. une méthode pour supprimer les fichiers
 
 1. Ajout du sdk dans pom.xml
-----------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Ajouter ceci dans le pom.xml (en faisant ensuite les mvn install ou mvn
 dependency:resolve et intellij -> reload project)
@@ -208,7 +208,7 @@ dependency:resolve et intellij -> reload project)
     </dependency>
 
 2. Ajout des credentials
-------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Cela se décomposent en 3 parties.
 D'abord vous créez les variables pour stocker vos identifiants en s'assurant
@@ -253,7 +253,7 @@ Puis dans la classe qui crééra l'objet de connection à S3 :
     private String bucketName;
 
 3. Création de l'objet AmazonS3
--------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: java
 
@@ -273,7 +273,7 @@ Ici on indique en dur la region (EU_WEST_3, soit Paris) mais sinon on pouvait
 utiliser Regions.valueOf(s3Region).
 
 4. Upload de fichier
---------------------
+^^^^^^^^^^^^^^^^^^^^
 
 Modifier la méthode **saveFile** de la classe **MediaService** pour intégrer
 la méthode d'upload de fichier, qui passe par une "PutObjectRequest".
@@ -296,7 +296,7 @@ rend les objets publics (indispensable si c'est pour faire partie d'un site
 web).
 
 5. Suppression de fichier
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 De même, il serait bien de supprimer les fichiers qui ne sont plus utilisés.
 Pour cela, nous utiliserons une autre requête, la **DeleteObjectRequest**.
@@ -307,7 +307,7 @@ Par exemple :
     amazonS3.deleteObject(new DeleteObjectRequest(bucketName, key));
 
 Correction
-----------
+^^^^^^^^^^
 
 Vous pouvez trouver la correcton sous
 partie_2_solution
@@ -315,7 +315,7 @@ partie_2_solution
 !Attention, il manque les credentials qui ne sont pas sous github
 
 Partie 3 : redimensionnement d'image
-====================================
+------------------------------------
 
 A noter que si Spring tend à encourager l'utilisation de services ou de "bean"
 , ie des composents gérés par Spring, nous simplement utiliser une classe
@@ -342,7 +342,7 @@ partie_3_solution
 Avec un test unitaire évidemment
 
 Partie 4 : création du job
-==========================
+-------------------------- 
 
 Maintenant nous attaquons la dernière partie, la création des batch jobs. Le
 principe des batchs jobs est de dissocier les tâches longues et couteuses de

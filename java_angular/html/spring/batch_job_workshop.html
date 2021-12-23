@@ -93,10 +93,10 @@ sous docker :</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>docker-compose up db
 </pre></div>
 </div>
-</section>
-</section>
 <section id="partie-1-tests">
-<h1>Partie 1 : tests<a class="headerlink" href="#partie-1-tests" title="Lien permanent vers ce titre">¶</a></h1>
+<h3>Partie 1 : tests<a class="headerlink" href="#partie-1-tests" title="Lien permanent vers ce titre">¶</a></h3>
+</section>
+</section>
 <section id="etape-numero-1-ajout-d-un-premier-test">
 <h2>Etape numéro 1 : ajout d’un premier test<a class="headerlink" href="#etape-numero-1-ajout-d-un-premier-test" title="Lien permanent vers ce titre">¶</a></h2>
 <p>On va commencer par ajouter un test unitaire.
@@ -136,8 +136,9 @@ dépendances, alors que là notre classe fait appel au service <strong>MediaServ
 dessus de l’attribut par l’annotation <strong>InjectMocks</strong>.</p>
 <p>Relancez le test. Que se passe-t-il ? Essayez de résoudre le problème par
 vous-même avant de passer à la suite.</p>
+</section>
 <section id="la-suite">
-<h3>La suite<a class="headerlink" href="#la-suite" title="Lien permanent vers ce titre">¶</a></h3>
+<h2>La suite<a class="headerlink" href="#la-suite" title="Lien permanent vers ce titre">¶</a></h2>
 <p>Il se passe qu’avec l’annotation InjectMocks, spring n’injecte pas les
 dépendances du MediaController, on reçoit donc un nullpointerexception à
 l’appel du <strong>MediaService</strong>. Pour palier cela, nous allons mocker ce service
@@ -159,7 +160,6 @@ est bien appelée.</p>
 step_2_correction</p>
 <p>N’hésitez pas à appeler votre formateur préféré (ou celui que vous avez sous
 la main pour compléter les explications sur cette partie)</p>
-</section>
 </section>
 <section id="etape-numero-3-autre-test-unitaire">
 <h2>Etape numéro 3 : autre test unitaire<a class="headerlink" href="#etape-numero-3-autre-test-unitaire" title="Lien permanent vers ce titre">¶</a></h2>
@@ -203,10 +203,8 @@ step_3_correction</p>
 </div>
 <p>Que contient la variable <strong>content</strong> ? Comment tester ce résultat ?</p>
 <p>Vous pouvez voir un code sous le tag <strong>step_4_correction</strong></p>
-</section>
-</section>
 <section id="partie-2-integration-s3">
-<h1>Partie 2 : intégration S3<a class="headerlink" href="#partie-2-integration-s3" title="Lien permanent vers ce titre">¶</a></h1>
+<h3>Partie 2 : intégration S3<a class="headerlink" href="#partie-2-integration-s3" title="Lien permanent vers ce titre">¶</a></h3>
 <p>On va maintenant modifier le projet pour héberger les images sous S3. Pour
 cela nous aurons besoin de 6 éléments :</p>
 <ol class="arabic simple">
@@ -217,6 +215,8 @@ d’environnement</p></li>
 <li><p>une méthode pour faire l’upload</p></li>
 <li><p>une méthode pour supprimer les fichiers</p></li>
 </ol>
+</section>
+</section>
 <section id="ajout-du-sdk-dans-pom-xml">
 <h2>1. Ajout du sdk dans pom.xml<a class="headerlink" href="#ajout-du-sdk-dans-pom-xml" title="Lien permanent vers ce titre">¶</a></h2>
 <p>Ajouter ceci dans le pom.xml (en faisant ensuite les mvn install ou mvn
@@ -317,10 +317,8 @@ Par exemple :</p>
 <p>Vous pouvez trouver la correcton sous
 partie_2_solution</p>
 <p>!Attention, il manque les credentials qui ne sont pas sous github</p>
-</section>
-</section>
 <section id="partie-3-redimensionnement-d-image">
-<h1>Partie 3 : redimensionnement d’image<a class="headerlink" href="#partie-3-redimensionnement-d-image" title="Lien permanent vers ce titre">¶</a></h1>
+<h3>Partie 3 : redimensionnement d’image<a class="headerlink" href="#partie-3-redimensionnement-d-image" title="Lien permanent vers ce titre">¶</a></h3>
 <p>A noter que si Spring tend à encourager l’utilisation de services ou de « bean »
 , ie des composents gérés par Spring, nous simplement utiliser une classe
 abstraite et des méthodes statics.</p>
@@ -341,7 +339,7 @@ partie_3_solution</p>
 <p>Avec un test unitaire évidemment</p>
 </section>
 <section id="partie-4-creation-du-job">
-<h1>Partie 4 : création du job<a class="headerlink" href="#partie-4-creation-du-job" title="Lien permanent vers ce titre">¶</a></h1>
+<h3>Partie 4 : création du job<a class="headerlink" href="#partie-4-creation-du-job" title="Lien permanent vers ce titre">¶</a></h3>
 <p>Maintenant nous attaquons la dernière partie, la création des batch jobs. Le
 principe des batchs jobs est de dissocier les tâches longues et couteuses de
 la réponse aux requêtes. Ceci pour plusieurs raisons :</p>
@@ -458,6 +456,8 @@ créer les tables nécessaires aux exécutions de job :</p>
 Goodluck !</p>
 <p>Vous pouvez trouver la solution sous le tag partie_4_solution</p>
 </section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -470,30 +470,30 @@ Goodluck !</p>
   <ul>
 <li><a class="reference internal" href="#">Spring batch job workshop</a><ul>
 <li><a class="reference internal" href="#objectifs">Objectifs</a></li>
-<li><a class="reference internal" href="#mise-en-place">Mise en place</a></li>
+<li><a class="reference internal" href="#mise-en-place">Mise en place</a><ul>
+<li><a class="reference internal" href="#partie-1-tests">Partie 1 : tests</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#partie-1-tests">Partie 1 : tests</a><ul>
 <li><a class="reference internal" href="#etape-numero-1-ajout-d-un-premier-test">Etape numéro 1 : ajout d’un premier test</a></li>
-<li><a class="reference internal" href="#etape-numero-2-faire-de-notre-test-un-vrai-test-unitaire">Etape numéro 2 : faire de notre test un vrai test unitaire</a><ul>
+<li><a class="reference internal" href="#etape-numero-2-faire-de-notre-test-un-vrai-test-unitaire">Etape numéro 2 : faire de notre test un vrai test unitaire</a></li>
 <li><a class="reference internal" href="#la-suite">La suite</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#etape-numero-3-autre-test-unitaire">Etape numéro 3 : autre test unitaire</a></li>
-<li><a class="reference internal" href="#etape-numero-4-test-d-integration">Etape numéro 4 : test d’intégration</a></li>
+<li><a class="reference internal" href="#etape-numero-4-test-d-integration">Etape numéro 4 : test d’intégration</a><ul>
+<li><a class="reference internal" href="#partie-2-integration-s3">Partie 2 : intégration S3</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#partie-2-integration-s3">Partie 2 : intégration S3</a><ul>
 <li><a class="reference internal" href="#ajout-du-sdk-dans-pom-xml">1. Ajout du sdk dans pom.xml</a></li>
 <li><a class="reference internal" href="#ajout-des-credentials">2. Ajout des credentials</a></li>
 <li><a class="reference internal" href="#creation-de-l-objet-amazons3">3. Création de l’objet AmazonS3</a></li>
 <li><a class="reference internal" href="#upload-de-fichier">4. Upload de fichier</a></li>
 <li><a class="reference internal" href="#suppression-de-fichier">5. Suppression de fichier</a></li>
-<li><a class="reference internal" href="#correction">Correction</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#correction">Correction</a><ul>
 <li><a class="reference internal" href="#partie-3-redimensionnement-d-image">Partie 3 : redimensionnement d’image</a></li>
 <li><a class="reference internal" href="#partie-4-creation-du-job">Partie 4 : création du job</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
   <h4>Sujet précédent</h4>
