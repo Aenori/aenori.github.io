@@ -10,14 +10,14 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 1
+    :maxdepth: 2
 
-   java
-   spring
-   base_de_donnee
-   angular
-   architecture_et_dev
-   dev_ops
+    java
+    spring
+    base_de_donnee
+    angular
+    architecture_et_dev
+    dev_ops
 
 Indices and tables
 ==================
