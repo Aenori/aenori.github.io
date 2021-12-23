@@ -6,6 +6,7 @@ les aspects du développement qui ne sont pas liés au code lui-même, mais aux
 procécures de qualité, au déploiement, à l'automatisation des tests.
 
 .. toctree::
+   dev_ops/file_permission
    dev_ops/git
    dev_ops/integration_continue
    dev_ops/docker
