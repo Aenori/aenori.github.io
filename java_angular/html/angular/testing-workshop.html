@@ -60,11 +60,16 @@
 <p>3/ Ajoutez trois méthodes :</p>
 <ul class="simple">
 <li><p>Une méthode synchrone qui set value à « valueAfterSynchrone »</p></li>
-<li><p>Une méthode asynchrone avec await qui set value à « valueAfterA »</p></li>
-<li><p>une méthode qui fait une requête http et set value</p></li>
+<li><p>Une méthode asynchrone (avec async) qui set value à « valueAfterA »</p></li>
+<li><p>une méthode qui fait une requête http et set la value à ce que vous voulez</p></li>
 </ul>
 <p>Vous pouvez faire strictement ce que vous voulez pour la requête http, car le
-but est de la mocker.</p>
+but est de la mocker, par exemple :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="k">this</span><span class="p">.</span><span class="nx">httpClient</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;le plus beau du monde&quot;</span><span class="p">).</span><span class="nx">subscribe</span><span class="p">(</span><span class="nx">result</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="nx">expect</span><span class="p">(</span><span class="nx">result</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s2">&quot;# ENTER YOUR NAME HERE&quot;</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
 <p>4/ Ajouter un test pour chacune de ces méthodes</p>
 </section>
 

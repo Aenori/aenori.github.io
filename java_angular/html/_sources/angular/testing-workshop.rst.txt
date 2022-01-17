@@ -13,10 +13,16 @@ Le but de ce workshop est simple :
 3/ Ajoutez trois méthodes :
 
 - Une méthode synchrone qui set value à "valueAfterSynchrone"
-- Une méthode asynchrone avec await qui set value à "valueAfterA"
-- une méthode qui fait une requête http et set value
+- Une méthode asynchrone (avec async) qui set value à "valueAfterA"
+- une méthode qui fait une requête http et set la value à ce que vous voulez
 
 Vous pouvez faire strictement ce que vous voulez pour la requête http, car le
-but est de la mocker.
+but est de la mocker, par exemple :
+
+.. code-block:: typescript
+
+    this.httpClient.get("le plus beau du monde").subscribe(result => {
+        expect(result).toBe("# ENTER YOUR NAME HERE");
+    });
 
 4/ Ajouter un test pour chacune de ces méthodes
