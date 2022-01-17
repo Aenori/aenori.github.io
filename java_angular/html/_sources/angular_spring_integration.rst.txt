@@ -7,4 +7,5 @@ Ici nous parlerons d'angular
 
     angular_spring_integration/security
     angular_spring_integration/basic_authentication
+    angular_spring_integration/basic-authentication-workshop
 

@@ -1,0 +1,15 @@
+Basic authentication workshop
+=============================
+
+Version complète
+----------------
+
+A partir de vos connaissances, créez from scratch un projet spring et un projet
+angular qui arrive à se connecter avec l'authentification http basique.
+
+Version plus simple
+-------------------
+
+Cloner git@github.com:Aenori/WCS_spring_angular_security.git
+Et faites en sorte que lorsque l'on clique sur "Faire la requête 2" le message s'affiche
+(sans désactiver l'authentification)
