@@ -1,0 +1,276 @@
+Testing with angular
+====================
+
+Principe
+--------
+
+Pour rappel il existe 3 types de test :
+    - les tests unitaires
+    - les tests d'intégration
+    - les tests fonctionnels
+
+Par rapport à ces 3 tests, nous nous concentrerons essentiellement dans
+angular sur les tests unitaires, le but étant dans angular de rendre les
+composants aussi indépendant les uns des autres que possible, et cela étant
+souvent plus possible que dans le back-end.
+
+Pour rappel l'objet d'un test unitaire est de tester un seul élément de
+l'application, sans ses dépendances (dans angular l'élément sera le plus
+souvent un component ou un service).
+
+Les fichiers .spec.ts
+^^^^^^^^^^^^^^^^^^^^^
+
+Si on retrouve beaucoup de similarités entre les tests de Spring et ceux
+d'angular, une des différence est l'organisation et la forme des fichiers de
+test. Sous angular, les fichiers de test s'appelle des spec, car il se
+comporte également comme des spécifications.
+
+En effet, si l'on regarde un exemple de test :
+
+.. code-block:: typescript
+
+    it('should retrieve 172_ISS-Slosh collection url', () => {
+      httpClientSpy.get.and.returnValue(of(test_search_result));
+
+      return service.retrieveCollectionHref("172_ISS-Slosh").then( collectionHref =>
+        {
+          expect(collectionHref).toBe('https://images-assets.nasa.gov/video/172_ISS-Slosh/collection.json');
+        });
+    });
+
+On voit que la formulation du test commence par la function "it" qui sert à
+décrire la fonctionnalité couverte par le test.
+Une autre différence est que les fichiers de test générés par angular CLI sont
+placés dans le même répertoire que les fichiers testés, ce qui implique une
+proximité plus proche que dans spring.
+
+Les principaux outils de tests : Karma et Jasmine
+-------------------------------------------------
+
+Les deux principaux outils qui sont utilisés pour les tests unitaires
+d'angular sont :
+- jasmine
+- karma
+
+Jasmine
+^^^^^^^
+
+Jasmine est l'équivalent de Junit pour spring. Il contient la syntaxe des
+tests des vérifications, et les différentes méthodes utiles pour gérer les
+différents cas. Il est intégré dans angular core testing, et ainsi il sera peu
+manipulé directement.
+
+Karma
+^^^^^
+
+Karma est un outil plus spécfique à angular, ou à tout autre framework
+front-end. Son job est de lancer les tests dans les navigateurs. En effet si
+un environnement comme node permet d'exécuter le code javascript, il en a va
+pas de même pour l'HTML et le DOM, également manipulés par angular, et qui eux
+ont besoin d'un navigateur.
+
+Karma a donc deux fonctionnalités principales :
+- fournir un environnement pour faire tourner les tests
+- vérifier la compatibilité du code pour les différents environnements
+
+Pour l'intégration continue, ie le lancement automatique des tests sous github
+(dans le cadre de la formation et de projets gratuits) ou sous une autre
+plateforme, il faudra passer par un navigateur "headless", ie sans interface
+graphique. Le principal actuellement est chrome-headless (c'est un domaine
+très spécifique, d'où peu de concurrence)
+
+Lorsque vous créez un projet avec angular-cli (ng new) la cli crééra
+automatiquement un fichier de configuration karma.conf.js. Y est notamment
+spécifié le navigateur à utiliser.
+
+Pour lancer les tests localement, vous pouvez simplement utiliser :
+
+.. code-block:: shell
+
+    ng test
+
+Sous intégration continue, il faudra spécifier l'utilisation de
+chrome-headless, ce qui se fait en créant un fichier de configuration
+spécifique (par exemple karma-ci.conf.js) et en précisant ceci :
+
+.. code-block:: js
+
+    module.exports = function (config) {
+      config.set({
+        autoWatch: false,
+        browsers: ['ChromeHeadlessCI'],
+        customLaunchers: {
+          ChromeHeadlessCI: {
+            base: 'ChromeHeadless',
+            flags: ['--no-sandbox']
+          }
+        },
+        singleRun: true
+      })
+    }
+
+Vous pouvez trouver un exemple dans le projet ci-dessous (à noter qu'il y a
+des modifications dans le fichier **.github/workflows/node.js.yml**
+
+`Projet NASA avec CI <https://github.com/Aenori/WCS_Q525_la_NASA_vous_rend_service>`_
+
+La configuration est très bien expliquée dans le tutoriel (en anglais) ci-dessous :
+
+`Mise en place karma CI <https://medium.com/acute-angular/how-to-setup-angular-unit-testing-in-ci-be061618f576>`_
+
+Débogage des tests sous karma
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Vous pouvez utiliser karma pour déboguer les tests, en utilisant l'inspecteur
+/ les outils de développeur.
+Cela est clairement expliquer ici :
+
+`Angular karma debug <https://angular.io/guide/test-debugging>`_
+
+Vous aurez à votre disposition tous les outils habituels de débogage :
+breakpoint, pas à pas, etc ...
+
+Construction des tests
+----------------------
+
+Expectations
+^^^^^^^^^^^^
+
+La syntaxe **expect** est ce qui remplace les asserts de spring. Le principe
+est exactement le même, seulement cela utilise une syntaxe un peu plus
+moderne, et notamment faite pour être plus facile à lire et comprendre, car
+plus proche du langage naturel.
+
+.. code-block:: typescript
+
+    expect(serviceName).toBe('NASA');
+    expect(value).toBeGreaterThan(5);
+
+On indique après expect l'objet / la variable que l'on veut tester, et après
+le test que l'on souhaite effectuer.
+
+A noter le test **toBeTruthy** qui est généré par défaut lorsque l'on ajoute
+un service ou un component :
+
+.. code-block:: typescript
+
+    it('should create the app', () => {
+      const fixture = TestBed.createComponent(AppComponent);
+      const app = fixture.componentInstance;
+      expect(app).toBeTruthy();
+    });
+
+ToBeTruthy signifie que la valeur convertit en booléen est égale à true, ce
+qui pour un component ou un service signifie qu'il n'est ni null, ni undefined
+ie qu'il a été créé correctement.
+
+Initialisation et injection de dépendances
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+La principale différence avec Spring ici est que l'on fera les choses un peu
+plus manuellement.
+On utilisera les méthodes **beforeAll** (qui s'exécute un fois avant tous les
+tests) et **beforeEach** (qui s'exécute avant chaque test) pour déclarer les
+dépendances nécessaires.
+
+Par exemple pour indiquer les modules nécessaires :
+
+.. code-block:: typescript
+
+    beforeAll(async () => {
+      await TestBed.configureTestingModule({
+        imports: [
+          RouterTestingModule,
+          HttpClientModule,
+          FormsModule
+        ],
+        declarations: [
+          AppComponent
+        ],
+      }).compileComponents();
+    });
+
+Pour les services que l'on teste, on peut soit laisser faire l'injection
+de dépendance (par exemple avec HttpClient ici) ou alors les spécifier
+explicitement dans le constructeur :
+
+.. code-block:: typescript
+
+    let service: NasaService;
+    service = new NasaService(httpClientSpy);
+
+Création de mock / spy
+^^^^^^^^^^^^^^^^^^^^^^
+
+Là, aucune différence significative avec les mocks sous java / spring /
+mockito (si ce n'est que c'est du typescript au lieu de java).
+On commence par déclarer notre objet en spécifiant la classe mocké et les
+méthodes que l'on souhaite mocker :
+
+.. code-block:: typescript
+
+    let httpClientSpy: jasmine.SpyObj<HttpClient>;
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+
+Pour l'injection, comme mentionné à la section précédente, on injecte
+directement le spy à l'appel du constructeur.
+
+.. code-block:: typescript
+
+    let service: NasaService;
+    service = new NasaService(httpClientSpy);
+
+En suite on spécifiera dans chaque test le retour souhaité.
+
+.. code-block:: typescript
+
+    httpClientSpy.get.and.returnValue(of(test_search_result));
+    // ou pour spécifier les arguments
+    httpClientSpy.get.withArgs("https://images-api.nasa.gov/search?q=172_ISS-Slosh").and.returnValue(of(test_search_result));
+
+
+Test de fonctions asynchrone
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Vous pouvez trouver beaucoup de façon de tester les fonctions asynchrones,
+en utilisant notamment la méthode **done**, **waitForAsync**, **fakeAsync**.
+
+Nous allons simplement voir la méthode que l'instructeur a trouvé la plus
+simple.
+D'abord, il faut se rappeler que si on possède une méthode asynchrone
+**retrieveServiceName** le test suivant ne fonctionne pas :
+
+.. code-block:: typescript
+
+    it('should retrieve service name', () => {
+    let serviceName: string = '';
+
+    // Ceci ne fonctionne pas !!!!!!!!!
+    service.retrieveServiceName().then(
+        _service => {
+          serviceName = _service;
+          expect(serviceName).toBe('NASA');
+        }
+      );
+    });
+
+En effet l'appel à la méthode étant asynchrone, le test finira avant que le
+**expect** ne soit appelé
+
+Il existe une solution très simple, c'est de renvoyer une promise, dans ce cas
+là jasmine attendra automatiquement la résolution de la promise pour terminer :
+
+.. code-block:: typescript
+
+    it('should retrieve service name', () => {
+    let serviceName: string = '';
+
+    // Un simple return et cela marche !!
+    return service.retrieveServiceName().then(
+        _service => {
+          serviceName = _service;
+          expect(serviceName).toBe('NASA');
+        }
+      );
+    });

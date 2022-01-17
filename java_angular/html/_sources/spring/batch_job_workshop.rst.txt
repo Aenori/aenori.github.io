@@ -342,7 +342,7 @@ partie_3_solution
 Avec un test unitaire évidemment
 
 Partie 4 : création du job
--------------------------- 
+--------------------------
 
 Maintenant nous attaquons la dernière partie, la création des batch jobs. Le
 principe des batchs jobs est de dissocier les tâches longues et couteuses de

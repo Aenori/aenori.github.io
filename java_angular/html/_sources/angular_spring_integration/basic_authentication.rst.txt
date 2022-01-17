@@ -1,0 +1,53 @@
+Basic authentication
+====================
+
+La première méthode d'authentification est appelé http basique, et comme son
+nom l'indique, elle n'est pas tes difficile à mettre en place.
+
+Côté serveur spring, en plus des CORS (voir la page sur la sécurité), il faut
+ajouter l'identification HTTP basique :
+
+.. code-block:: java
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/home", "/api/superpowers/**", "/api/users/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic(); // <= Authorisation de la l'authentification
+                    // basique
+
+        http.addFilterBefore(basicHeaderRequestFilter,
+                UsernamePasswordAuthenticationFilter.class);
+
+    }
+
+Maintenant votre application Spring est prête à recevoir une requête HTTP avec
+l'authentification basique. En quoi cela consiste-t-il ? A include un header
+authorization constitué du login et du mot de passe encodé (encoder et pas
+encrypté, il n'y a pas de sécurité ici). Concrètement cela donne le code
+ci-dessous :
+
+.. code-block:: javascript
+
+    let username: string = 'superman';
+    let password: string = 'password';
+
+    let authorizationData = 'Basic ' + btoa(`${username}:${password}`);
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        Authorization: authorizationData
+      })
+    };
+
+    this.httpClient.get<any>(this.apiSecuredUrl, httpOptions)
+      .subscribe(
+      message => { this.message = message.message; }
+    );
+
+

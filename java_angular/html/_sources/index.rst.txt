@@ -16,8 +16,10 @@ Contents
     spring
     base_de_donnee
     angular
+    angular_spring_integration
     architecture_et_dev
     dev_ops
+
 
 Indices and tables
 ==================

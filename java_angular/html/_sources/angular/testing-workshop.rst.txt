@@ -1,0 +1,22 @@
+Testing with angular - workshop
+===============================
+
+Le but de ce workshop est simple :
+
+1/ Créez un nouveau projet angular (ou greffez vous à un projet test)
+2/ Ajouter un nouveau composant avec un field :
+
+.. code-block:: typescript
+
+    value: string = ''
+
+3/ Ajoutez trois méthodes :
+
+- Une méthode synchrone qui set value à "valueAfterSynchrone"
+- Une méthode asynchrone avec await qui set value à "valueAfterA"
+- une méthode qui fait une requête http et set value
+
+Vous pouvez faire strictement ce que vous voulez pour la requête http, car le
+but est de la mocker.
+
+4/ Ajouter un test pour chacune de ces méthodes

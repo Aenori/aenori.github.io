@@ -1,5 +1,27 @@
 File permission
 ===============
 
+Les permissions des fichiers sont un des éléments qu'il est important de
+connaître lorsque l'on veut administrer des sites webs.
+Elles ont plusieurs objets :
+
+- créer des scripts d'automatisation
+- protéger des fichiers sensibles (type mot de passe)
+- protéger des fichiers des maladresses des programmeurs
+- isoler une application
+
+File permission - qu'est-ce ?
+-----------------------------
+
+.. code-block:: shell
+
+    ll *
+
+    drwxrwxr-x  2 nicolas nicolas  4096 sept. 28 14:09 docs/
+    -rw-rw-r--  1 nicolas nicolas   169 déc.  14 13:38 .env
+    -rwxrw-r--  1 nicolas nicolas   185 oct.  29 12:28 env_spring_boot_run.sh*
+
+NB : La commande ll est un alias défini par bash pour 'ls -alF' si elle
+n'existe dans votre shell, vous pouvez utiliser 'ls -alF' à la place.
 
 

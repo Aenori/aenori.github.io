@@ -7,7 +7,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
 
-    <title>File permission &#8212; Documentation Java Angular 0.1</title>
+    <title>Testing with angular - workshop &#8212; Documentation Java Angular 0.1</title>
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
     
@@ -19,8 +19,8 @@
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Recherche" href="../search.html" />
-    <link rel="next" title="Git - done" href="git.html" />
-    <link rel="prev" title="Dev ops" href="../dev_ops.html" />
+    <link rel="next" title="Angular" href="../angular_spring_integration.html" />
+    <link rel="prev" title="Testing with angular" href="testing.html" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!--[if lt IE 9]>
     <script src="_static/css3-mediaqueries.js"></script>
@@ -33,14 +33,14 @@
           <a href="../genindex.html" title="Index général"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="git.html" title="Git - done"
+          <a href="../angular_spring_integration.html" title="Angular"
              accesskey="N">suivant</a> |</li>
         <li class="right" >
-          <a href="../dev_ops.html" title="Dev ops"
+          <a href="testing.html" title="Testing with angular"
              accesskey="P">précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../dev_ops.html" accesskey="U">Dev ops</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">File permission</a></li> 
+          <li class="nav-item nav-item-1"><a href="../angular.html" accesskey="U">Angular</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Testing with angular - workshop</a></li> 
       </ul>
     </div>  
 
@@ -49,29 +49,23 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="file-permission">
-<h1>File permission<a class="headerlink" href="#file-permission" title="Lien permanent vers ce titre">¶</a></h1>
-<p>Les permissions des fichiers sont un des éléments qu’il est important de
-connaître lorsque l’on veut administrer des sites webs.
-Elles ont plusieurs objets :</p>
-<ul class="simple">
-<li><p>créer des scripts d’automatisation</p></li>
-<li><p>protéger des fichiers sensibles (type mot de passe)</p></li>
-<li><p>protéger des fichiers des maladresses des programmeurs</p></li>
-<li><p>isoler une application</p></li>
-</ul>
-<section id="file-permission-qu-est-ce">
-<h2>File permission - qu’est-ce ?<a class="headerlink" href="#file-permission-qu-est-ce" title="Lien permanent vers ce titre">¶</a></h2>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ll *
-
-drwxrwxr-x  <span class="m">2</span> nicolas nicolas  <span class="m">4096</span> sept. <span class="m">28</span> <span class="m">14</span>:09 docs/
--rw-rw-r--  <span class="m">1</span> nicolas nicolas   <span class="m">169</span> déc.  <span class="m">14</span> <span class="m">13</span>:38 .env
--rwxrw-r--  <span class="m">1</span> nicolas nicolas   <span class="m">185</span> oct.  <span class="m">29</span> <span class="m">12</span>:28 env_spring_boot_run.sh*
+  <section id="testing-with-angular-workshop">
+<h1>Testing with angular - workshop<a class="headerlink" href="#testing-with-angular-workshop" title="Lien permanent vers ce titre">¶</a></h1>
+<p>Le but de ce workshop est simple :</p>
+<p>1/ Créez un nouveau projet angular (ou greffez vous à un projet test)
+2/ Ajouter un nouveau composant avec un field :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">value</span>: <span class="kt">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 </pre></div>
 </div>
-<p>NB : La commande ll est un alias défini par bash pour “ls -alF” si elle
-n’existe dans votre shell, vous pouvez utiliser “ls -alF” à la place.</p>
-</section>
+<p>3/ Ajoutez trois méthodes :</p>
+<ul class="simple">
+<li><p>Une méthode synchrone qui set value à « valueAfterSynchrone »</p></li>
+<li><p>Une méthode asynchrone avec await qui set value à « valueAfterA »</p></li>
+<li><p>une méthode qui fait une requête http et set value</p></li>
+</ul>
+<p>Vous pouvez faire strictement ce que vous voulez pour la requête http, car le
+but est de la mocker.</p>
+<p>4/ Ajouter un test pour chacune de ces méthodes</p>
 </section>
 
 
@@ -81,24 +75,16 @@ n’existe dans votre shell, vous pouvez utiliser “ls -alF” à la place.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table des matières</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">File permission</a><ul>
-<li><a class="reference internal" href="#file-permission-qu-est-ce">File permission - qu’est-ce ?</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Sujet précédent</h4>
-  <p class="topless"><a href="../dev_ops.html"
-                        title="Chapitre précédent">Dev ops</a></p>
+  <p class="topless"><a href="testing.html"
+                        title="Chapitre précédent">Testing with angular</a></p>
   <h4>Sujet suivant</h4>
-  <p class="topless"><a href="git.html"
-                        title="Chapitre suivant">Git - done</a></p>
+  <p class="topless"><a href="../angular_spring_integration.html"
+                        title="Chapitre suivant">Angular</a></p>
   <div role="note" aria-label="source link">
     <h3>Cette page</h3>
     <ul class="this-page-menu">
-      <li><a href="../_sources/dev_ops/file_permission.rst.txt"
+      <li><a href="../_sources/angular/testing-workshop.rst.txt"
             rel="nofollow">Montrer le code source</a></li>
     </ul>
    </div>
@@ -123,14 +109,14 @@ n’existe dans votre shell, vous pouvez utiliser “ls -alF” à la place.</p>
           <a href="../genindex.html" title="Index général"
              >index</a></li>
         <li class="right" >
-          <a href="git.html" title="Git - done"
+          <a href="../angular_spring_integration.html" title="Angular"
              >suivant</a> |</li>
         <li class="right" >
-          <a href="../dev_ops.html" title="Dev ops"
+          <a href="testing.html" title="Testing with angular"
              >précédent</a> |</li>
         <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
-          <li class="nav-item nav-item-1"><a href="../dev_ops.html" >Dev ops</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">File permission</a></li> 
+          <li class="nav-item nav-item-1"><a href="../angular.html" >Angular</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Testing with angular - workshop</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

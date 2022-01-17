@@ -1,0 +1,366 @@
+
+
+<!doctype html>
+
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18: http://docutils.sourceforge.net/" />
+
+    <title>Testing with angular &#8212; Documentation Java Angular 0.1</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/translations.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Recherche" href="../search.html" />
+    <link rel="next" title="Testing with angular - workshop" href="testing-workshop.html" />
+    <link rel="prev" title="Angular" href="../angular.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="testing-workshop.html" title="Testing with angular - workshop"
+             accesskey="N">suivant</a> |</li>
+        <li class="right" >
+          <a href="../angular.html" title="Angular"
+             accesskey="P">précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../angular.html" accesskey="U">Angular</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Testing with angular</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="testing-with-angular">
+<h1>Testing with angular<a class="headerlink" href="#testing-with-angular" title="Lien permanent vers ce titre">¶</a></h1>
+<section id="principe">
+<h2>Principe<a class="headerlink" href="#principe" title="Lien permanent vers ce titre">¶</a></h2>
+<dl class="simple">
+<dt>Pour rappel il existe 3 types de test :</dt><dd><ul class="simple">
+<li><p>les tests unitaires</p></li>
+<li><p>les tests d’intégration</p></li>
+<li><p>les tests fonctionnels</p></li>
+</ul>
+</dd>
+</dl>
+<p>Par rapport à ces 3 tests, nous nous concentrerons essentiellement dans
+angular sur les tests unitaires, le but étant dans angular de rendre les
+composants aussi indépendant les uns des autres que possible, et cela étant
+souvent plus possible que dans le back-end.</p>
+<p>Pour rappel l’objet d’un test unitaire est de tester un seul élément de
+l’application, sans ses dépendances (dans angular l’élément sera le plus
+souvent un component ou un service).</p>
+<section id="les-fichiers-spec-ts">
+<h3>Les fichiers .spec.ts<a class="headerlink" href="#les-fichiers-spec-ts" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Si on retrouve beaucoup de similarités entre les tests de Spring et ceux
+d’angular, une des différence est l’organisation et la forme des fichiers de
+test. Sous angular, les fichiers de test s’appelle des spec, car il se
+comporte également comme des spécifications.</p>
+<p>En effet, si l’on regarde un exemple de test :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should retrieve 172_ISS-Slosh collection url&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="nx">httpClientSpy</span><span class="p">.</span><span class="nx">get</span><span class="p">.</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">(</span><span class="k">of</span><span class="p">(</span><span class="nx">test_search_result</span><span class="p">));</span>
+
+  <span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">retrieveCollectionHref</span><span class="p">(</span><span class="s2">&quot;172_ISS-Slosh&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span> <span class="nx">collectionHref</span> <span class="p">=&gt;</span>
+    <span class="p">{</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">collectionHref</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;https://images-assets.nasa.gov/video/172_ISS-Slosh/collection.json&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>On voit que la formulation du test commence par la function « it » qui sert à
+décrire la fonctionnalité couverte par le test.
+Une autre différence est que les fichiers de test générés par angular CLI sont
+placés dans le même répertoire que les fichiers testés, ce qui implique une
+proximité plus proche que dans spring.</p>
+</section>
+</section>
+<section id="les-principaux-outils-de-tests-karma-et-jasmine">
+<h2>Les principaux outils de tests : Karma et Jasmine<a class="headerlink" href="#les-principaux-outils-de-tests-karma-et-jasmine" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Les deux principaux outils qui sont utilisés pour les tests unitaires
+d’angular sont :
+- jasmine
+- karma</p>
+<section id="jasmine">
+<h3>Jasmine<a class="headerlink" href="#jasmine" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Jasmine est l’équivalent de Junit pour spring. Il contient la syntaxe des
+tests des vérifications, et les différentes méthodes utiles pour gérer les
+différents cas. Il est intégré dans angular core testing, et ainsi il sera peu
+manipulé directement.</p>
+</section>
+<section id="karma">
+<h3>Karma<a class="headerlink" href="#karma" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Karma est un outil plus spécfique à angular, ou à tout autre framework
+front-end. Son job est de lancer les tests dans les navigateurs. En effet si
+un environnement comme node permet d’exécuter le code javascript, il en a va
+pas de même pour l’HTML et le DOM, également manipulés par angular, et qui eux
+ont besoin d’un navigateur.</p>
+<p>Karma a donc deux fonctionnalités principales :
+- fournir un environnement pour faire tourner les tests
+- vérifier la compatibilité du code pour les différents environnements</p>
+<p>Pour l’intégration continue, ie le lancement automatique des tests sous github
+(dans le cadre de la formation et de projets gratuits) ou sous une autre
+plateforme, il faudra passer par un navigateur « headless », ie sans interface
+graphique. Le principal actuellement est chrome-headless (c’est un domaine
+très spécifique, d’où peu de concurrence)</p>
+<p>Lorsque vous créez un projet avec angular-cli (ng new) la cli crééra
+automatiquement un fichier de configuration karma.conf.js. Y est notamment
+spécifié le navigateur à utiliser.</p>
+<p>Pour lancer les tests localement, vous pouvez simplement utiliser :</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ng <span class="nb">test</span>
+</pre></div>
+</div>
+<p>Sous intégration continue, il faudra spécifier l’utilisation de
+chrome-headless, ce qui se fait en créant un fichier de configuration
+spécifique (par exemple karma-ci.conf.js) et en précisant ceci :</p>
+<div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">config</span><span class="p">.</span><span class="nx">set</span><span class="p">({</span>
+    <span class="nx">autoWatch</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nx">browsers</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;ChromeHeadlessCI&#39;</span><span class="p">],</span>
+    <span class="nx">customLaunchers</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">ChromeHeadlessCI</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">base</span><span class="o">:</span> <span class="s1">&#39;ChromeHeadless&#39;</span><span class="p">,</span>
+        <span class="nx">flags</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;--no-sandbox&#39;</span><span class="p">]</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="nx">singleRun</span><span class="o">:</span> <span class="kc">true</span>
+  <span class="p">})</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Vous pouvez trouver un exemple dans le projet ci-dessous (à noter qu’il y a
+des modifications dans le fichier <strong>.github/workflows/node.js.yml</strong></p>
+<p><a class="reference external" href="https://github.com/Aenori/WCS_Q525_la_NASA_vous_rend_service">Projet NASA avec CI</a></p>
+<p>La configuration est très bien expliquée dans le tutoriel (en anglais) ci-dessous :</p>
+<p><a class="reference external" href="https://medium.com/acute-angular/how-to-setup-angular-unit-testing-in-ci-be061618f576">Mise en place karma CI</a></p>
+</section>
+<section id="debogage-des-tests-sous-karma">
+<h3>Débogage des tests sous karma<a class="headerlink" href="#debogage-des-tests-sous-karma" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Vous pouvez utiliser karma pour déboguer les tests, en utilisant l’inspecteur
+/ les outils de développeur.
+Cela est clairement expliquer ici :</p>
+<p><a class="reference external" href="https://angular.io/guide/test-debugging">Angular karma debug</a></p>
+<p>Vous aurez à votre disposition tous les outils habituels de débogage :
+breakpoint, pas à pas, etc …</p>
+</section>
+</section>
+<section id="construction-des-tests">
+<h2>Construction des tests<a class="headerlink" href="#construction-des-tests" title="Lien permanent vers ce titre">¶</a></h2>
+<section id="expectations">
+<h3>Expectations<a class="headerlink" href="#expectations" title="Lien permanent vers ce titre">¶</a></h3>
+<p>La syntaxe <strong>expect</strong> est ce qui remplace les asserts de spring. Le principe
+est exactement le même, seulement cela utilise une syntaxe un peu plus
+moderne, et notamment faite pour être plus facile à lire et comprendre, car
+plus proche du langage naturel.</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">expect</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;NASA&#39;</span><span class="p">);</span>
+<span class="nx">expect</span><span class="p">(</span><span class="nx">value</span><span class="p">).</span><span class="nx">toBeGreaterThan</span><span class="p">(</span><span class="mf">5</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>On indique après expect l’objet / la variable que l’on veut tester, et après
+le test que l’on souhaite effectuer.</p>
+<p>A noter le test <strong>toBeTruthy</strong> qui est généré par défaut lorsque l’on ajoute
+un service ou un component :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should create the app&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">fixture</span> <span class="o">=</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">createComponent</span><span class="p">(</span><span class="nx">AppComponent</span><span class="p">);</span>
+  <span class="kd">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">fixture</span><span class="p">.</span><span class="nx">componentInstance</span><span class="p">;</span>
+  <span class="nx">expect</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">toBeTruthy</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>ToBeTruthy signifie que la valeur convertit en booléen est égale à true, ce
+qui pour un component ou un service signifie qu’il n’est ni null, ni undefined
+ie qu’il a été créé correctement.</p>
+</section>
+<section id="initialisation-et-injection-de-dependances">
+<h3>Initialisation et injection de dépendances<a class="headerlink" href="#initialisation-et-injection-de-dependances" title="Lien permanent vers ce titre">¶</a></h3>
+<p>La principale différence avec Spring ici est que l’on fera les choses un peu
+plus manuellement.
+On utilisera les méthodes <strong>beforeAll</strong> (qui s’exécute un fois avant tous les
+tests) et <strong>beforeEach</strong> (qui s’exécute avant chaque test) pour déclarer les
+dépendances nécessaires.</p>
+<p>Par exemple pour indiquer les modules nécessaires :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">beforeAll</span><span class="p">(</span><span class="k">async</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">await</span> <span class="nx">TestBed</span><span class="p">.</span><span class="nx">configureTestingModule</span><span class="p">({</span>
+    <span class="nx">imports</span><span class="o">:</span> <span class="p">[</span>
+      <span class="nx">RouterTestingModule</span><span class="p">,</span>
+      <span class="nx">HttpClientModule</span><span class="p">,</span>
+      <span class="nx">FormsModule</span>
+    <span class="p">],</span>
+    <span class="nx">declarations</span><span class="o">:</span> <span class="p">[</span>
+      <span class="nx">AppComponent</span>
+    <span class="p">],</span>
+  <span class="p">}).</span><span class="nx">compileComponents</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>Pour les services que l’on teste, on peut soit laisser faire l’injection
+de dépendance (par exemple avec HttpClient ici) ou alors les spécifier
+explicitement dans le constructeur :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">service</span>: <span class="kt">NasaService</span><span class="p">;</span>
+<span class="nx">service</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">NasaService</span><span class="p">(</span><span class="nx">httpClientSpy</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="creation-de-mock-spy">
+<h3>Création de mock / spy<a class="headerlink" href="#creation-de-mock-spy" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Là, aucune différence significative avec les mocks sous java / spring /
+mockito (si ce n’est que c’est du typescript au lieu de java).
+On commence par déclarer notre objet en spécifiant la classe mocké et les
+méthodes que l’on souhaite mocker :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">httpClientSpy</span>: <span class="kt">jasmine.SpyObj</span><span class="o">&lt;</span><span class="nx">HttpClient</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="nx">httpClientSpy</span> <span class="o">=</span> <span class="nx">jasmine</span><span class="p">.</span><span class="nx">createSpyObj</span><span class="p">(</span><span class="s1">&#39;HttpClient&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;get&#39;</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Pour l’injection, comme mentionné à la section précédente, on injecte
+directement le spy à l’appel du constructeur.</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="kd">let</span> <span class="nx">service</span>: <span class="kt">NasaService</span><span class="p">;</span>
+<span class="nx">service</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">NasaService</span><span class="p">(</span><span class="nx">httpClientSpy</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>En suite on spécifiera dans chaque test le retour souhaité.</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">httpClientSpy</span><span class="p">.</span><span class="nx">get</span><span class="p">.</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">(</span><span class="k">of</span><span class="p">(</span><span class="nx">test_search_result</span><span class="p">));</span>
+<span class="c1">// ou pour spécifier les arguments</span>
+<span class="nx">httpClientSpy</span><span class="p">.</span><span class="nx">get</span><span class="p">.</span><span class="nx">withArgs</span><span class="p">(</span><span class="s2">&quot;https://images-api.nasa.gov/search?q=172_ISS-Slosh&quot;</span><span class="p">).</span><span class="nx">and</span><span class="p">.</span><span class="nx">returnValue</span><span class="p">(</span><span class="k">of</span><span class="p">(</span><span class="nx">test_search_result</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="test-de-fonctions-asynchrone">
+<h3>Test de fonctions asynchrone<a class="headerlink" href="#test-de-fonctions-asynchrone" title="Lien permanent vers ce titre">¶</a></h3>
+<p>Vous pouvez trouver beaucoup de façon de tester les fonctions asynchrones,
+en utilisant notamment la méthode <strong>done</strong>, <strong>waitForAsync</strong>, <strong>fakeAsync</strong>.</p>
+<p>Nous allons simplement voir la méthode que l’instructeur a trouvé la plus
+simple.
+D’abord, il faut se rappeler que si on possède une méthode asynchrone
+<strong>retrieveServiceName</strong> le test suivant ne fonctionne pas :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should retrieve service name&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="kd">let</span> <span class="nx">serviceName</span>: <span class="kt">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+<span class="c1">// Ceci ne fonctionne pas !!!!!!!!!</span>
+<span class="nx">service</span><span class="p">.</span><span class="nx">retrieveServiceName</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span>
+    <span class="nx">_service</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">serviceName</span> <span class="o">=</span> <span class="nx">_service</span><span class="p">;</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;NASA&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+<p>En effet l’appel à la méthode étant asynchrone, le test finira avant que le
+<strong>expect</strong> ne soit appelé</p>
+<p>Il existe une solution très simple, c’est de renvoyer une promise, dans ce cas
+là jasmine attendra automatiquement la résolution de la promise pour terminer :</p>
+<div class="highlight-typescript notranslate"><div class="highlight"><pre><span></span><span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should retrieve service name&#39;</span><span class="p">,</span> <span class="p">()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<span class="kd">let</span> <span class="nx">serviceName</span>: <span class="kt">string</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
+
+<span class="c1">// Un simple return et cela marche !!</span>
+<span class="k">return</span> <span class="nx">service</span><span class="p">.</span><span class="nx">retrieveServiceName</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span>
+    <span class="nx">_service</span> <span class="p">=&gt;</span> <span class="p">{</span>
+      <span class="nx">serviceName</span> <span class="o">=</span> <span class="nx">_service</span><span class="p">;</span>
+      <span class="nx">expect</span><span class="p">(</span><span class="nx">serviceName</span><span class="p">).</span><span class="nx">toBe</span><span class="p">(</span><span class="s1">&#39;NASA&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table des matières</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Testing with angular</a><ul>
+<li><a class="reference internal" href="#principe">Principe</a><ul>
+<li><a class="reference internal" href="#les-fichiers-spec-ts">Les fichiers .spec.ts</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#les-principaux-outils-de-tests-karma-et-jasmine">Les principaux outils de tests : Karma et Jasmine</a><ul>
+<li><a class="reference internal" href="#jasmine">Jasmine</a></li>
+<li><a class="reference internal" href="#karma">Karma</a></li>
+<li><a class="reference internal" href="#debogage-des-tests-sous-karma">Débogage des tests sous karma</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#construction-des-tests">Construction des tests</a><ul>
+<li><a class="reference internal" href="#expectations">Expectations</a></li>
+<li><a class="reference internal" href="#initialisation-et-injection-de-dependances">Initialisation et injection de dépendances</a></li>
+<li><a class="reference internal" href="#creation-de-mock-spy">Création de mock / spy</a></li>
+<li><a class="reference internal" href="#test-de-fonctions-asynchrone">Test de fonctions asynchrone</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Sujet précédent</h4>
+  <p class="topless"><a href="../angular.html"
+                        title="Chapitre précédent">Angular</a></p>
+  <h4>Sujet suivant</h4>
+  <p class="topless"><a href="testing-workshop.html"
+                        title="Chapitre suivant">Testing with angular - workshop</a></p>
+  <div role="note" aria-label="source link">
+    <h3>Cette page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/angular/testing.rst.txt"
+            rel="nofollow">Montrer le code source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Recherche rapide</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="Index général"
+             >index</a></li>
+        <li class="right" >
+          <a href="testing-workshop.html" title="Testing with angular - workshop"
+             >suivant</a> |</li>
+        <li class="right" >
+          <a href="../angular.html" title="Angular"
+             >précédent</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Documentation Java Angular 0.1</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../angular.html" >Angular</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Testing with angular</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Nicolas Rousset.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.3.0.
+    </div>
+  </body>
+</html>

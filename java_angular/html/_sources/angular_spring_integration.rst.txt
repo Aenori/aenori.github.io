@@ -4,6 +4,5 @@ Angular
 Ici nous parlerons d'angular
 
 .. toctree::
-    angular/testing
-    angular/testing-workshop
+    angular_spring_integration/basic_authentication
 

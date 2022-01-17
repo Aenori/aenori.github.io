@@ -1,0 +1,82 @@
+Securite
+========
+
+Jusqu'ici nous n'avons fait que des requêtes non sécurisées entre spring et
+angular. Mais comment fait-on pour ajouter un peu de sećurité ?
+
+Sans surprise on demande à l'utilisateur son login et mot de passe. A noter
+que contrairement à l'identification classique, on n'utilisera pas le
+système des sessions.
+
+L'identification avec angular passera par un header, une partie de la requête
+http que l'on ne manipule pas la plupart du temps.
+On va voir ici deux méthodes :
+- la méthode http basique où l'on renvoit le login et mot de passe à chaque
+requête, ce qui n'est pas top, mais est plutôt simple à implémenter
+- la méthode jwt (jso-web-token) où l'on transmet une seule fois les login et
+mot de passe pour obtenir un token qui servira d'identification
+
+Configuration spring générique
+------------------------------
+
+Requête CORS
+^^^^^^^^^^^^
+
+Un des points très important pour l'authentification et vous évitez de perdre
+du temps et d'authoriser les requêtes CORS :
+
+.. code-block:: java
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors() // <= C'est cette partie qui est très importante
+                .and()
+                .authorizeRequests()
+                .antMatchers("/", "/home", "/api/superpowers/**", "/api/users/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
+
+        http.addFilterBefore(basicHeaderRequestFilter,
+                UsernamePasswordAuthenticationFilter.class);
+
+    }
+
+Cela nécessite également une annotation dans le controller pour autoriser les
+requêtes cross-origin :
+
+.. code-block:: java
+
+    @RestController
+    @RequestMapping("/api/secured")
+    @CrossOrigin()
+    public class RestSecuredController {
+        ...
+    }
+
+Mais ça vous l'auriez trouvé plus facilement. Pourquoi avons-nous besoin de
+tout cela ? Parce que la plupart du temps votre projet angular et votre projet
+spring ne seront pas hébergés par le même serveur.
+
+Or accepter des requêtes d'un serveur différent peut poser des problèmes de
+sécurité. Il faut donc spécifier explicitement ce que l'on autorise.
+C'est le but de l'annotation @CrossOrigin sur le controlleur.
+
+Ok, mais du coup que sont ces requêtes CORS que l'on doit autoriser avec
+**http.cors()** ? C'est là que cela se corse.
+Il existe un deuxième système de sécurité pour le cross origin, ce sont les
+requêtes CORS (Cross Origin Ressources Sharing). Le navigateur envoie une
+pré-requête pour demander au serveur d'envoyer la vraie requête. Problème,
+dans cette première requête le navigateur va demander l'autorisation d'envoyer
+certaines ressources, dont les headers, qui contiennent justement les données
+d'authentification.
+
+Il n'est donc pas possible d'authentifier la pré-requête, car elle ne contient
+pas les headers nécessaires ! Il faut l'accepter par défaut et appliquer la
+vérification à la deuxième requête qui vient après.
+
+C'est le rôle de l'instruction **http.cors()**
+
+
+
+
