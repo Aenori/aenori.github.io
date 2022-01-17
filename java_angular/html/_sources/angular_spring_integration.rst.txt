@@ -4,5 +4,7 @@ Angular
 Ici nous parlerons d'angular
 
 .. toctree::
+
+    angular_spring_integration/security
     angular_spring_integration/basic_authentication
 
