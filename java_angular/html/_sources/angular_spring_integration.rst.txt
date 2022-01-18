@@ -1,7 +1,8 @@
-Angular
-=======
+Angular Spring Integration
+==========================
 
-Ici nous parlerons d'angular
+Ici nous parlerons de l'intégration d'angular avec spring, notamment la
+sécurité
 
 .. toctree::
 
