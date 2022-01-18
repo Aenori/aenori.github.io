@@ -26,3 +26,8 @@ but est de la mocker, par exemple :
     });
 
 4/ Ajouter un test pour chacune de ces méthodes
+
+Vous pouvez trouver la correction dans le repository ci-dessous :
+
+`Repo correction test unitaire angular <https://github.com/Aenori/TUCorrection>`_
+Ou sur la video 188 pour les wilders
