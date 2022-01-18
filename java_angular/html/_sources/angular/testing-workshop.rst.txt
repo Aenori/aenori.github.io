@@ -3,7 +3,7 @@ Testing with angular - workshop
 
 Le but de ce workshop est simple :
 
-1/ Créez un nouveau projet angular (ou greffez vous à un projet test)
+1/ Créez un nouveau projet angular (ou greffez vous à un projet test)  
 2/ Ajouter un nouveau composant avec un field :
 
 .. code-block:: typescript
