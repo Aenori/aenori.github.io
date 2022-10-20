@@ -10,11 +10,17 @@ Welcome to PythonDataAnalysis's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   day_1_general_presentation
+   day_1_python
+   day_2_numpy
+   day_2_pandas
+   day_3_scikitlearn
+   day_3_matplotlib
 
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
 * :ref:`search`

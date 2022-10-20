@@ -1,0 +1,5 @@
+Day 1 : general presentation
+============================
+
+
+`1 Training introduction <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_01_introduction.pdf>`_
