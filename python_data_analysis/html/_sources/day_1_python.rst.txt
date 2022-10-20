@@ -1,0 +1,6 @@
+Day 1 : python
+==============
+
+`Official documentation <https://www.python.org/>`_
+`Presentation notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D01_python_basic_presentation.ipynb>`_
+`Practice notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D01_python_basic_practice.ipynb>`_

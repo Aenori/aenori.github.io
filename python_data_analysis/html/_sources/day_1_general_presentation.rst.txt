@@ -3,3 +3,7 @@ Day 1 : general presentation
 
 
 `1 Training introduction <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_01_introduction.pdf>`_
+`2 Python introduction <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_02_python_practical_walkthrough.pdf>`_
+`3 Performance and data analysis <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_
+`4 Python library overview <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_04_python_library_overview.pdf>`_
+

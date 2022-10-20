@@ -1,0 +1,7 @@
+Day 2 : numpy
+=============
+
+
+`Official documentation <https://numpy.org/>`_
+`Presentation notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_numpy_presentation.ipynb>`_
+`Practice notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_numpy_practice.ipynb>`_

@@ -1,0 +1,6 @@
+Day 3 : scikit learn
+====================
+
+`Official documentation <https://scikit-learn.org>`_
+`Presentation notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D03_scikitlearn_presentation.ipynb>`_
+`Practice notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D03_scikitlearn_practice.ipynb>`_
