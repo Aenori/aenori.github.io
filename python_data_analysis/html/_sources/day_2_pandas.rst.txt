@@ -2,5 +2,7 @@ Day 2 : pandas
 ==============
 
 `Official documentation <https://pandas.pydata.org/>`_  
+
 `Presentation notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_pandas_presentation.ipynb>`_  
+
 `Practice notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_pandas_practice.ipynb>`_  

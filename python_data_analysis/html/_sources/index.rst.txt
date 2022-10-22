@@ -6,6 +6,14 @@
 Welcome to PythonDataAnalysis's documentation!
 ==============================================
 
+Welcome to the home page for this 3-days training !  
+
+The purpose of this page is simply to give you access to all the material for the training.
+
+
+.. image:: img/planning.png
+   :align: center
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -16,12 +24,11 @@ Welcome to PythonDataAnalysis's documentation!
    day_2_pandas
    day_3_scikitlearn
    day_3_matplotlib
+   jupyter_and_other_tip_and_tricks
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Other resources:
 
-Indices and tables
-==================
+   
 
-.. * :ref:`genindex`
-.. * :ref:`modindex`
-
-* :ref:`search`
