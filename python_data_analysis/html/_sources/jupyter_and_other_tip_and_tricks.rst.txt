@@ -1,4 +1,19 @@
 Jupyter and tip and tricks
 ==========================
 
+Text cell becomes weird
+-----------------------
 
+If you click on a cell, you can see some weird stuff, that is raw markdown code.  
+Don't worry,it is just the geek way of doing formatted text, you just need to execute the cell to get it back to normal.
+
+Auto-completion
+---------------
+
+You can use the TAB keypad to use auto-completion. It is not magical, jupyter needs to know what is the type of the variable to use it,but it will propose you all the methods available for that object.
+
+Stackoverflow
+-------------
+
+Stack overflow is the number 1 general resource for developper. There are a lot of joke about software developpers spending a lot of time copy-pasting stuff from this site.  
+It is great, and you will find most of your answer here, if you can formule the right question.  

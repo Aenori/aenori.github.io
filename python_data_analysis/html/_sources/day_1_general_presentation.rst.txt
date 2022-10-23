@@ -1,6 +1,8 @@
 Day 1 : general presentation
 ============================
 
+First morning will be a general, more theoretical presentation
+
 `1 Training introduction <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_01_introduction.pdf>`_  
 
 `2 Python introduction <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_02_python_practical_walkthrough.pdf>`_  
