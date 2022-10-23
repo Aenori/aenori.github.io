@@ -1,6 +1,10 @@
 Other resources
 ===============
 
+Titanic dataset
+
+`Titanic dataset <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/Titanic_data_set.ipynb>`_ 
+
 A nice jupyter notebook from an external resources.  
 Part of the numpy courses we will have are based on that 
 
