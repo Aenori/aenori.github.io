@@ -1,0 +1,8 @@
+Other resources
+===============
+
+A nice jupyter notebook from an external resources.  
+Part of the numpy courses we will have are based on that 
+
+`Python basic numpy tutorial <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/other_resources/colab_tutorial.ipynb>`_  
+

@@ -26,6 +26,7 @@ The purpose of this page is simply to give you access to all the material for th
    day_3_scikitlearn
    day_3_matplotlib
    jupyter_and_other_tip_and_tricks
+   other_resources
 
 .. toctree::
    :maxdepth: 2
