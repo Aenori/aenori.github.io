@@ -4,6 +4,7 @@ Day 2 : pandas
 `Official documentation <https://pandas.pydata.org/>`_  
 
 `Pandas 01 getting started <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_01_getting_started_with_pandas.ipynb>`_  
+
 `Pandas 02 data wrangling <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_02_data_wrangling.ipynb>`_ 
 
 `Pandas 03 data visualisation <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_03_data_visualization.ipynb>`_ 
