@@ -12,8 +12,17 @@ Auto-completion
 
 You can use the TAB keypad to use auto-completion. It is not magical, jupyter needs to know what is the type of the variable to use it,but it will propose you all the methods available for that object.
 
+When using google colab, you can use CTRL+SPACE
+
 Stackoverflow
 -------------
 
 Stack overflow is the number 1 general resource for developper. There are a lot of joke about software developpers spending a lot of time copy-pasting stuff from this site.  
 It is great, and you will find most of your answer here, if you can formule the right question.  
+
+https://stackoverflow.com/
+
+Pandas cheat sheet
+------------------
+
+https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
