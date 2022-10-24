@@ -9,7 +9,7 @@ First morning will be a general, more theoretical presentation
 
 `3 Performance and data analysis <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_  
 
-`3.2 Correlation between life expectancy GNI and CO2 <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_
+`3.2 Comparing performance in python <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_
 
 `4 Python library overview <https://raw.githubusercontent.com/Aenori/20221024_public/main/pdf/D01_04_python_library_overview.pdf>`_  
 
