@@ -10,3 +10,8 @@ Day 2 : pandas
 `Pandas 03 data visualisation <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_03_data_visualization.ipynb>`_ 
 
 `Practice notebook <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_pandas_practice.ipynb>`_  
+
+Pandas cheat sheet
+------------------
+
+https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
