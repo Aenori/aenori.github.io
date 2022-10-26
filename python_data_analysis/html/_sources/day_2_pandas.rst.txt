@@ -13,6 +13,13 @@ Day 2 : pandas
 
 `Practice notebook solution <https://colab.research.google.com/github/Aenori/20221024_public/blob/master/jupyter_notebook/D02_pandas_practice_solution.ipynb>`_  
 
+Pandas quizz answers :
+
+https://raw.githubusercontent.com/Aenori/20221024_public/main/Day_2_pandas_quizz.csv
+
+https://raw.githubusercontent.com/Aenori/20221024_public/main/Day_2_pandas_quizz.xlsx
+
+
 Pandas cheat sheet
 ------------------
 
