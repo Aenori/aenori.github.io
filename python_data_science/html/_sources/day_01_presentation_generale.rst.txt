@@ -1,7 +1,7 @@
-Day 1 : general presentation
-============================
+Day 01 : presentation générale
+==============================
 
-First morning will be a general, more theoretical presentation
+La première matinée sera consacrée à une présentation générale de la formation et de la thématique des data sciences en python
 
 `1 Training introduction <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_01_introduction.pdf>`_  
 

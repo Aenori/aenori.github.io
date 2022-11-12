@@ -3,29 +3,30 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PythonDataAnalysis's documentation!
-==============================================
+Bienvenue à la formation Python - DataScience
+============================================= 
 
-Welcome to the home page for this 3-days training !  
-
-The purpose of this page is simply to give you access to all the material for the training.
+L'objectif de cette page est de servir de point d'entrée 
 
 
-.. image:: img/planning.png
+.. image:: ../../img/planning.png
    :align: center
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
-   day_1_general_presentation
-   day_1_case_study
-   day_1_python
-   day_2_numpy
-   day_2_pandas
-   day_3_scikitlearn
-   day_3_matplotlib
-   day_3_going_into_full_automation
+   day_01_presentation_generale
+   day_01_etude_de_cas
+   day_01_python
+   day_01_numpy
+   day_02_scipy
+   day_02_pandas
+   day_03_scikitlearn_matin
+   day_03_scikitlearn_apres_midi
+   day_03_demo_tensorflow_TFX
+   day_04_data_visualisation
+
    jupyter_and_other_tip_and_tricks
    other_resources
    summary

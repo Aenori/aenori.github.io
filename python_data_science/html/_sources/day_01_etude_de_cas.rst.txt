@@ -1,8 +1,7 @@
-Day 1 : case study
-==================
+Day 01 : etude de cas
+====================
 
-The google of this notebook is a global overview of what we want and can do in python.  
-We are using world bank raw data sets.
+Un exemple d'étude à partir de données open source de ce que l'on peut faire avec python et l'open-source
 
 `1 Correlation between life expectancy GNI and CO2 <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D01_world_bank_study.ipynb>`_
   

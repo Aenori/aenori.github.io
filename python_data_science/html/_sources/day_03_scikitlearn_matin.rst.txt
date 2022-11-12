@@ -1,5 +1,5 @@
-Day 3 : scikit learn
-====================
+Day 03 : Scikit learn - pipeline & apprentissage non-supervisé
+==============================================================
 
 `Official documentation <https://scikit-learn.org>`_  
 
