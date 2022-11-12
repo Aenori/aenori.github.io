@@ -1,5 +1,5 @@
 Day 01 : etude de cas
-====================
+=====================
 
 Un exemple d'étude à partir de données open source de ce que l'on peut faire avec python et l'open-source
 
