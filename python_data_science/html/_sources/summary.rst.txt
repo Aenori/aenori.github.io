@@ -1,0 +1,13 @@
+Summaries
+=========
+
+Day 1 : morning
+---------------
+
+- Python is a very good language for machine learning
+- It gets top performance by using C/C++ libraries despite being slow itself
+- It offers great value for genericity, interfacing and going into production mode
+- Pandas (excel-like) and matplotlib (drawing graphs) can be used as a low-code stack
+- Python lets you also very silly stuff, you have to be careful
+
+

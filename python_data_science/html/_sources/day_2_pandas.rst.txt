@@ -1,0 +1,26 @@
+Day 2 : pandas
+==============
+
+`Official documentation <https://pandas.pydata.org/>`_  
+
+`Pandas 01 getting started <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_01_getting_started_with_pandas.ipynb>`_  
+
+`Pandas 02 data wrangling <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_02_data_wrangling.ipynb>`_ 
+
+`Pandas 03 data visualisation <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_03_data_visualization.ipynb>`_ 
+
+`Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_pandas_practice.ipynb>`_  
+
+`Practice notebook solution <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_pandas_practice_solution.ipynb>`_  
+
+Pandas quizz answers :
+
+https://raw.githubusercontent.com/Aenori/20221129_public/main/Day_2_pandas_quizz.csv
+
+https://raw.githubusercontent.com/Aenori/20221129_public/main/Day_2_pandas_quizz.xlsx
+
+
+Pandas cheat sheet
+------------------
+
+https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
