@@ -1,8 +1,3 @@
-Day 03 : Scikit learn - pipeline & apprentissage non-supervisé
-==============================================================
+Day 03 : Scikit learn - overview & apprentissage supervisé
+==========================================================
 
-`Official documentation <https://scikit-learn.org>`_  
-
-`Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D03_scikitlearn_presentation.ipynb>`_  
-
-`Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D03_scikitlearn_practice.ipynb>`_  

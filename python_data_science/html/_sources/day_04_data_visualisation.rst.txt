@@ -3,9 +3,13 @@ Day 04 : data visualisation
 
 **Jupyter notebook :**
 
-`Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D03_matplotlib_presentation.ipynb>`_  
+`Matplotlib presentation <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D04_matplotlib_presentation.ipynb>`_  
 
-`Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D03_matplotlib_practice.ipynb>`_  
+`Matplotlib practice <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D04_matplotlib_practice.ipynb>`_  
+
+`Altair presentation <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D04_altair_presentation.ipynb>`_  
+
+`Altair practice <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D04_altair_practice.ipynb>`_  
 
 **Ressources :**
 
