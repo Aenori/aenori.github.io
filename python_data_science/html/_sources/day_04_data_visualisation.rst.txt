@@ -1,5 +1,5 @@
-Day 3 : matplotlib
-==================
+Day 4 : data visualisation
+==========================
 
 `Official documentation <https://matplotlib.org/>`_  
 

@@ -1,13 +1,17 @@
-Day 2 : numpy
+Day 2 : scipy
 =============
 
 
 `Official documentation <https://numpy.org/>`_  
 
-`Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_numpy_presentation.ipynb>`_  
+Jupyter notebooks :
 
-`Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_numpy_practice.ipynb>`_  
+`Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_scipy_presentation.ipynb>`_  
+
+`Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_scipy_practice.ipynb>`_  
 
 `Practice notebook solution <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_numpy_practice_solution.ipynb>`_  
   
+Resources :
+
 `Cheat sheet <https://assets.datacamp.com/blog_assets/Numpy_Python_Cheat_Sheet.pdf>`_  
