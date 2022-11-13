@@ -21,8 +21,3 @@ Stack overflow is the number 1 general resource for developper. There are a lot 
 It is great, and you will find most of your answer here, if you can formule the right question.  
 
 https://stackoverflow.com/
-
-Pandas cheat sheet
-------------------
-
-https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
