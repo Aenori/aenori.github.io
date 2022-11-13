@@ -18,6 +18,7 @@ L'objectif de cette page est de servir de point d'entrée
 
    day_01_presentation_generale
    day_01_etude_de_cas
+   day_01_MLOps
    day_01_python
    day_01_numpy
    day_02_scipy
