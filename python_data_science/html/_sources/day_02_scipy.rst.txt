@@ -4,7 +4,7 @@ Day 02 : scipy
 
 `Official documentation <https://numpy.org/>`_  
 
-:underline:`Jupyter notebooks :`
+Jupyter notebooks :
 
 `Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_scipy_presentation.ipynb>`_  
 
