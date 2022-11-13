@@ -1,7 +1,9 @@
 Day 02 : pandas
 ===============
 
-`Official documentation <https://pandas.pydata.org/>`_  
+Pandas est une des librairies les plus utiles pour l'analyse de données sous python. En un mot, il s'agit de l'équivalent d'excel en python.
+
+**Jupyter notebook**
 
 `Pandas 01 getting started <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_01_getting_started_with_pandas.ipynb>`_  
 
@@ -13,6 +15,8 @@ Day 02 : pandas
 
 `Practice notebook solution <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_pandas_practice_solution.ipynb>`_  
 
-**Pandas cheat sheet**
+**Resources**
 
-https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
+`Official documentation <https://pandas.pydata.org/>`_  
+
+`Pandas cheat sheet <https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf>`_

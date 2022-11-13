@@ -1,8 +1,12 @@
 Day 4 : data visualisation
 ==========================
 
-`Official documentation <https://matplotlib.org/>`_  
+**Jupyter notebook :**
 
 `Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D03_matplotlib_presentation.ipynb>`_  
 
 `Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D03_matplotlib_practice.ipynb>`_  
+
+**Ressources :**
+
+`Matplotlib documentation officielle <https://matplotlib.org/>`_  
