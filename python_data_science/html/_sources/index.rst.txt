@@ -6,7 +6,7 @@
 Bienvenue à la formation Python - DataScience
 ============================================= 
 
-L'objectif de cette page est de servir de point d'entrée 
+L'objectif de cette page est de servir de point d'entrée aux différents supports de la formation, et aux ressources associées 
 
 
 .. image:: ../../img/planning.png
