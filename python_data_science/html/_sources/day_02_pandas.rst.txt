@@ -1,5 +1,5 @@
-Day 2 : pandas
-==============
+Day 02 : pandas
+===============
 
 `Official documentation <https://pandas.pydata.org/>`_  
 
@@ -13,14 +13,6 @@ Day 2 : pandas
 
 `Practice notebook solution <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_pandas_practice_solution.ipynb>`_  
 
-Pandas quizz answers :
-
-https://raw.githubusercontent.com/Aenori/20221129_public/main/Day_2_pandas_quizz.csv
-
-https://raw.githubusercontent.com/Aenori/20221129_public/main/Day_2_pandas_quizz.xlsx
-
-
-Pandas cheat sheet
-------------------
+**Pandas cheat sheet**
 
 https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
