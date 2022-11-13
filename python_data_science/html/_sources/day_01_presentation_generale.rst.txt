@@ -11,5 +11,7 @@ La première matinée sera consacrée à une présentation générale de la form
 
 `3.2 Comparing performance in python <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_
 
-`4 Python library overview <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_04_python_library_overview.pdf>`_  
+`4 Machine learning <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_04_machine_learning.pdf>`_  
+
+`5 Python library overview <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_05_python_library_overview.pdf>`_  
 
