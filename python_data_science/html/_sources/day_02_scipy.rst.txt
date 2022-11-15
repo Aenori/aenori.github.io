@@ -8,7 +8,8 @@ Scipy est une librairie qui utilise numpy et fournit toutes les fonctions de cal
 `Presentation notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_scipy_presentation.ipynb>`_  
 
 `Practice notebook <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_scipy_practice.ipynb>`_   
-**Resources :**
+
+**Ressources :**
 
 `Official documentation <https://numpy.org/>`_  
 

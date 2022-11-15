@@ -13,7 +13,7 @@ Elle permet d'utiliser des structures de données C++ pour le calcul scientifiqu
 
 `Practice notebook solution <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D01_numpy_practice_solution.ipynb>`_  
   
-**Resources :**
+**Ressources :**
 
 `Numpy documentation officielle <https://numpy.org/>`_ 
 

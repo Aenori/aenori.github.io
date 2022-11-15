@@ -3,13 +3,13 @@ Day 01 : presentation générale
 
 La première matinée sera consacrée à une présentation générale de la formation et de la thématique des data sciences en python
 
-`1 Training introduction <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_01_introduction.pdf>`_  
+`1 Introduction de la formation <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_01_introduction.pdf>`_  
 
-`2 Python introduction <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_02_python_practical_walkthrough.pdf>`_  
+`2 Présentation de Python <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_02_python_practical_walkthrough.pdf>`_  
 
-`3 Performance and data analysis <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_  
+`3 Performance et analyse de donnée <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_  
 
-`3.2 Comparing performance in python <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_
+`3.2 Comparer les performances en Python <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_
 
 `4 Machine learning <https://raw.githubusercontent.com/Aenori/20221129_public/main/pdf/D01_04_machine_learning.pdf>`_  
 

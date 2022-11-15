@@ -15,7 +15,7 @@ Pandas est une des librairies les plus utiles pour l'analyse de données sous py
 
 `Practice notebook solution <https://colab.research.google.com/github/Aenori/20221129_public/blob/master/jupyter_notebook/D02_pandas_practice_solution.ipynb>`_  
 
-**Resources**
+**Ressources**
 
 `Official documentation <https://pandas.pydata.org/>`_  
 
