@@ -11,7 +11,7 @@ Welcome to the home page for this 3-days training !
 The purpose of this page is simply to give you access to all the material for the training.
 
 
-.. image:: img/planning.png
+.. image:: ../../img/Schedule.png
    :align: center
 
 .. toctree::
