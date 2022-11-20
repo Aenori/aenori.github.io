@@ -7,9 +7,9 @@ First morning will be a general, more theoretical presentation
 
 `2 Python introduction <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_02_python_practical_walkthrough.pdf>`_  
 
-`3 Performance and data analysis <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_  
+`3 Comparing performance in python <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_  
 
-`3.2 Comparing performance in python <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D01_Understanding_performance.ipynb>`_
+`3.2 Performance and data analysis <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_  
 
 `4 Python library overview <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_04_python_library_overview.pdf>`_  
 
