@@ -1,0 +1,32 @@
+Day 3 : advanced demos
+======================
+
+Scikit-learn
+------------
+
+`Official documentation <https://scikit-learn.org>`_  
+
+`Presentation notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_scikitlearn_presentation.ipynb>`_  
+
+`Practice notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_scikitlearn_practice.ipynb>`_  
+
+going into full automation
+--------------------------
+
+Sample can be found at :
+
+https://github.com/Aenori/DataAnalysisAutomated
+
+Process
+^^^^^^^
+
+You often starts with a jupyter notebook to check if your pandas and matplotlib are working.  
+Then you can switch to a more classical python structure, pandas and matplotlib don't change.
+
+Dependancy management
+^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+
