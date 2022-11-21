@@ -14,4 +14,5 @@ First morning will be a general, more theoretical presentation
 `4.2 Performance and data analysis <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_03_python_performance_and_data_analysis.pdf>`_  
 
 `5 Python library overview <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_04_python_library_overview.pdf>`_  
-
+  
+`6 What is programming <https://raw.githubusercontent.com/Aenori/PythonDataAnalysis_public/main/pdf/D01_05_what_is_programming.pdf>`_  
