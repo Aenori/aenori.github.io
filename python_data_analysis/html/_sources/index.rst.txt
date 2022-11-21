@@ -33,5 +33,6 @@ The purpose of this page is simply to give you access to all the material for th
    :maxdepth: 2
    :caption: Other resources:
 
+Resources are hosted by a public github repository :    
    
-
+https://github.com/Aenori/PythonDataAnalysis_public  
