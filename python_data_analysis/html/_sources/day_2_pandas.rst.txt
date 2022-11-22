@@ -13,7 +13,7 @@ Day 2 : pandas
 
 `Practice notebook - titanic <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_pandas_titanic_practice.ipynb>`_  
 
-`Practice notebook - titanic <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_pandas_titanic_practice_solution.ipynb>`_  
+`Practice notebook - titanic solution <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_pandas_titanic_practice_solution.ipynb>`_  
 
 `Practice notebook - advanced <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_pandas_practice.ipynb>`_  
 
