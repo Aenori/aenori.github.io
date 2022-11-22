@@ -21,6 +21,7 @@ The purpose of this page is simply to give you access to all the material for th
    day_1_general_presentation
    day_1_case_study
    day_1_python
+   day_2_quizz_and_code_samples
    day_2_pandas
    day_2_numpy
    day_3_data_visualization
