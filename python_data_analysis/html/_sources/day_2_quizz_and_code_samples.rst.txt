@@ -1,17 +1,8 @@
-Day 2 : pandas
-==============
+Day 2 : quizz and code samples
+==============================
 
-`Official documentation <https://pandas.pydata.org/>`_  
+`Quizz <https://forms.gle/gpJEfBowCEa9Gb468>`_  
 
-`Pandas 01 getting started <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_01_getting_started_with_pandas.ipynb>`_  
+`Sample 1 : EURIBOR <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/code_samples/Retrieve_EURIBOR.ipynb>`_  
 
-`Pandas 02 data wrangling <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_02_data_wrangling.ipynb>`_ 
-
-`Practice notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_pandas_practice.ipynb>`_  
-
-`Practice notebook solution <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D02_pandas_practice_solution.ipynb>`_  
-
-Pandas cheat sheet
-------------------
-
-https://pandas.pydata.org/Pandas_Cheat_Sheet.pdf
+`Sample 2 : process multiple files <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/code_samples/Process_various_excel_files.ipynb>`_  
