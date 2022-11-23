@@ -6,3 +6,5 @@ Day 2 : quizz and code samples
 `Sample 1 : EURIBOR <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/code_samples/Retrieve_EURIBOR.ipynb>`_  
 
 `Sample 2 : process multiple files <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/code_samples/Process_various_excel_files.ipynb>`_  
+
+`Sample 3 : generating pdf file <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/code_samples/Process_various_excel_files.ipynb>`_  
