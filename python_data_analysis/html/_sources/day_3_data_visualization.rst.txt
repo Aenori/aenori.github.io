@@ -1,8 +1,20 @@
-Day 3 : matplotlib
-==================
+Day 3 : data visualization
+==========================
 
-`Official documentation <https://matplotlib.org/>`_  
+Matplotlib
+----------
 
-`Presentation notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_matplotlib_presentation.ipynb>`_  
+`Matplotlib official documentation <https://matplotlib.org/>`_  
 
-`Practice notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_matplotlib_practice.ipynb>`_  
+`Matplotlib presentation notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_matplotlib_presentation.ipynb>`_  
+
+`Matplotlib practice notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_matplotlib_practice.ipynb>`_  
+
+Vega - Altair
+-------------
+
+(Nothing to do with Altair engineering)
+
+`AltairViz official documentation <https://altair-viz.github.io/>`_  
+  
+`AltairViz presentation notebook <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_altair_presentation.ipynb>`_  

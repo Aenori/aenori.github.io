@@ -26,6 +26,7 @@ The purpose of this page is simply to give you access to all the material for th
    day_2_numpy
    day_3_data_visualization
    day_3_advanced_demos
+   day_3_extra_exercises
    jupyter_and_other_tip_and_tricks
    other_resources
    summary
