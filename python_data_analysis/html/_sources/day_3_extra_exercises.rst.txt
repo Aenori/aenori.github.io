@@ -4,13 +4,13 @@ Day 3 : Extra Exercises
 Pandas
 ------
 
-`Pandas - euros - exercises<https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_euros_exercises.ipynb>`_  
+`Pandas - euros - exercises <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_euros_exercises.ipynb>`_  
 
-`Pandas - euros - exercises with solutions<https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_euros_exercises_with_solutions.ipynb>`_  
+`Pandas - euros - exercises with solutions <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_euros_exercises_with_solutions.ipynb>`_  
 
 Visualization
 -------------
 
-`Pandas - euros - exercises<https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises.ipynb>`_  
+`Pandas - euros - exercises <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises.ipynb>`_  
 
-`Pandas - euros - exercises with solutions<https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises_with_solutions.ipynb>`_  
+`Pandas - euros - exercises with solutions <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises_with_solutions.ipynb>`_  
