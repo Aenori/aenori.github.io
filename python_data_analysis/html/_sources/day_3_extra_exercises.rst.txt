@@ -11,6 +11,6 @@ Pandas
 Visualization
 -------------
 
-`Pandas - euros - exercises <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises.ipynb>`_  
+`Visualization - exercises <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises.ipynb>`_  
 
-`Pandas - euros - exercises with solutions <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises_with_solutions.ipynb>`_  
+`Visualization - exercises with solutions <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_visualization_exercises_with_solutions.ipynb>`_  
