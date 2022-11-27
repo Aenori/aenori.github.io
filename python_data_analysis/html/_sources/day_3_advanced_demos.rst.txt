@@ -17,11 +17,6 @@ Sample can be found at :
 
 https://github.com/Aenori/DataAnalysisAutomated
 
-Comparing Dataframes
---------------------
-
-`Comparing dataframes <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_comparing_df_titanic_data_set.ipynb>`_  
-
 Process
 ^^^^^^^
 

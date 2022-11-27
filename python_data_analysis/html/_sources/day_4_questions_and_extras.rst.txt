@@ -1,0 +1,34 @@
+Day 4 : Questions and extras
+============================
+
+Advanced questions
+------------------
+
+A notebook containing some advanced questions that some of you asked me. I put them in a public notebook, so that you can all benefit from them.  
+
+`Advanced questions <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D04_advanced_questions.ipynb>`_  
+
+Comparing Dataframes
+--------------------
+
+`Comparing dataframes <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_comparing_df_titanic_data_set.ipynb>`_  
+
+Extracting data from pdf file
+-----------------------------
+
+
+
+Resources for beginners
+-----------------------
+
+W3 schools (which was originally a website for web language) is providing some very nice resources (text and interactive code / exercises) for most languages, including python :
+
+`W3 school <https://www.w3schools.com/python>`_  
+
+Also coursera is a great resources for beginners, in every computer science topics. You can follow courses at your own paces and it provides very good videos.
+
+Important : click `audit the courses` for free access 
+
+`Coursera <https://www.coursera.org>`_  
+`Coursera python for beginners <https://www.coursera.org/learn/python?specialization=python>`_  
+
