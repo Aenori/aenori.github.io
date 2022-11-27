@@ -13,11 +13,6 @@ Comparing Dataframes
 
 `Comparing dataframes <https://colab.research.google.com/github/Aenori/PythonDataAnalysis_public/blob/master/jupyter_notebook/D03_comparing_df_titanic_data_set.ipynb>`_  
 
-Extracting data from pdf file
------------------------------
-
-
-
 Resources for beginners
 -----------------------
 
@@ -31,4 +26,3 @@ Important : click `audit the courses` for free access
 
 `Coursera <https://www.coursera.org>`_  
 `Coursera python for beginners <https://www.coursera.org/learn/python?specialization=python>`_  
-
