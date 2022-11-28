@@ -26,3 +26,9 @@ Important : click `audit the courses` for free access
 
 `Coursera <https://www.coursera.org>`_  
 `Coursera python for beginners <https://www.coursera.org/learn/python?specialization=python>`_  
+
+The learn python site is also providing nice tutorials, with online script interpretation :
+
+`Learn python <https://www.learnpython.org>`_  
+
+And finally, there is obviously Youtube, that is providing a lot of video on python, you can just try and find the videos that is the closer to your way of thinking.
